@@ -1,6 +1,9 @@
-//Made by Coltaho 5/31/2018
-//Splits on boss kill, assumes boss rush is 1 split
-//Version 1.2
+/** 
+ * MM2autosplit_v1.2.asl - An ASL script for LiveSplit for the game Mega Man 2 (NES) using FCEUX. Nestopia NYI.
+ * @author Coltaho
+ * @version 1.2 on May 31st 2018
+ * Splits on boss kill, assumes boss rush is 1 split
+ */
 
 state("fceux")
 {
