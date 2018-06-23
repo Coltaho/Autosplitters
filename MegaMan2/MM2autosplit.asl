@@ -49,13 +49,13 @@ start {
 }
 
 update {
-	print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --framecount: " + vars.framecounter + " --split: " + vars.splitNumber + " --incombat: " + vars.inBossFight);
+	//print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --framecount: " + vars.framecounter + " --split: " + vars.splitNumber + " --incombat: " + vars.inBossFight);
 }
 
 split
 {
 	if (current.myhp == 0 && current.bosshp != 0 && vars.inBossFight == 1 && vars.iknowimdead == 0 && vars.framecounter <= 8) {
-		vars.framecounter++;	//Accounts for a DKO, gives you 8 frames of leeway if you die before the boss does	
+		vars.framecounter++;	//Accounts for a DKO by giving you 8 frames of leeway if you die before the boss does	
 	} else if (current.myhp == 0 && current.bosshp != 0 && vars.inBossFight == 1 && vars.iknowimdead == 0 && vars.framecounter > 8) {
 		vars.inBossFight = 0;
 		vars.iknowimdead = 1;
@@ -135,5 +135,5 @@ startup
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : FCEUX, Netstopia", "main");
 	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
-	settings.SetToolTip("DoesNothing", "Pretty cool, right?");
+	settings.SetToolTip("main", "Pretty cool, right?");
 }
