@@ -13,7 +13,7 @@ Auto Splitter for Mega Man 2 NES
 ## Features
 
 - Automatically start the timer when you start a run. Timer starts after selecting the difficulty
-- Automatically split when a boss dies (except for boss rush, and then after Wily Machine phase 2)
+- Automatically split when a boss dies (except for boss rush where it splits after Wily Machine phase 2)
 
 ## Installation 
 
