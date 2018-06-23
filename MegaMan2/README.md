@@ -25,7 +25,7 @@ Auto Splitter for Mega Man 2 NES
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/MegaMan2/master/MM2autosplit.asl
+- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MegaMan2/MM2autosplit.asl
 - Edit Layout
 - Add Other /Scriptable Componment / Script Path: Browse to the "MM2autosplit.asl" file you downloaded previously
 - Enable Start/Split feature here
