@@ -1,4 +1,4 @@
-## MegaMan 2 Autosplitter
+## Mega Man 2 Autosplitter
  
 Auto Splitter for Mega Man 2 NES
 
