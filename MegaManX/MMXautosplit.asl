@@ -37,16 +37,16 @@ init
 	vars.bosses["sigmafinal"] = 101;
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
-	vars.splitNumber = 0;
+	vars.started = 0;
 	vars.iknowimdead = 0;
 }
 
 start { 
-	if (vars.splitNumber > 0) {
+	if (vars.started == 1) {
 		print("--Starting, Reset vars!--");
 		vars.inBossFight = 0;
 		vars.sigmaFight = 1;
-		vars.splitNumber = 0;
+		vars.started = 0;
 		vars.iknowimdead = 0;
 	}
 	if (current.fade == 15 && (current.currentlevel == 35 || current.currentlevel == 3) && old.mycontroller == 0 && current.mycontroller == 16 && current.titleselection == 0 && current.myhp == 30) {
@@ -56,16 +56,13 @@ start {
 }
 
 update {
-	//print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --split: " + vars.splitNumber + " --incombat: " + vars.inBossFight);
-	//print("--level: " + current.currentlevel + " old enemy: " + old.enemyid + " bossvar: " + vars.bosses["introafterboss"] + " current enemy: " + current.enemyid);
-	//print("--Heartflags: " + ((current.myhearts & (1 << 0)) != 0));
+	//print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --incombat: " + vars.inBossFight);
 }
 
 split
 {
-	//split after intro (Zero stops yapping)
+	//split after intro (Zero stops yapping and screen fades to black)
 	if (current.currentlevel == 0 && old.enemyid == vars.bosses["introafterboss"] && current.enemyid == 0) {
-		vars.splitNumber++;
 		print("--Yay intro done!--");
 		return true;
 	}
@@ -105,24 +102,23 @@ split
 	}
 	
 	//split on each maverick kill when in first stages, and sigma 1 and 2 boss hits
-	if ((vars.splitNumber > 0 && vars.splitNumber < 8) || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"]) {
+	if ((current.currentlevel <= 8 || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"]) {
 		if (vars.inBossFight == 0) {
 			if (current.bosshp == 32 && old.bosshp == 31) {
-				print("--Starting boss " + (vars.splitNumber + 1) + "!--");
+				print("--Starting boss!--");
 				vars.inBossFight = 1;				
 			}
 		} else {
 			if (current.bosshp == 0) {
 				vars.inBossFight = 0;
-				vars.splitNumber++;
-				print("--Yay " + vars.splitNumber + " boss dead!--");
+				print("--Yay boss dead!--");
 				return true;
 			}
 		}
 	} 
 	
-	//split on sigma 3 and eagle since they are dumb and use different enemy location
-	if (current.enemyidtwo == vars.bosses["sigma3"] || (current.enemyidtwo == vars.bosses["eagle"] && vars.splitNumber <= 8)) {
+	//special split on sigma 3 and eagle since they are dumb and use a different enemy object location
+	if (current.enemyidtwo == vars.bosses["sigma3"] || (current.enemyidtwo == vars.bosses["eagle"] && current.currentlevel == 5)) {
 		if (vars.inBossFight == 0) {
 			if ((current.secondarybosshp == 32 && old.secondarybosshp == 0) || (current.secondarybosshp == 32 && old.secondarybosshp == 31)) {
 				print("--Starting Sigma 3 or Eagle!--");
@@ -131,7 +127,6 @@ split
 		} else {
 			if (current.secondarybosshp == 0) {
 				vars.inBossFight = 0;
-				vars.splitNumber++;
 				print("--Yay Sigma 3 or Eagle boss dead!--");
 				return true;
 			}
