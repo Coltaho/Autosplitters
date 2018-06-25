@@ -101,7 +101,7 @@ split
 		print("--You have risen!--");
 	}
 	
-	//split on each maverick kill when in first stages, and sigma 1 and 2 boss hits
+	//split on each maverick kill when in first stages, and sigma 1 and 2 last boss kills
 	if ((current.currentlevel <= 8 || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"]) {
 		if (vars.inBossFight == 0) {
 			if (current.bosshp == 32 && old.bosshp == 31) {
