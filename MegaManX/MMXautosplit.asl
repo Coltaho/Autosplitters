@@ -2,19 +2,18 @@
 
 state("snes9x-x64")
 {
-	byte bosshp : 0x5C80A8, 0xE8F; //enemy health (used for all enemies)
-	byte secondarybosshp : 0x5C80A8, 0xECF; //used for sigma 3
+	byte bosshp : 0x5C80A8, 0xE8F; //enemy health (first slot in a section used for all enemies)
+	byte secondarybosshp : 0x5C80A8, 0xECF; //used for sigma 3 and eagle
 	byte enemyid : 0x5C80A8, 0xE72; //enemy object id
 	byte enemyidtwo : 0x5C80A8, 0xEB2; //enemy object id 2
 	byte myhp : 0x5C80A8, 0xBCF; //current health
 	byte mylives : 0x5C80A8, 0x1F80; //current lives
-	byte titleselection : 0x5C80A8, 0x3C; //what cursor is on in title screen
+	byte titleselection : 0x5C80A8, 0x3C; //what cursor is on during title screen
 	byte currentlevel : 0x5C80A8, 0x1F7A; //current stage
-	byte fade : 0x5C80A8, 0xB3; //current level of screen fade
+	byte fade : 0x5C80A8, 0xB3; //current amount of screen fade
 	byte mycontroller : 0x5C80A8, 0xA8; //controller input
 	byte myvisits : 0x5C80A8, 0x1F7E; //visits to hadoukun, turns to 133 when you get it
-	byte myhearts : 0x5C80A8, 0x1F9C; //heart bitflags
-	//Bitflags for heart tanks collected. Format hgfedcba 
+	byte myhearts : 0x5C80A8, 0x1F9C; //Bitflags for heart tanks collected. Format hgfedcba 
 	//a = Penguin b = Armadillo c = Eagle d = Chameleon e = Mammoth f = Kuwanger g = Mandrill h = Octopus	
 }
 
@@ -72,13 +71,13 @@ split
 	}
 	
 	//split when chill penguin tank is picked up
-	if (((old.myhearts & (1 << 0)) == 0) && ((current.myhearts & (1 << 0)) != 0)) {
+	if (settings["chillpenguin"] && ((old.myhearts & (1 << 0)) == 0) && ((current.myhearts & (1 << 0)) != 0)) {
 		print("--Yay chill penguin heart got!--");
 		return true;
 	}
 	
 	//split when we get hadouken
-	if (old.myvisits < 133 && current.myvisits == 133) {
+	if (settings["hadouken"] && old.myvisits < 133 && current.myvisits == 133) {
 		print("--Yay HADOUKEN!--");
 		return true;
 	}
@@ -164,6 +163,11 @@ split
 startup
 {
 	refreshRate = 60;
+	settings.Add("hundosplits", true, "Optional 100% splits");
+	settings.SetToolTip("hundosplits", "Turn off if you don't want to split on these events");
+	settings.Add("chillpenguin", true, "- Chill Penguin Split"), "hundosplits");
+	settings.Add("hadouken", true, "- Hadouken Split"), "hundosplits");
+	
 	settings.Add("main", false, "Mega Man X AutoSplitter v1.0 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : Snex9x-x64", "main");
