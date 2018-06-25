@@ -21,7 +21,7 @@ Auto Splitter for Mega Man 2 NES
 - Enter the name of the game in "Game Name"
   - This must be entered correctly for LiveSplit to know which script to load
 - Click the "Activate" button to download and enable the autosplitter script
-  - If you ever want to stop using the autosplitter altogether, just click "Desactivate"
+  - If you ever want to stop using the autosplitter altogether, just click "Deactivate"
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
