@@ -22,7 +22,7 @@ init
 	print("--Setting init variables!--");
 	vars.bosses = new Dictionary<string, int>();
 	vars.bosses["introboss"] = 50;
-	vars.bosses["introafterboss"] = 51;
+	vars.bosses["introafterboss"] = 60;
 	vars.bosses["penguin"] = 2;
 	vars.bosses["eagle"] = 82;
 	vars.bosses["octopus"] = 7;
@@ -39,6 +39,7 @@ init
 	vars.sigmaFight = 1;
 	vars.started = 0;
 	vars.iknowimdead = 0;
+	vars.introdone = 0;
 }
 
 start { 
@@ -48,6 +49,7 @@ start {
 		vars.sigmaFight = 1;
 		vars.started = 0;
 		vars.iknowimdead = 0;
+		vars.introdone = 0;
 	}
 	if (current.fade == 15 && (current.currentlevel == 35 || current.currentlevel == 3) && old.mycontroller == 0 && current.mycontroller == 16 && current.titleselection == 0 && current.myhp == 30) {
 		print("--Here we go!--");
@@ -56,18 +58,19 @@ start {
 }
 
 update {
-	print("--Current level: " + current.currentlevel + " Current EnemyID: " + current.enemyid + " --fade: " + current.fade);
+	print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp);
 }
 
 split
 {
 	//split after intro (Zero stops yapping and screen fades to black)
-	if (current.currentlevel == 0) {
-		if (current.enemyid == vars.bosses["introboss"]) {
+	if (vars.introdone == 0 && current.currentlevel == 0) {
+		if (current.enemyid == vars.bosses["introafterboss"] || current.enemyidtwo == vars.bosses["introafterboss"]) {
 			vars.inBossFight = 1;
 		}
 		if (vars.inBossFight == 1 && current.fade == 0) {
 			vars.inBossFight = 0;
+			vars.introdone = 1;
 			print("--Yay intro done!--");
 			return true;
 		}
@@ -110,7 +113,7 @@ split
 	//split on each maverick kill when in first stages, and sigma 1 and 2 last boss kills
 	if (current.currentlevel != 0 && (current.currentlevel <= 8 || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"])) {
 		if (vars.inBossFight == 0) {
-			if (current.bosshp == 32 && old.bosshp == 31) {
+			if (current.bosshp == 28 && old.bosshp == 27) {
 				print("--Starting boss!--");
 				vars.inBossFight = 1;				
 			}
@@ -142,7 +145,7 @@ split
 	//split on final boss hit when in phase 2
 	if (current.enemyid == vars.bosses["sigmafinal"]) {
 		if (vars.inBossFight == 0) {
-			if (current.bosshp == 32 && old.bosshp == 31) {
+			if (current.bosshp == 28 && old.bosshp == 27) {
 				print("--Starting final sigma phase " + (vars.sigmaFight) + "!--");
 				vars.inBossFight = 1;
 			}
