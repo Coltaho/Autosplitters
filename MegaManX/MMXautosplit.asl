@@ -102,7 +102,7 @@ split
 	}
 	
 	//split on each maverick kill when in first stages, and sigma 1 and 2 last boss kills
-	if ((current.currentlevel <= 8 || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"]) {
+	if (current.currentlevel <= 8 || current.enemyid == vars.bosses["sigma1"] || current.enemyid == vars.bosses["sigma2"]) {
 		if (vars.inBossFight == 0) {
 			if (current.bosshp == 32 && old.bosshp == 31) {
 				print("--Starting boss!--");
@@ -160,8 +160,8 @@ startup
 	refreshRate = 60;
 	settings.Add("hundosplits", true, "Optional 100% splits");
 	settings.SetToolTip("hundosplits", "Turn off if you don't want to split on these events");
-	settings.Add("chillpenguin", true, "- Chill Penguin Split"), "hundosplits");
-	settings.Add("hadouken", true, "- Hadouken Split"), "hundosplits");
+	settings.Add("chillpenguin", true, "- Chill Penguin Split", "hundosplits");
+	settings.Add("hadouken", true, "- Hadouken Split", "hundosplits");
 	
 	settings.Add("main", false, "Mega Man X AutoSplitter v1.0 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
