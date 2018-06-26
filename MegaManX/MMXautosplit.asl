@@ -17,6 +17,23 @@ state("snes9x-x64")
 	//a = Penguin b = Armadillo c = Eagle d = Chameleon e = Mammoth f = Kuwanger g = Mandrill h = Octopus	
 }
 
+
+state("snes9x")
+{
+	byte bosshp : 0x3832C4, 0xE8F;
+	byte secondarybosshp : 0x3832C4, 0xECF;
+	byte enemyid : 0x3832C4, 0xE72;
+	byte enemyidtwo : 0x3832C4, 0xEB2;
+	byte myhp : 0x3832C4, 0xBCF;
+	byte mylives : 0x3832C4, 0x1F80;
+	byte titleselection : 0x3832C4, 0x3C;
+	byte currentlevel : 0x3832C4, 0x1F7A;
+	byte fade : 0x3832C4, 0xB3;
+	byte mycontroller : 0x3832C4, 0xA8;
+	byte myvisits : 0x3832C4, 0x1F7E;
+	byte myhearts : 0x3832C4, 0x1F9C;
+}
+
 init
 {
 	print("--Setting init variables!--");
@@ -58,7 +75,7 @@ start {
 }
 
 update {
-	print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp);
+	print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp + " --myhp: " + current.myhp);
 }
 
 split
@@ -174,7 +191,7 @@ startup
 	
 	settings.Add("main", false, "Mega Man X AutoSplitter v1.0 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Snex9x-x64", "main");
+	settings.Add("main1", false, "- Supported emulators : Snes9X 1.56+ 32 and 64 bit", "main");
 	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
