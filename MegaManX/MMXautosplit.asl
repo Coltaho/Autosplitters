@@ -56,13 +56,13 @@ start {
 }
 
 update {
-	//print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --incombat: " + vars.inBossFight);
+	//print("--Current level: " + current.currentlevel + " Old EnemyID: " + old.enemyid + " --fade: " + current.fade);
 }
 
 split
 {
 	//split after intro (Zero stops yapping and screen fades to black)
-	if (current.currentlevel == 0 && old.enemyid == vars.bosses["introafterboss"] && current.enemyid == 0) {
+	if (current.currentlevel == 0 && old.enemyid == vars.bosses["introafterboss"] && current.fade <= 2) {
 		print("--Yay intro done!--");
 		return true;
 	}
