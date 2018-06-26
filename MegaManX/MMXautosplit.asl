@@ -22,7 +22,7 @@ init
 	print("--Setting init variables!--");
 	vars.bosses = new Dictionary<string, int>();
 	vars.bosses["introboss"] = 50;
-	vars.bosses["introafterboss"] = 60;
+	vars.bosses["introafterboss"] = 51;
 	vars.bosses["penguin"] = 2;
 	vars.bosses["eagle"] = 82;
 	vars.bosses["octopus"] = 7;
@@ -56,15 +56,21 @@ start {
 }
 
 update {
-	print("--Current level: " + current.currentlevel + " Old EnemyID: " + old.enemyid + " --fade: " + current.fade);
+	print("--Current level: " + current.currentlevel + " Current EnemyID: " + current.enemyid + " --fade: " + current.fade);
 }
 
 split
 {
 	//split after intro (Zero stops yapping and screen fades to black)
-	if (current.currentlevel == 0 && old.enemyid == vars.bosses["introafterboss"] && current.fade == 0) {
-		print("--Yay intro done!--");
-		return true;
+	if (current.currentlevel == 0) {
+		if (current.enemyid == vars.bosses["introboss"]) {
+			vars.inBossFight = 1;
+		}
+		if (vars.inBossFight == 1 && current.fade == 0) {
+			vars.inBossFight = 0;
+			print("--Yay intro done!--");
+			return true;
+		}
 	}
 	
 	//split when chill penguin tank is picked up
