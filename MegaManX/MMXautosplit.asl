@@ -72,12 +72,13 @@ start {
 	}
 	if (current.fade == 15 && (current.currentlevel == 35 || current.currentlevel == 3) && old.mycontroller == 0 && current.mycontroller == 16 && current.titleselection == 0 && current.myhp == 30) {
 		print("--Here we go!--");
+		vars.started = 1;
 		return true;
 	}
 }
 
 update {
-	//print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp + " --myhp: " + current.myhp);
+	//print("--Combat: " + vars.inBossFight + " Enemy1 ID: " + current.enemyid);
 }
 
 split
