@@ -6,6 +6,8 @@ state("snes9x-x64")
 	byte secondarybosshp : 0x5C80A8, 0xECF; //used for sigma 3 and eagle
 	byte enemyid : 0x5C80A8, 0xE72; //enemy object id
 	byte enemyidtwo : 0x5C80A8, 0xEB2; //enemy object id 2
+	byte enemyidthree : 0x5C80A8, 0xEF2; //enemy object id 3
+	byte enemyidfour : 0x5C80A8, 0xF32; //enemy object id 4
 	byte myhp : 0x5C80A8, 0xBCF; //current health
 	byte mylives : 0x5C80A8, 0x1F80; //current lives
 	byte titleselection : 0x5C80A8, 0x3C; //what cursor is on during title screen
@@ -39,7 +41,7 @@ init
 	print("--Setting init variables!--");
 	vars.bosses = new Dictionary<string, int>();
 	vars.bosses["introboss"] = 50;
-	vars.bosses["introafterboss"] = 60;
+	vars.bosses["introtextbox"] = 60;
 	vars.bosses["penguin"] = 2;
 	vars.bosses["eagle"] = 82;
 	vars.bosses["octopus"] = 7;
@@ -75,14 +77,15 @@ start {
 }
 
 update {
-	print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp + " --myhp: " + current.myhp);
+	//print("--combat: " + vars.inBossFight + " Current EnemyID: " + current.enemyid + " --bosshp: " + current.bosshp + " --myhp: " + current.myhp);
 }
 
 split
 {
 	//split after intro (Zero stops yapping and screen fades to black)
 	if (vars.introdone == 0 && current.currentlevel == 0) {
-		if (current.enemyid == vars.bosses["introafterboss"] || current.enemyidtwo == vars.bosses["introafterboss"]) {
+		if (current.enemyid == vars.bosses["introtextbox"] || current.enemyidtwo == vars.bosses["introtextbox"]
+		 || current.enemyidthree == vars.bosses["introtextbox"] || current.enemyidfour == vars.bosses["introtextbox"]) {
 			vars.inBossFight = 1;
 		}
 		if (vars.inBossFight == 1 && current.fade == 0) {
