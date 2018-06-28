@@ -78,7 +78,7 @@ start {
 }
 
 update {
-	//print("--Combat: " + vars.inBossFight + "Lvl: " + current.currentlevel + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Enemy4 ID: " + current.enemyidfour);
+	//print("--Combat: " + vars.inBossFight + " Lvl: " + current.currentlevel + " Visits: " + current.myvisits + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Fade: " + current.fade);
 }
 
 split
@@ -89,7 +89,7 @@ split
 		 || current.enemyidthree == vars.bosses["introtextbox"] || current.enemyidfour == vars.bosses["introtextbox"]) {
 			vars.inBossFight = 1;
 		}
-		if (vars.inBossFight == 1 && current.fade == 0) {
+		if (vars.inBossFight == 1 && current.fade <= 2) {
 			vars.inBossFight = 0;
 			vars.introdone = 1;
 			print("--Yay intro done!--");
