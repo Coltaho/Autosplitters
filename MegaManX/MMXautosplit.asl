@@ -78,7 +78,7 @@ start {
 }
 
 update {
-	//print("--Combat: " + vars.inBossFight + " Enemy1 ID: " + current.enemyid);
+	//print("--Combat: " + vars.inBossFight + "Lvl: " + current.currentlevel + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Enemy4 ID: " + current.enemyidfour);
 }
 
 split
@@ -97,8 +97,8 @@ split
 		}
 	}
 	
-	//split when chill penguin tank is picked up
-	if (settings["chillpenguin"] && ((old.myhearts & (1 << 0)) == 0) && ((current.myhearts & (1 << 0)) != 0)) {
+	//split when chill penguin tank is picked up, bit 0 is this tank
+	if (settings["chillpenguin"] && ((old.myhearts & (1 << 0)) == 0) && ((current.myhearts & (1 << 0)) == 1)) {
 		print("--Yay chill penguin heart got!--");
 		return true;
 	}
@@ -150,7 +150,7 @@ split
 	//special split on sigma 3 and eagle since they are dumb and use a different enemy object location
 	if (current.enemyidtwo == vars.bosses["sigma3"] || (current.enemyidtwo == vars.bosses["eagle"] && current.currentlevel == 5)) {
 		if (vars.inBossFight == 0) {
-			if ((current.secondarybosshp == 32 && old.secondarybosshp == 0) || (current.secondarybosshp == 32 && old.secondarybosshp == 31)) {
+			if ((current.secondarybosshp == 32 && old.secondarybosshp == 0) || (current.secondarybosshp == 28 && old.secondarybosshp == 27)) {
 				print("--Starting Sigma 3 or Eagle!--");
 				vars.inBossFight = 1;				
 			}
