@@ -78,7 +78,7 @@ start {
 }
 
 update {
-	//print("--Combat: " + vars.inBossFight + " Lvl: " + current.currentlevel + " Visits: " + current.myvisits + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Fade: " + current.fade);
+	//print("--Combat: " + vars.inBossFight + " Boss2HP: " + current.secondarybosshp + " Visits: " + current.myvisits + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Fade: " + current.fade);
 }
 
 split
@@ -150,7 +150,7 @@ split
 	//special split on sigma 3 and eagle since they are dumb and use a different enemy object location
 	if (current.enemyidtwo == vars.bosses["sigma3"] || (current.enemyidtwo == vars.bosses["eagle"] && current.currentlevel == 5)) {
 		if (vars.inBossFight == 0) {
-			if ((current.secondarybosshp == 32 && old.secondarybosshp == 0) || (current.secondarybosshp == 28 && old.secondarybosshp == 27)) {
+			if ((current.secondarybosshp == 32 && old.secondarybosshp == 0) || (current.secondarybosshp > old.secondarybosshp)) {
 				print("--Starting Sigma 3 or Eagle!--");
 				vars.inBossFight = 1;				
 			}
