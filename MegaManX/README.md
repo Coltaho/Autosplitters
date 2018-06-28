@@ -6,7 +6,8 @@ Auto Splitter for Mega Man X SNES
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators:**
- - SNES9x 1.56 32 and 64 bit
+ - SNES9x 1.56.1 32 and 64 bit
+ - SNES9X 1.56.2 Will NOT currently work
  
 ## Features
 
