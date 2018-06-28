@@ -26,6 +26,8 @@ state("snes9x")
 	byte secondarybosshp : 0x3832C4, 0xECF;
 	byte enemyid : 0x3832C4, 0xE72;
 	byte enemyidtwo : 0x3832C4, 0xEB2;
+	byte enemyidthree : 0x3832C4, 0xEF2;
+	byte enemyidfour : 0x3832C4, 0xF32;
 	byte myhp : 0x3832C4, 0xBCF;
 	byte mylives : 0x3832C4, 0x1F80;
 	byte titleselection : 0x3832C4, 0x3C;
@@ -78,7 +80,7 @@ start {
 }
 
 update {
-	//print("--Combat: " + vars.inBossFight + " Boss2HP: " + current.secondarybosshp + " Visits: " + current.myvisits + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Fade: " + current.fade);
+	print("--Combat: " + vars.inBossFight + " Boss2HP: " + current.secondarybosshp + " Visits: " + current.myvisits + " Enemy1 ID: " + current.enemyid + " Enemy2 ID: " + current.enemyidtwo + " Enemy3 ID: " + current.enemyidthree + " Fade: " + current.fade);
 }
 
 split
@@ -145,7 +147,7 @@ split
 				return true;
 			}
 		}
-	} 
+	}
 	
 	//special split on sigma 3 and eagle since they are dumb and use a different enemy object location
 	if (current.enemyidtwo == vars.bosses["sigma3"] || (current.enemyidtwo == vars.bosses["eagle"] && current.currentlevel == 5)) {
