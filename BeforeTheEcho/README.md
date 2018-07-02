@@ -10,6 +10,8 @@ Auto Splitter for Before The Echo
 - Automatically start the timer when you start a run. Timer starts after selecting the difficulty
 - Automatically split when you get to the next floor (Guardian is dead and text is done) and on last boss hit
 
+**Note that if your game opens in compatibility/Run As Admin mode, LiveSplit must be started with Run As Admin mode to work**
+
 ## Installation 
 
 - Go to "Edit Splits.." in LiveSplit
