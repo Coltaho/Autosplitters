@@ -48,9 +48,7 @@ init
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x1405BFDB8);
 				break;
 			case 6848512: //snes9x (1.56.1)
-				memoryOffset = memory.ReadValue<int>((IntPtr)0x3AA96C);
-				memoryOffset = 1;
-				version = "None";
+				memoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4);
 				break;
 			case 8945664: //snes9x (1.56.1-x64)
 				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5C80A8);
