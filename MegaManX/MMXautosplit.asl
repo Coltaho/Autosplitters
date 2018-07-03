@@ -15,10 +15,10 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split", "hundosplits");
 	
-	settings.Add("main", false, "Mega Man X AutoSplitter v1.1 by Coltaho");
-	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
-	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
+	settings.Add("main", true, "Mega Man X AutoSplitter v1.1 by Coltaho");
+	settings.Add("main0", true, "- Website : https://github.com/Coltaho/Autosplitters", "main");
+	settings.Add("main1", true, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
+	settings.Add("main2", true, "- Splits on boss kill, get used to it", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
