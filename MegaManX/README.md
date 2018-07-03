@@ -7,7 +7,7 @@ Auto Splitter for Mega Man X SNES
 
 **Supported emulators:**
  - SNES9x 1.53+ 32 and 64 bit
- - SNES9X 1.56.1 and 1.56.2 32-bit Will NOT currently work (64-bit is fine) -- fix incoming soon!
+ - SNES9X 1.56.1 32-bit Will NOT currently work (64-bit is fine) -- fix incoming soon!
  - Higan v102-106 (untested)
  
 ## Features
