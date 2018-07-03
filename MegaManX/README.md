@@ -6,13 +6,14 @@ Auto Splitter for Mega Man X SNES
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators:**
- - SNES9x 1.56.1 32 and 64 bit
- - SNES9X 1.56.2 Will NOT currently work
+ - SNES9x 1.53+ 32 and 64 bit
+ - SNES9X 1.56.1 and 1.56.2 32-bit Will NOT currently work (64-bit is fine) -- fix incoming soon!
+ - Higan v102-106 (untested)
  
 ## Features
 
 - Automatically start the timer when you start a run. Timer starts after selecting Game Start
-- Automatically split after Highway scene fade and on each Maverick kill in their stage, as well as Sigma 1-4 last bosses. Optional splits for 100% run: Chill Penguin Heart and Hadouken
+- Automatically split after being grabbed on Highway scene OR screen fade and on each Maverick kill in their stage, as well as Sigma 1-4 last bosses. Optional splits for 100% run: Chill Penguin Heart and Hadouken
 
 ## Installation 
 
@@ -45,6 +46,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 ## Thanks
 
 - Thanks to [Square_One_](http://twitch.tv/Square_One_) for moral support and expertise in MMX. 
+- Thanks to [Spiraster](http://twitch.tv/Spiraster) for help with memory stuffs.
 
 ## Contact
 
