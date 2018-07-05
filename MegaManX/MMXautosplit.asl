@@ -7,18 +7,18 @@ state("higan"){}
 startup
 {
 	refreshRate = 60;
-	settings.Add("ongrab", true, "Split on Intro Grab instead of Intro Fade");
-	settings.SetToolTip("ongrab", "Turn off if you want to split on the fade of the intro screen");
+	settings.Add("ongrab", true, "Split on Intro Grab instead of Intro teleport out");
+	settings.SetToolTip("ongrab", "Turn off if you want to split on teleport out of the intro screen");
 	
 	settings.Add("hundosplits", true, "Optional 100% splits");
 	settings.SetToolTip("hundosplits", "Turn off if you don't want to split on these events");
 	settings.Add("chillpenguin", true, "- Chill Penguin Split", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split", "hundosplits");
 	
-	settings.Add("main", true, "Mega Man X AutoSplitter v1.1 by Coltaho");
-	settings.Add("main0", true, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", true, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
-	settings.Add("main2", true, "- Splits on boss kill, get used to it", "main");
+	settings.Add("main", false, "Mega Man X AutoSplitter v1.1 by Coltaho");
+	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
+	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
@@ -99,7 +99,8 @@ init
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0xA8) { Name = "mycontroller" }, //controller input
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F7E) { Name = "myvisits" }, //visits to hadoukun, turns to 133 when you get it
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F9C) { Name = "myhearts" }, //Bitflags for heart tanks collected. Format hgfedcba: a = Penguin b = Armadillo c = Eagle d = Chameleon e = Mammoth f = Kuwanger g = Mandrill h = Octopus
-		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0xC32) { Name = "stance" } //kind of a stance flag? I think i can use it for intro grab (value of 48)
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0xC32) { Name = "stance" }, //kind of a stance flag? I think i can use it for intro grab (value of 48)
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F9B) { Name = "introdone" } //0 if intro is not done, 4 if it is
 	};
 	
 	print("--Setting init variables!--");
@@ -133,7 +134,6 @@ init
 	vars.currentBossName = "";
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
-	vars.introdone = 0;
 }
 
 start { 
@@ -143,7 +143,6 @@ start {
 		vars.currentBossName = "";
 		vars.inBossFight = 0;
 		vars.sigmaFight = 1;
-		vars.introdone = 0;
 		print("--Here we go!--");
 		return true;
 	}
@@ -153,34 +152,20 @@ update {
 	if (version == "None")
 		return false; //doesn't update if no memory found
 	vars.watchers.UpdateAll(game);
-	//print("--MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	print("--Stance: " + vars.watchers["stance"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
 
 split
 {
 	//split after X is grabbed during Intro
-	if (settings["ongrab"] && vars.introdone == 0 && vars.watchers["currentlevel"].Current == 0 && vars.watchers["stance"].Current == 48) {
-		vars.inBossFight = 0;
-		vars.introdone = 1;
+	if (settings["ongrab"] && vars.watchers["currentlevel"].Current == 0 && vars.watchers["stance"].Old == 46 && vars.watchers["stance"].Current == 48) {
 		print("--Yay intro done!--");
 		return true;
 	} else 
-	//split after intro (Zero stops yapping and screen fades to black)	
-	if (vars.introdone == 0 && vars.watchers["currentlevel"].Current == 0) {
-		if (vars.inBossFight == 0) {
-			for (int x = 0; x < 3; x++) {
-				if (vars.enemyids[x].Current == vars.introtext) {
-					print("--Intro Box found in slot: " + x);
-					vars.inBossFight = 1;
-					break;
-				}
-			}
-		} else if (vars.inBossFight == 1 && vars.watchers["fade"].Current <= 2) {
-			vars.inBossFight = 0;
-			vars.introdone = 1;
-			print("--Yay intro done!--");
-			return true;
-		}
+	//split after intro (Zero stops yapping and they teleport out)	
+	if (!settings["ongrab"] && vars.watchers["introdone"].Old == 0 && vars.watchers["introdone"].Current == 4) {
+		print("--Yay intro done!--");
+		return true;
 	}
 	
 	//Iterate through the first 4 enemy objects and see if we are fighting a boss. If they die on their stage then split (so we don't split on refights)
