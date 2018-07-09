@@ -1,4 +1,4 @@
-####SRL Instructions for non-irc folks:
+#### SRL Instructions for non-irc folks:
 
 1. Go to http://www.speedrunslive.com/channel/
 
