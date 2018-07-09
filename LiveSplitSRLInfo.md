@@ -6,7 +6,7 @@
 
 3. Once connected, enter the command: `/nickserv register <password> <e-mail>`
 
--Make sure to replace <password> with the password you want to use, and <e-mail> with your email so you can recover the account if you forget your password
+-Make sure to replace `<password>` with the password you want to use, and `<e-mail>` with your email so you can recover the account if you forget your password
 
 4. Enter the command: `/nickserv identify <password>`
 
