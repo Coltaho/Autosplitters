@@ -6,15 +6,15 @@
 
 3. Once connected, enter the command: `/nickserv register <password> <e-mail>`
 
--Make sure to replace `<password>` with the password you want to use, and `<e-mail>` with your email so you can recover the account if you forget your password
+-Make sure to replace `<password>` with the password you want to use, and `<e-mail>` with your email so you can recover the account if you forget your password. Example: `/nickserv register password123 joe@yahoo.com`
 
 4. Enter the command: `/nickserv identify <password>`
 
--This basically verifies you are who you say you are, which is the nickname you signed up with
+-This basically verifies you are who you say you are, which is the nickname you signed up with. Example: `/nickserve identify password123`
 
 5. Enter the command: `.setstream twitch/<your channel>`
 
--This allows SRL to track when you are online and let people watch you when you race using SRL
+-This allows SRL to track when you are online and let people watch you when you race using SRL. Example: `.setstream twitch/joe_tv`
 
 6. Forget about IRC
 
