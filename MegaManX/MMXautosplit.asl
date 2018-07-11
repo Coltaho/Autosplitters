@@ -7,6 +7,8 @@ state("higan"){}
 startup
 {
 	refreshRate = 60;
+	settings.Add("onding", true, "Split on helmet ding instead of boss kill");
+	settings.SetToolTip("onding", "Turn off if you want to split on boss kill");
 	settings.Add("ongrab", true, "Split on Intro Grab instead of Intro teleport out");
 	settings.SetToolTip("ongrab", "Turn off if you want to split on teleport out of the intro screen");
 	
@@ -18,49 +20,60 @@ startup
 	settings.Add("main", false, "Mega Man X AutoSplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
-	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
 init
 {
 	int memoryOffset = 0;
+	int othermemoryOffset = 0;
 	while (memoryOffset == 0)
 	{
 		switch (modules.First().ModuleMemorySize)
 		{
 			case 5914624: //snes9x (1.53)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x6EFBA4);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x6EFBA4 + 0x18EE10);
 				break;
 			case 6909952: //snes9x (1.53-x64)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x140405EC8);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x140405EC8 + 0x18EE10);
 				break;
 			case 6447104: //snes9x (1.54.1)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x7410D4);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x7410D4 + 0x18EE10);
 				break;
 			case 7946240: //snes9x (1.54.1-x64)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x1404DAF18);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x1404DAF18 + 0x18EE10);
 				break;
 			case 6602752: //snes9x (1.55)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x762874);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x762874 + 0x18EE10);
 				break;
 			case 8355840: //snes9x (1.55-x64)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x1405BFDB8);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x1405BFDB8 + 0x18EE10);
 				break;
 			case 9003008: //snes9x (1.56-x64)
-				memoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4);
+				memoryOffset = memory.ReadValue<int>((IntPtr)0x1405D8C68);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x1405D8C68 + 0x18EE10);
 				break;
 			case 6848512: //snes9x (1.56.1)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4 + 0x18EE10);
 				break;
 			case 8945664: //snes9x (1.56.1-x64)
 				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5C80A8);
+				othermemoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5C80A8 + 0x18EE10);
 				break;
 			case 6856704: //snes9x (1.56.2 and 1.56)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x7832C4);
+				othermemoryOffset = memory.ReadValue<int>((IntPtr)0x7832C4 + 0x18EE10);
 				break;
 			case 9015296: //snes9x (1.56.2-x64)
 				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5D9298);
+				othermemoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5D9298 + 0x18EE10);
 				break;
 			case 12509184: //higan (v102)
 				memoryOffset = 0x915304;
@@ -103,7 +116,8 @@ init
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F7E) { Name = "myvisits" }, //visits to hadoukun, turns to 133 when you get it
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F9C) { Name = "myhearts" }, //Bitflags for heart tanks collected. Format hgfedcba: a = Penguin b = Armadillo c = Eagle d = Chameleon e = Mammoth f = Kuwanger g = Mandrill h = Octopus
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0xC32) { Name = "stance" }, //kind of a stance flag? I think i can use it for intro grab (value of 48)
-		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F9B) { Name = "introdone" } //0 if intro is not done, 4 if it is
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x1F9B) { Name = "introdone" }, //0 if intro is not done, 4 if it is
+		new MemoryWatcher<byte>((IntPtr)othermemoryOffset + 0xF7) { Name = "sfx" } //250 to 45 when helmet dings
 	};
 	
 	print("--Setting init variables!--");
@@ -137,15 +151,17 @@ init
 	vars.currentBossName = "";
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
+	vars.waitforsfx = 0;
 }
 
 start { 
-	if (vars.watchers["fade"].Current == 15 && (vars.watchers["currentlevel"].Current == 35 || vars.watchers["currentlevel"].Current == 3) && vars.watchers["mycontroller"].Old == 0 && vars.watchers["mycontroller"].Current == 16 && vars.watchers["titleselection"].Current == 0 && vars.watchers["myhp"].Current == 30) {
+	if (vars.watchers["sfx"].Current == 4 && vars.watchers["titleselection"].Current == 0 && vars.watchers["myhp"].Current == 30) {
 		print("--Starting, Reset vars!--");
 		vars.currentBossSlot = -1;
 		vars.currentBossName = "";
 		vars.inBossFight = 0;
 		vars.sigmaFight = 1;
+		vars.waitforsfx = 0;
 		print("--Here we go!--");
 		return true;
 	}
@@ -155,7 +171,7 @@ update {
 	if (version == "None")
 		return false; //doesn't update if no memory found
 	vars.watchers.UpdateAll(game);
-	print("--Stance: " + vars.watchers["stance"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	//print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
 
 split
@@ -219,9 +235,17 @@ split
 				print("--Boss killed: " + vars.currentBossName);
 				vars.inBossFight = 0;
 				vars.currentBossName = "";
-				return true;
+				if (!settings["onding"] || vars.sigmaFight == 2) {
+					return true;
+				}
 			}
 		}
+	}
+	
+	//split after we kill a boss and hear helmet ding
+	if (vars.watchers["sfx"].Old == 250 && vars.watchers["sfx"].Current == 45 && vars.currentBossSlot != -1) {
+		print("--After Boss Kill Helmet Ding!--");
+		return true;
 	}
 	
 	//split when chill penguin tank is picked up, bit 0 is this tank
