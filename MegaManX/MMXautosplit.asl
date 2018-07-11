@@ -47,17 +47,20 @@ init
 			case 8355840: //snes9x (1.55-x64)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x1405BFDB8);
 				break;
+			case 9003008: //snes9x (1.56-x64)
+				memoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4);
+				break;
 			case 6848512: //snes9x (1.56.1)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x7811B4);
 				break;
 			case 8945664: //snes9x (1.56.1-x64)
 				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5C80A8);
 				break;
-			case 6856704: //snes9x (1.56.2)
+			case 6856704: //snes9x (1.56.2 and 1.56)
 				memoryOffset = memory.ReadValue<int>((IntPtr)0x7832C4);
 				break;
-			case 9003008: //snes9x (1.56.2-x64)
-				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5D8C68);
+			case 9015296: //snes9x (1.56.2-x64)
+				memoryOffset = memory.ReadValue<int>(modules.First().BaseAddress + 0x5D9298);
 				break;
 			case 12509184: //higan (v102)
 				memoryOffset = 0x915304;
