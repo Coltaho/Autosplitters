@@ -29,10 +29,9 @@ state("nestopia")
 startup
 {
 	settings.Add("onteleport", true, "Split on teleport, instead of on boss kill");
-	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.3 by Coltaho");
+	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.4 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : FCEUX, Netstopia", "main");
-	settings.Add("main2", false, "- Splits on boss kill, get used to it", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
