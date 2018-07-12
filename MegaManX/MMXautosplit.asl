@@ -243,7 +243,7 @@ split
 	}
 	
 	//split after we kill a boss and hear helmet ding
-	if (vars.watchers["sfx"].Old == 250 && vars.watchers["sfx"].Current == 45 && vars.currentBossSlot != -1) {
+	if (settings["onding"] && vars.watchers["sfx"].Old == 250 && vars.watchers["sfx"].Current == 45 && vars.currentBossSlot != -1) {
 		print("--After Boss Kill Helmet Ding!--");
 		return true;
 	}
