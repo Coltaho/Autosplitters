@@ -2,27 +2,40 @@ state("sequence") {}
 
 startup {
 	print("--Starting up!--");
-    vars.scanTarget = new SigScanTarget(0, "B8 AF", String.Join(" ", Enumerable.Repeat("??", 214)), "FF FF FF FF");
+    vars.scanTarget = new SigScanTarget(0, "?? B0 ?? ?? 00 00 00 00 00 00 00 00", String.Join(" ", Enumerable.Repeat("??", 204)), "FF FF FF FF");
+//	AF", String.Join(" ", Enumerable.Repeat("??", 214)), "FF FF FF FF");
 	refreshRate = 60;
 }
 
 init {
     var ptr = IntPtr.Zero;
-	var oldptr = IntPtr.Zero;
+	List<IntPtr> iList = new List<IntPtr>();
+	vars.mypointers = iList;
+	vars.foundsig = false;
+	vars.currentpointer = IntPtr.Zero;
 	print("--init!--");
 	vars.FindOffsets = (Action<Process>)((proc) => 
 		{
 		ptr = IntPtr.Zero;
 		foreach (var page in game.MemoryPages(true)) {
 			var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
-			//print("--baseaddress: " + page.BaseAddress + " regionsize: " + (int)page.RegionSize);
+			//print("--baseaddress: " + page.BaseAddress);
 			if (ptr == IntPtr.Zero) {
 				ptr = scanner.Scan(vars.scanTarget);	
 			} 
 			if (ptr != IntPtr.Zero) {
-				print("--Bingo! Base address: " + (int)page.BaseAddress);
-				oldptr = ptr;
-				break;
+				foreach(IntPtr pointer in vars.mypointers) {
+					if (ptr == pointer) {
+						print("--Already attempted with this pointer: " + ptr);
+						ptr = IntPtr.Zero;
+						break;
+					}
+				}
+				if (ptr != IntPtr.Zero) {
+					print("--Bingo! Base address: " + (int)page.BaseAddress);
+					vars.currentpointer = ptr;
+					break;
+				}
 			}
 		}
 
@@ -57,15 +70,21 @@ init {
 
 update {
     vars.watchers.UpdateAll(game);
-	//print("--scene: " + vars.scenetransition.Current + " myhp: " + vars.myhp.Current + " enemyhp: " + vars.enemyhp.Current + " enemymaxhp: " + vars.enemymaxhp.Current + " maxfloor: " + vars.maxfloor.Current);
-	if (!(vars.maxfloor.Current >= 1 && vars.maxfloor.Current <=7)) {
-		print("--Let's find another offset!");
-		vars.FindOffsets(game);
+	print("--scene: " + vars.scenetransition.Current + " myhp: " + vars.myhp.Current + " enemyhp: " + vars.enemyhp.Current + " enemymaxhp: " + vars.enemymaxhp.Current + " maxfloor: " + vars.maxfloor.Current);
+	if (vars.foundsig == false) {
+		if ((vars.scenetransition.Current == 90 || vars.scenetransition.Current == 60) && vars.maxfloor.Current >= 0 && vars.maxfloor.Current <= 7 && vars.enemyhp.Current == 0 && vars.enemymaxhp.Current == 0) {
+			print("--Signature should be good!");
+			vars.foundsig = true;
+		} else {
+			print("--Let's find another offset!");
+			vars.mypointers.Add(vars.currentpointer);
+			vars.FindOffsets(game);
+		}
 	}
 }
 
 start {
-    return (vars.scenetransition.Current == 90);
+    return (vars.scenetransition.Old == 90 && vars.scenetransition.Current == 240);
 }
 
 split {
