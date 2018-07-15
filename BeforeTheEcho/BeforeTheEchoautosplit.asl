@@ -31,8 +31,8 @@ init {
 					if (ptr == pointer) {
 						//print("--Already attempted with this pointer: " + ptr);
 						ptr = IntPtr.Zero;
-						if (vars.mypointers.Count > 20) {
-							print("--Past 20 pointers found, clearing checked pointers");
+						if (vars.mypointers.Count > 10) {
+							print("--Past 10 pointers found, clearing checked pointers");
 							vars.mypointers.Clear();
 						}
 						break;
