@@ -29,8 +29,11 @@ init {
 			if (ptr != IntPtr.Zero) {
 				foreach(IntPtr pointer in vars.mypointers) {
 					if (ptr == pointer) {
-						print("--Already attempted with this pointer: " + ptr);
+						//print("--Already attempted with this pointer: " + ptr);
 						ptr = IntPtr.Zero;
+						if (vars.mypointers.Count > 20) {
+							vars.mypointers.Clear()
+						}
 						break;
 					}
 				}
