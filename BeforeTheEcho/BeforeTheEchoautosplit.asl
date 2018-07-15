@@ -5,7 +5,7 @@ startup {
     vars.scanTarget = new SigScanTarget(0, "?? B0 ?? ?? 00 00 00 00 00 00 00 00", String.Join(" ", Enumerable.Repeat("??", 204)), "FF FF FF FF");
 //	AF", String.Join(" ", Enumerable.Repeat("??", 214)), "FF FF FF FF");
 	refreshRate = 60;
-	settings.Add("main", false, "Before the Echo Autosplitter v1.1 by Coltaho");
+	settings.Add("main", false, "Before the Echo Autosplitter v1.2 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
