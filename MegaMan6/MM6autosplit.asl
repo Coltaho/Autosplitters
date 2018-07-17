@@ -27,6 +27,7 @@ init
 	vars.splitNumber = 0;
 	vars.iknowimdead = 0;
 	vars.framecounter = 0;
+	vars.bossrushdone = 0;
 }
 
 start {
@@ -37,6 +38,7 @@ start {
 		vars.splitNumber = 0;
 		vars.iknowimdead = 0;
 		vars.framecounter = 0;
+		vars.bossrushdone = 0;
 		print("--Here we go!");
 		return true;
 	}
@@ -92,9 +94,10 @@ split
 				print("--Yay " + vars.currentBossRush + " boss(es) in rush is dead!--");
 			}
 		}
-		if (vars.currentBossRush == 8) {
+		if (vars.currentBossRush == 8 && vars.bossrushdone == 0) {
 			print("--Yay ALL bosses in rush are dead!--");
 			vars.currentBossRush = 0;
+			vars.bossrushdone = 1;
 			return true;
 		}
 	} else if (current.currentstage == 15) {
