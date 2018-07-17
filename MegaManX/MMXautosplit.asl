@@ -17,7 +17,7 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split (on heart pick up)", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split (on helmet ding)", "hundosplits");
 	
-	settings.Add("main", false, "Mega Man X AutoSplitter v1.1 by Coltaho");
+	settings.Add("main", false, "Mega Man X AutoSplitter v1.2 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
