@@ -152,6 +152,7 @@ init
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
 	vars.waitforsfx = 0;
+	vars.hadoget = 0;
 }
 
 start { 
@@ -162,6 +163,7 @@ start {
 		vars.inBossFight = 0;
 		vars.sigmaFight = 1;
 		vars.waitforsfx = 0;
+		vars.hadoget = 0;
 		print("--Here we go!--");
 		return true;
 	}
@@ -254,9 +256,10 @@ split
 		return true;
 	}
 	
-	//split when we get hadouken
-	if (settings["hadouken"] && vars.watchers["myvisits"].Old < 133 && vars.watchers["myvisits"].Current == 133) {
+	//split when we get hadouken and helmet dings
+	if (settings["hadouken"] && vars.hadoget == 0 && vars.watchers["myvisits"].Current == 133 && vars.watchers["sfx"].Current == 45) {
 		print("--Yay HADOUKEN!--");
+		vars.hadoget = 1;
 		return true;
 	}
 	
