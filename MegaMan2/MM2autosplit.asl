@@ -107,7 +107,7 @@ split
 					return true;
 				}
 			}
-		} else if (current.stage == 12 && vars.bossrushdone == 1) {
+		} else if (current.stage == 12) {
 			if (vars.inBossFight == 0) {
 				if (current.bosshp == 28 && old.bosshp == 27) {
 					print("--Starting boss rush boss " + vars.currentBossRush + "!--");
@@ -121,10 +121,9 @@ split
 					print("--Yay " + vars.currentBossRush + " boss(es) in rush is dead!--");
 				}
 			}
-			if (vars.currentBossRush == 10) {
+			if (vars.currentBossRush == 10 && vars.bossrushdone == 0) {
 				print("--Yay ALL bosses in rush are dead!--");
 				vars.bossrushdone = 1;
-				vars.splitNumber++;
 				return true;
 			}
 		} else if (current.stage == 13) {
