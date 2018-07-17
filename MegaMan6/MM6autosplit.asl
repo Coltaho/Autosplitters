@@ -14,7 +14,7 @@ state("fceux")
 
 startup
 {
-	settings.Add("DoesNothing", true, "V1.3 - Splits on boss kill, get used to it. Only works with FCEUX for now!");
+	settings.Add("DoesNothing", true, "V1.4 - Splits on boss kill, get used to it. Only works with FCEUX for now!");
 	settings.SetToolTip("DoesNothing", "Pretty cool though, right?");
 }
 
