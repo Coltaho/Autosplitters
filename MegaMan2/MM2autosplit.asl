@@ -29,7 +29,7 @@ state("nestopia")
 startup
 {
 	settings.Add("onteleport", true, "Split on teleport, instead of on boss kill");
-	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.4 by Coltaho");
+	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.5 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : FCEUX, Netstopia", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
@@ -44,6 +44,7 @@ init
 	vars.splitNumber = 0;
 	vars.iknowimdead = 0;
 	vars.framecounter = 0;
+	vars.bossrushdone = 0;
 }
 
 start {
@@ -54,6 +55,7 @@ start {
 		vars.splitNumber = 0;
 		vars.iknowimdead = 0;
 		vars.framecounter = 0;
+		vars.bossrushdone = 0;
 		print("--Here we go!");
 		return true;
 	}
@@ -105,7 +107,7 @@ split
 					return true;
 				}
 			}
-		} else if (current.stage == 12) {
+		} else if (current.stage == 12 && vars.bossrushdone == 1) {
 			if (vars.inBossFight == 0) {
 				if (current.bosshp == 28 && old.bosshp == 27) {
 					print("--Starting boss rush boss " + vars.currentBossRush + "!--");
@@ -121,6 +123,7 @@ split
 			}
 			if (vars.currentBossRush == 10) {
 				print("--Yay ALL bosses in rush are dead!--");
+				vars.bossrushdone = 1;
 				vars.splitNumber++;
 				return true;
 			}
