@@ -171,7 +171,7 @@ start {
 
 update {
 	if (version == "None") {
-		print("--No valid emulator found!");
+		//print("--No valid emulator found!");
 		return false; //doesn't update if no memory found
 	}
 	vars.watchers.UpdateAll(game);
