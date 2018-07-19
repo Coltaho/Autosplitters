@@ -170,8 +170,10 @@ start {
 }
 
 update {
-	if (version == "None")
+	if (version == "None") {
+		print("--No valid emulator found!");
 		return false; //doesn't update if no memory found
+	}
 	vars.watchers.UpdateAll(game);
 	//print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
