@@ -20,7 +20,7 @@ startup
 	
 	settings.Add("main", false, "Mega Man X AutoSplitter v1.3 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan, Snes9X 1.53+ 32 and 64 bit", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.53+ 32 and 64 bit", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 	
 	
@@ -84,9 +84,11 @@ startup
 			break;
 		case 16756736: //higan (v105tr1)
 			vars.memoryOffset = 0x94F144;
+			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		case 16019456: //higan (v106)
-			vars.memoryOffset = 0x94D144;
+			vars.memoryOffset = (IntPtr)0x94D144;
+			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		default:
 			vars.memoryOffset = IntPtr.Zero;
@@ -180,7 +182,7 @@ update {
 	if (vars.stopwatch.ElapsedMilliseconds > 1500)
     {
         vars.dostuff(game, modules.First().ModuleMemorySize);
-		print("--Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
+		print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
         if (vars.memoryOffset != IntPtr.Zero && vars.othermemoryOffset != IntPtr.Zero)
         {
 			print("--Found offsets!");
