@@ -73,15 +73,15 @@ startup
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D9298);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407680A8);  //all of these seem to be first mem  + 0x18EE10 for 64 bit
 			break;
-		case 12509184: //higan (v102)
-			vars.memoryOffset = 0x915304;
-			break;
-		case 13062144: //higan (v103)
-			vars.memoryOffset = 0x937324;
-			break;
-		case 15859712: //higan (v104)
-			vars.memoryOffset = 0x952144;
-			break;
+		// case 12509184: //higan (v102)
+			// vars.memoryOffset = 0x915304;
+			// break;
+		// case 13062144: //higan (v103)
+			// vars.memoryOffset = 0x937324;
+			// break;
+		// case 15859712: //higan (v104)
+			// vars.memoryOffset = 0x952144;
+			// break;
 		case 16756736: //higan (v105tr1)
 			vars.memoryOffset = 0x94F144;
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
@@ -265,6 +265,7 @@ split
 				print("--Boss killed: " + vars.currentBossName);
 				vars.inBossFight = 0;
 				vars.currentBossName = "";
+				//split on boss kill if onding is true, OR always if we killed final sigma
 				if (!settings["onding"] || vars.sigmaFight == 2) {
 					return true;
 				}
