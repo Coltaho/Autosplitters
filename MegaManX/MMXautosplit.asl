@@ -31,47 +31,47 @@ startup
 	{
 		case 5914624: //snes9x (1.53)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBA4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBA4 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBB4) + 0x2140 - 0xF7;
 			break;
 		case 6909952: //snes9x (1.53-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140405EC8);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140405EC8 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140594CD8);
 			break;
 		case 6447104: //snes9x (1.54.1)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410D4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410D4 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410E4)+ 0x2140 - 0xF7;
 			break;
 		case 7946240: //snes9x (1.54.1-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140669D28);
 			break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x97046C);
 			break;
 		case 8355840: //snes9x (1.55-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405BFDB8);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405BFDB8 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x14074D188);
 			break;
 		case 9003008: //snes9x (1.56-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D8C68);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D8C68 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140765EC8);
 			break;
 		case 6848512: //snes9x (1.56.1)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7811B4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7811B4 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92523C);
 			break;
 		case 8945664: //snes9x (1.56.1-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405C80A8);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405C80A8 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140756EB8);
 			break;
 		case 6856704: //snes9x (1.56.2 and 1.56)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7832C4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7832C4 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92734C);
 			break;
 		case 9015296: //snes9x (1.56.2-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D9298);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D9298 + 0x18EE10);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407680A8);  //all of these seem to be first mem  + 0x18EE10 for 64 bit
 			break;
 		case 12509184: //higan (v102)
 			vars.memoryOffset = 0x915304;
@@ -198,7 +198,8 @@ update {
         return false;
 	
 	vars.watchers.UpdateAll(game);
-	print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
+	//print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
 
 split
