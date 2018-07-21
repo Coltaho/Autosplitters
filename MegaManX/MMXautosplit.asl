@@ -174,24 +174,24 @@ update {
 	if (vars.stopwatch.ElapsedMilliseconds > 1500)
     {
         vars.dostuff(game, modules.First().ModuleMemorySize);
-		print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
+	//print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
         if (vars.memoryOffset != IntPtr.Zero && vars.othermemoryOffset != IntPtr.Zero)
         {
-			print("--Found offsets!");
+	    print("--Found offsets!");
             vars.watchers = vars.GetWatcherList(vars.memoryOffset, vars.othermemoryOffset);
-			vars.enemyids[0] = vars.watchers["enemyid"];
-			vars.enemyids[1] = vars.watchers["enemyid2"];
-			vars.enemyids[2] = vars.watchers["enemyid3"];
-			vars.enemyids[3] = vars.watchers["enemyid4"];
-			vars.enemyhps[0] = vars.watchers["enemyhp"];
-			vars.enemyhps[1] = vars.watchers["enemyhp2"];
-			vars.enemyhps[2] = vars.watchers["enemyhp3"];
-			vars.enemyhps[3] = vars.watchers["enemyhp4"];
+	    vars.enemyids[0] = vars.watchers["enemyid"];
+	    vars.enemyids[1] = vars.watchers["enemyid2"];
+	    vars.enemyids[2] = vars.watchers["enemyid3"];
+	    vars.enemyids[3] = vars.watchers["enemyid4"];
+	    vars.enemyhps[0] = vars.watchers["enemyhp"];
+	    vars.enemyhps[1] = vars.watchers["enemyhp2"];
+	    vars.enemyhps[2] = vars.watchers["enemyhp3"];
+	    vars.enemyhps[3] = vars.watchers["enemyhp4"];
             vars.stopwatch.Reset();
         }
         else
         {
-			print("--Still looking for offsets... Next check in 1.5 seconds...");
+	    print("--Still looking for offsets... Next check in 1.5 seconds...");
             vars.stopwatch.Restart();
             return false;
         }
