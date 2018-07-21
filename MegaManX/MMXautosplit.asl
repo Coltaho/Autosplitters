@@ -18,7 +18,7 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split (on heart pick up)", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split (on helmet ding)", "hundosplits");
 	
-	settings.Add("main", false, "Mega Man X AutoSplitter v1.3 by Coltaho");
+	settings.Add("main", false, "Mega Man X AutoSplitter v1.4 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.53+ 32 and 64 bit", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
@@ -120,14 +120,6 @@ startup
 			new MemoryWatcher<byte>(memoryOffset + 0x1F9B) { Name = "introdone" }, //0 if intro is not done, 4 if it is
 			new MemoryWatcher<byte>(othermemoryOffset + 0xF7) { Name = "sfx" } //250 to 45 when helmet dings       
 		};
-			vars.enemyids[0] = vars.watchers["enemyid"];
-			vars.enemyids[1] = vars.watchers["enemyid2"];
-			vars.enemyids[2] = vars.watchers["enemyid3"];
-			vars.enemyids[3] = vars.watchers["enemyid4"];
-			vars.enemyhps[0] = vars.watchers["enemyhp"];
-			vars.enemyhps[1] = vars.watchers["enemyhp2"];
-			vars.enemyhps[2] = vars.watchers["enemyhp3"];
-			vars.enemyhps[3] = vars.watchers["enemyhp4"];
 	});
 }
 
@@ -187,6 +179,14 @@ update {
         {
 			print("--Found offsets!");
             vars.watchers = vars.GetWatcherList(vars.memoryOffset, vars.othermemoryOffset);
+			vars.enemyids[0] = vars.watchers["enemyid"];
+			vars.enemyids[1] = vars.watchers["enemyid2"];
+			vars.enemyids[2] = vars.watchers["enemyid3"];
+			vars.enemyids[3] = vars.watchers["enemyid4"];
+			vars.enemyhps[0] = vars.watchers["enemyhp"];
+			vars.enemyhps[1] = vars.watchers["enemyhp2"];
+			vars.enemyhps[2] = vars.watchers["enemyhp3"];
+			vars.enemyhps[3] = vars.watchers["enemyhp4"];
             vars.stopwatch.Reset();
         }
         else
@@ -200,8 +200,8 @@ update {
         return false;
 	
 	vars.watchers.UpdateAll(game);
-	print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
-	//print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Combat: " + vars.inBossFight + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	//print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
+	print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " level: " + vars.watchers["currentlevel"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
 
 split
