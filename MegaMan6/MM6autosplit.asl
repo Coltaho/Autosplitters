@@ -1,6 +1,6 @@
 //Made by Coltaho 6/1/2018
 //Splits on boss kill, assumes boss rush is 1 split
-//Version 1.3
+//Version 1.5
 
 state("fceux")
 {
@@ -14,7 +14,7 @@ state("fceux")
 
 startup
 {
-	settings.Add("DoesNothing", true, "V1.4 - Splits on boss kill, get used to it. Only works with FCEUX for now!");
+	settings.Add("DoesNothing", true, "V1.5 - Splits on boss kill, get used to it. Only works with FCEUX for now!");
 	settings.SetToolTip("DoesNothing", "Pretty cool though, right?");
 }
 
