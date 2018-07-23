@@ -102,7 +102,7 @@ split
 		}
 	} else if (current.currentstage == 15) {
 		if (vars.inBossFight == 0) {
-			if ((current.bosshp == 27 && old.bosshp == 26) || (vars.currentBossRush == 2 && current.bosshp == 0 && old.bosshp == 255)) {
+			if ((current.bosshp == 22 && old.bosshp == 21) || (vars.currentBossRush == 2 && current.bosshp == 0 && old.bosshp == 255)) {
 				if (vars.currentBossRush == 0) {
 					print("--Starting LAST boss phase 1 of 3!--");
 				} else {
