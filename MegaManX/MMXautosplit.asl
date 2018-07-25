@@ -18,9 +18,9 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split (on heart pick up)", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split (on helmet ding)", "hundosplits");
 	
-	settings.Add("main", false, "Mega Man X AutoSplitter v1.4 by Coltaho");
+	settings.Add("main", false, "Mega Man X AutoSplitter v1.5 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.53+ 32 and 64 bit", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 	
 	
@@ -29,22 +29,22 @@ startup
 	vars.othermemoryOffset = IntPtr.Zero;
 	switch (mymodulesize)
 	{
-		case 5914624: //snes9x (1.53)
-			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBA4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBB4) + 0x2140 - 0xF7;
-			break;
-		case 6909952: //snes9x (1.53-x64)
-			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140405EC8);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140594CD8);
-			break;
-		case 6447104: //snes9x (1.54.1)
-			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410D4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410E4)+ 0x2140 - 0xF7;
-			break;
-		case 7946240: //snes9x (1.54.1-x64)
-			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140669D28);
-			break;
+		// case 5914624: //snes9x (1.53)
+			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBA4);
+			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBB4) + 0x2140 - 0xF7;
+			// break;
+		// case 6909952: //snes9x (1.53-x64)
+			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140405EC8);
+			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140594CD8);
+			// break;
+		// case 6447104: //snes9x (1.54.1)
+			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410D4);
+			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410E4)+ 0x2140 - 0xF7;
+			// break;
+		// case 7946240: //snes9x (1.54.1-x64)
+			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18);
+			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140669D28);
+			// break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x97046C);
@@ -174,24 +174,24 @@ update {
 	if (vars.stopwatch.ElapsedMilliseconds > 1500)
     {
         vars.dostuff(game, modules.First().ModuleMemorySize);
-	//print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
+		print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
         if (vars.memoryOffset != IntPtr.Zero && vars.othermemoryOffset != IntPtr.Zero)
         {
-	    print("--Found offsets!");
+			print("--Found offsets!");
             vars.watchers = vars.GetWatcherList(vars.memoryOffset, vars.othermemoryOffset);
-	    vars.enemyids[0] = vars.watchers["enemyid"];
-	    vars.enemyids[1] = vars.watchers["enemyid2"];
-	    vars.enemyids[2] = vars.watchers["enemyid3"];
-	    vars.enemyids[3] = vars.watchers["enemyid4"];
-	    vars.enemyhps[0] = vars.watchers["enemyhp"];
-	    vars.enemyhps[1] = vars.watchers["enemyhp2"];
-	    vars.enemyhps[2] = vars.watchers["enemyhp3"];
-	    vars.enemyhps[3] = vars.watchers["enemyhp4"];
+			vars.enemyids[0] = vars.watchers["enemyid"];
+			vars.enemyids[1] = vars.watchers["enemyid2"];
+			vars.enemyids[2] = vars.watchers["enemyid3"];
+			vars.enemyids[3] = vars.watchers["enemyid4"];
+			vars.enemyhps[0] = vars.watchers["enemyhp"];
+			vars.enemyhps[1] = vars.watchers["enemyhp2"];
+			vars.enemyhps[2] = vars.watchers["enemyhp3"];
+			vars.enemyhps[3] = vars.watchers["enemyhp4"];
             vars.stopwatch.Reset();
         }
         else
         {
-	    print("--Still looking for offsets... Next check in 1.5 seconds...");
+			print("--Still looking for offsets... Next check in 1.5 seconds...");
             vars.stopwatch.Restart();
             return false;
         }
