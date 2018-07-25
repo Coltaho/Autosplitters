@@ -6,8 +6,10 @@ Auto Splitter for Mega Man X SNES
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators:**
- - SNES9x 1.53+ 32 and 64 bit
+ - SNES9x 1.55+ 32 and 64 bit
  - Higan v105 and 106 (untested)
+ 
+ Note that if you use an old version like 1.53, start and intro grab splits will work, but anything on helmet ding will NOT.
  
 ## Features
 
