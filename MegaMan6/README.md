@@ -12,7 +12,9 @@ Auto Splitter for Mega Man 6 NES
 ## Features
 
 - Automatically start the timer when you start a run. Timer starts after selecting the difficulty
-- Automatically split when a boss dies (except for boss rush where it splits at the end, and after Wily phase 3)
+- Automatically split when a boss dies (except for boss rush where it splits after teleport out, and after Wily phase 3)
+
+-Optional to split on the 8th robo refight kill instead of teleport to Wily 4 (used to default to this, no longer does)
 
 ## Installation 
 
@@ -45,6 +47,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 ## Thanks
 
 - Thanks to [Resistingframe](http://twitch.tv/Resistingframe) for testing.
+- Thanks to [Kammesennin](http://twitch.tv/Kammesennin) for testing and feedback.
 
 ## Contact
 
