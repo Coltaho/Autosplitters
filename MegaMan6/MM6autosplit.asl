@@ -10,10 +10,15 @@ state("fceux")
 	byte currentstage : 0x3B1388, 0x51;
 	byte currentscreen : 0x3B1388, 0x92;
 	byte mycontroller : 0x3B1388, 0x40;
+	byte mymenuselection : 0x3B1388, 0x5B1;
+	byte mysound : 0x3B1388, 0x702; //current/last played sound
 }
 
 startup
 {
+	settings.Add("robotele", true, "Split on teleport out instead of 8th robo kill during boss rush");
+	settings.SetToolTip("robotele", "Turn off if you want to split when the 8th robo is killed in refights");
+	
 	settings.Add("DoesNothing", true, "V1.5 - Splits on boss kill, get used to it. Only works with FCEUX for now!");
 	settings.SetToolTip("DoesNothing", "Pretty cool though, right?");
 }
@@ -31,7 +36,7 @@ init
 }
 
 start {
-	if (old.currentscreen == 163 && current.currentscreen == 163 && old.mycontroller == 0 && current.mycontroller == 16) {
+	if (current.mymenuselection == 0 && current.currentscreen == 163 && current.mysound == 63) {
 		print("--Starting, Reset vars!--");
 		vars.inBossFight = 0;
 		vars.currentBossRush = 0;
@@ -46,7 +51,6 @@ start {
 
 update { 
 	print("-- myhealth: " + current.myhp + " --Current bosshp: " + current.bosshp + " --Current boss rush: " + vars.currentBossRush + " --Current split: " + vars.splitNumber + " --Current boss fight status: " + vars.inBossFight);
-	//print("--info: " + current.bosshp);
 }
 
 split
@@ -80,7 +84,7 @@ split
 				return true;
 			}
 		}
-	} else if (current.currentstage == 14) {
+	} else if (current.currentstage == 14 && !settings["robotele"]) {
 		if (vars.inBossFight == 0) {
 			if (current.bosshp == 27 && old.bosshp == 26) {
 				print("--Starting boss rush boss " + (vars.currentBossRush + 1) + "!--");
@@ -123,6 +127,9 @@ split
 			print("--Yay LAST boss is dead! You Win!--");
 			return true;
 		}
+	}
+	if (settings["robotele"] && old.currentstage == 14 && current.currentstage == 15) {
+		return true;
 	}
 	return;
 }
