@@ -1,4 +1,4 @@
-## Mega Man X Autosplitter
+## Mega Man X2 Autosplitter
  
 Auto Splitter for Mega Man X2 SNES
 
