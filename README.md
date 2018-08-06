@@ -6,4 +6,5 @@
 ### Mega Man X
 
 ## Beta:
+### Mega Man X2
 ### Before the Echo
