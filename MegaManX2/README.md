@@ -13,6 +13,7 @@ Auto Splitter for Mega Man X2 SNES
 
 - Automatically start the timer when you start a run. Timer starts after selecting Game Start
 - Automatically split either on helmet ding or teleport out as applicable
+- Optionally you can split instead on boss kill hit, however for the X-Hunters it will be delayed until they start exploding
 
 ## Installation 
 
