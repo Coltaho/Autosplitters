@@ -8,6 +8,9 @@ startup
 {
 	vars.stopwatch = new Stopwatch();
 	refreshRate = 60;		
+	
+	settings.Add("onding", true, "Split on helmet ding instead of boss kill");
+	settings.SetToolTip("onding", "Turn off if you want to split on boss kill - Except for X-Hunters who talk before blowing up");
 
 	settings.Add("main", false, "Mega Man X2 AutoSplitter v1.0 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
@@ -240,6 +243,8 @@ split
 			print("--Boss killed: " + vars.currentBossName);
 			//split if we just killed sigma final
 			if (vars.currentBossName == "sigmafinal") {
+				vars.inBossFight = 0;
+				vars.currentBossName = "";
 				return true;
 			}
 			vars.inBossFight = 0;
@@ -254,8 +259,14 @@ split
 	}
 	
 	//split after we kill a boss and hear teleport out
-	if ((vars.watchers["sfx"].Old == 3 || vars.watchers["sfx"].Old == 250) && (vars.watchers["sfx"].Current == 17 || vars.watchers["sfx"].Current == 29) && vars.currentBossSlot != -1) {
+	if (settings["onding"] && (vars.watchers["sfx"].Old == 3 || vars.watchers["sfx"].Old == 250) && (vars.watchers["sfx"].Current == 17 || vars.watchers["sfx"].Current == 29) && vars.currentBossSlot != -1) {
 		print("--After Boss Kill Teleport!--");
+		return true;
+	}
+	
+	//split after we kill a boss and hear first explosion
+	if (!settings["onding"] && vars.watchers["sfx"].Old != 17 && vars.watchers["sfx"].Old != 254 && vars.watchers["sfx"].Old != 246 && vars.watchers["sfx"].Current == 246 && vars.currentBossSlot != -1 && vars.currentBossName != "") {
+		print("--After Boss Kill Explosion!--");
 		return true;
 	}
 	
