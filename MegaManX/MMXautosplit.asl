@@ -45,6 +45,10 @@ startup
 			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18);
 			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140669D28);
 			// break;
+		case 7729152 : //snes9x (1.54 RR/COOP)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x890F0C);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xA4FFD0);
+			break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x97046C);
