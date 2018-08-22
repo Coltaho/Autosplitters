@@ -48,6 +48,7 @@ startup
 		case 7729152 : //snes9x (1.54 RR/COOP)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x890F0C);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xA4FFD0);
+			vars.coop = true;
 			break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
@@ -159,6 +160,7 @@ init
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
 	vars.hadoget = 0;
+	vars.coop = false;
 }
 
 start { 
@@ -277,10 +279,12 @@ split
 		}
 	}
 	
-	//split after we kill a boss and hear helmet ding
-	if (settings["onding"] && vars.watchers["sfx"].Old == 250 && vars.watchers["sfx"].Current == 45 && vars.currentBossSlot != -1) {
-		print("--After Boss Kill Helmet Ding!--");
-		return true;
+	if (!vars.coop) {
+		//split after we kill a boss and hear helmet ding
+		if (settings["onding"] && vars.watchers["sfx"].Old == 250 && vars.watchers["sfx"].Current == 45 && vars.currentBossSlot != -1) {
+			print("--After Boss Kill Helmet Ding!--");
+			return true;
+		}
 	}
 	
 	//split when chill penguin tank is picked up, bit 0 is this tank
