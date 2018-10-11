@@ -27,7 +27,6 @@ init {
 	} else {
 		print("--Found Mega Man 11");
 		refreshRate = 60;
-		vars.ydteleport = 11500;
 	}
 }
 
