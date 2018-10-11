@@ -63,8 +63,8 @@ split {
 	}
 	
 	//split if stopwatch is ready
-	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > 15500)
-	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 11500)) {
+	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > 11500) //11.5 if killed small, 15.5 if killed big
+	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 11750)) {
 		vars.stopwatch.Reset();
 		return true;
 	}
