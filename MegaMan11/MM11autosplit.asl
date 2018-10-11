@@ -59,7 +59,7 @@ split {
 		//if on teleport, start a stopwatch	
 		if (settings["onteleport"]) {
 			vars.stopwatch.Restart();
-			if (current.wilystage == 1 && current.ydform == 34) {
+			if (current.wilystage == 1 && old.ydform == 34) {
 				vars.ydteleport = 11500;
 			}
 			else {
