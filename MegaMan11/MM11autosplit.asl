@@ -32,7 +32,7 @@ init {
 }
 
 update {
-	print("--Health: " + vars.stopwatch.ElapsedMilliseconds + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Form: " + current.ydform + " | YD Tele: " + vars.ydteleport);
+	print("--Health: " + vars.stopwatch.ElapsedMilliseconds + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Form: " + old.ydform + " | YD Tele: " + vars.ydteleport);
 	
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
