@@ -63,7 +63,8 @@ split {
 	}
 	
 	//split if stopwatch is ready
-	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage > 0 && vars.stopwatch.ElapsedMilliseconds > 15500)) {
+	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > 15500)
+	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 10000)) {
 		vars.stopwatch.Reset();
 		return true;
 	}
