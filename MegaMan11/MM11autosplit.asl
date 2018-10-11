@@ -4,6 +4,7 @@ state("game") {
 	int wilystage : 0xC3F6C0, 0x3B48; //Wily stage select
 	int bosshp : 0xB87660, 0x120, 0x4628; //Boss health (56 or 28 depending on difficulty)
 	int enemyid : 0xC3EF58, 0x230, 0x1840;  //Enemy ID? (can be shared with other enemies)
+	int ydform : 0xC3EF58, 0x230, 0x187C;  //Yellow Devil form indicator?
 	int selectedindex : 0xC3EF58, 0x358, 0x4688; //Currently selected index on main menu
 	int selecteddifficulty : 0xC3EF58, 0x358, 0x4684; //Selected difficulty on main menu
 }
@@ -26,6 +27,7 @@ init {
 	} else {
 		print("--Found Mega Man 11");
 		refreshRate = 60;
+		vars.ydteleport = 11500
 	}
 }
 
@@ -57,13 +59,17 @@ split {
 		//if on teleport, start a stopwatch	
 		if (settings["onteleport"]) {
 			vars.stopwatch.Restart();
+			if (current.wilystage == 1 && current.ydform == 34)
+				vars.ydteleport = 11500;
+			else
+				vars.ydteleport = 15500;
 		} else {
 			return true;
 		}
 	}
 	
 	//split if stopwatch is ready
-	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > 11500) //11.5 if killed small, 15.5 if killed big
+	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > vars.ydteleport) //11.5 if killed small, 15.5 if killed big
 	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 11750)) {
 		vars.stopwatch.Reset();
 		return true;
