@@ -13,6 +13,7 @@ startup {
 	vars.stopwatch = new Stopwatch();
 	refreshRate = 1;
 	settings.Add("onteleport", true, "Split on teleport instead of on kill");
+	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
 	
 	settings.Add("main", false, "MM11 Autosplitter v1.0 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
