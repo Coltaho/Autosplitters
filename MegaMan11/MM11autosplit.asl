@@ -15,7 +15,7 @@ startup {
 	settings.Add("onteleport", true, "Split on teleport instead of on kill");
 	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
 	
-	settings.Add("main", false, "MM11 Autosplitter v1.0 by Coltaho");
+	settings.Add("main", false, "MM11 Autosplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
@@ -54,7 +54,7 @@ split {
 		return true;
 	//split on boss kill hit unless on refights
 	if (current.wilystage < 3 && current.myhp > 0 && current.bosshp <= 0 && old.bosshp > 0) {
-		//if on teleport, add 16.5 seconds by starting a stopwatch	
+		//if on teleport, start a stopwatch	
 		if (settings["onteleport"]) {
 			vars.stopwatch.Restart();
 		} else {
@@ -63,7 +63,7 @@ split {
 	}
 	
 	//split if stopwatch is ready
-	if (vars.stopwatch.ElapsedMilliseconds > 16500) {
+	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage > 0 && vars.stopwatch.ElapsedMilliseconds > 15500)) {
 		vars.stopwatch.Reset();
 		return true;
 	}
