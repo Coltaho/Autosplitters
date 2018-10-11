@@ -16,7 +16,7 @@ startup {
 	settings.Add("onteleport", true, "Split on teleport instead of on kill");
 	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
 	
-	settings.Add("main", false, "MM11 Autosplitter v1.1 by Coltaho");
+	settings.Add("main", false, "MM11 Autosplitter v1.2 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
