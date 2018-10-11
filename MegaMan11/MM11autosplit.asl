@@ -10,10 +10,12 @@ state("game") {
 
 startup {
 	print("--Starting up!--");
+	vars.stopwatch = new Stopwatch();
 	refreshRate = 1;
-	settings.Add("main", true, "MM11 Autosplitter v1.0 by Coltaho");
-	settings.Add("main0", true, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", true, "Currently can only split on boss kill! Resets timer when selecting start.", "main");
+	settings.Add("onteleport", true, "Split on teleport instead of on kill");
+	
+	settings.Add("main", false, "MM11 Autosplitter v1.0 by Coltaho");
+	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
@@ -27,7 +29,7 @@ init {
 }
 
 update {
-	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid);
+	print("--Health: " + vars.stopwatch.ElapsedMilliseconds + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid);
 	
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
@@ -46,8 +48,22 @@ reset {
 }
 
 split {	
-	if (current.wilystage < 3 && current.myhp > 0 && current.bosshp <= 0 && old.bosshp > 0)
-		return true;
+	//Split on last boss kill hit
 	if (current.wilystage == 4 && current.enemyid == 5 && current.myhp > 0 && current.bosshp <= 0 && old.bosshp > 0)
 		return true;
+	//split on boss kill hit unless on refights
+	if (current.wilystage < 3 && current.myhp > 0 && current.bosshp <= 0 && old.bosshp > 0) {
+		//if on teleport, add 16.5 seconds by starting a stopwatch	
+		if (settings["onteleport"]) {
+			vars.stopwatch.Restart();
+		} else {
+			return true;
+		}
+	}
+	
+	//split if stopwatch is ready
+	if (vars.stopwatch.ElapsedMilliseconds > 16500) {
+		vars.stopwatch.Reset();
+		return true;
+	}
 }
