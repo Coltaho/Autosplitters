@@ -7,6 +7,7 @@ Auto Splitter for Mega Man 11 (PC)
 
 ## Features
 
+*Currently does NOT split for Wily 3 (refights)* Work in progress
 - Automatically start the timer when you start a run. Timer starts after selecting a difficulty
 - Automatically split either on boss kill OR 16.5 seconds later on teleport (currently not exact)
 - Automatically reset when "START" is selected on the main menu if the timer is already running
