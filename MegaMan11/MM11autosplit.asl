@@ -7,6 +7,7 @@ state("game") {
 	int ydform : 0xC3EF58, 0x230, 0x187C;  //Yellow Devil form indicator?
 	int selectedindex : 0xC3EF58, 0x358, 0x4688; //Currently selected index on main menu
 	int selecteddifficulty : 0xC3EF58, 0x358, 0x4684; //Selected difficulty on main menu
+	int igt : 0xC3F6C0, 0x3888; //frame counter starts slightly after difficulty select, resets on main menu
 }
 
 startup {
@@ -17,7 +18,7 @@ startup {
 	settings.Add("blank", true, "---");
 	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
 	
-	settings.Add("main", false, "MM11 Autosplitter v1.4 by Coltaho");
+	settings.Add("main", false, "MM11 Autosplitter v1.5 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
@@ -33,7 +34,7 @@ init {
 }
 
 update {
-	print("--Health: " + vars.stopwatch.ElapsedMilliseconds + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Form: " + old.ydform + " | YD Tele: " + vars.ydteleport);
+	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | IGT: " + current.igt + " | Room: N/A");
 	
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
@@ -44,11 +45,11 @@ update {
 }
 
 start {
-	return (current.stage == 0 && old.stage == 4);
+	return (current.igt == 0 && current.stage == 0 && old.stage == 4);
 }
 
 reset {
-	return (current.selectedindex == 1 && old.selectedindex == 0 && current.selecteddifficulty == 2);
+	return (current.igt == 0 && old.igt > 0);
 }
 
 split {	
