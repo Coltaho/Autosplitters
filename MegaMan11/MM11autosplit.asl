@@ -8,6 +8,9 @@ state("game") {
 	int selectedindex : 0xC3EF58, 0x358, 0x4688; //Currently selected index on main menu
 	int selecteddifficulty : 0xC3EF58, 0x358, 0x4684; //Selected difficulty on main menu
 	int igt : 0xC3F6C0, 0x3888; //frame counter starts slightly after difficulty select, resets on main menu
+	int roomid : 0xB87F60, 0x78C; //Room ID
+	int xpos : 0xC3EF58, 0x1D0, 0x1878; // X Pos
+	int ypos : 0xC3EF58, 0x1D0, 0x187C; // Y Pos
 }
 
 startup {
@@ -28,14 +31,36 @@ init {
 		throw new Exception("--This isn't Mega Man 11!");
 	} else {
 		print("--Found Mega Man 11");
-		refreshRate = 60;
+		refreshRate = 70;
 		vars.ydteleport = 15500;
+		vars.lastroomtime = 0;
+		vars.currentroomtime = 0;
+		vars.roomstart = 0;
+		vars.formattedigt = "";
+		vars.formattedcurrentroomtime = "";
+		vars.formattedlastroomtime = "";
 	}
 }
 
 update {
-	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | IGT: " + current.igt + " | Room: N/A");
-	
+	if (current.igt != 0) {
+		if (current.roomid != old.roomid) {
+			vars.lastroomtime = current.igt - vars.roomstart;
+			vars.roomstart = current.igt;
+		}
+		vars.currentroomtime = current.igt - vars.roomstart;
+		vars.formattedigt = "(H:M:S:Frames) " + (current.igt / 60 / 60 / 60 % 60) + ":" + (current.igt / 60 / 60 % 60).ToString("D2") + ":" + (current.igt / 60 % 60).ToString("D2") + ":" + (current.igt % 60).ToString("D2");
+		vars.formattedcurrentroomtime = (vars.currentroomtime / 60 / 60).ToString("D2") + ":" + (vars.currentroomtime / 60 % 60).ToString("D2") + ":" + (vars.currentroomtime % 60).ToString("D2");
+		vars.formattedlastroomtime = (vars.lastroomtime / 60 / 60).ToString("D2") + ":" + (vars.lastroomtime / 60 % 60).ToString("D2") + ":" + (vars.lastroomtime % 60).ToString("D2");
+	} else {
+		vars.currentroomtime = 0;
+		vars.lastroomtime = 0;
+		vars.roomstart = 0;
+		vars.formattedigt = "IGT Not Started";
+		vars.formattedcurrentroomtime = "IGT Not Started";
+	}
+	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos);
+		
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
 		
