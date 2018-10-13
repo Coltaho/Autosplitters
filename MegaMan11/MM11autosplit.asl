@@ -21,7 +21,7 @@ startup {
 	settings.Add("blank", true, "---");
 	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
 	
-	settings.Add("main", false, "MM11 Autosplitter v1.5 by Coltaho");
+	settings.Add("main", false, "MM11 Autosplitter v1.6 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
