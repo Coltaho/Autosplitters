@@ -19,7 +19,7 @@ startup {
 	refreshRate = 1;
 	settings.Add("onteleport", true, "Split on teleport instead of on kill");
 	settings.Add("blank", true, "---");
-	settings.Add("info", true, "Currently does NOT split for Wily 3 (refights) Work in progress");
+	settings.Add("info", true, "Now splits on capsule teleport out of Wily 3 (refights)!");
 	
 	settings.Add("main", false, "MM11 Autosplitter v1.6 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
@@ -39,6 +39,7 @@ init {
 		vars.formattedigt = "";
 		vars.formattedcurrentroomtime = "";
 		vars.formattedlastroomtime = "";
+		vars.refightkills = 0;
 	}
 }
 
@@ -59,7 +60,17 @@ update {
 		vars.formattedigt = "IGT Not Started";
 		vars.formattedcurrentroomtime = "IGT Not Started";
 	}
-	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos);
+	
+	//If we kill a boss on a refight, increment refight counter
+	if (current.wilystage == 3 && current.myhp > 0 && current.bosshp <= 0 && old.bosshp > 0) {
+		vars.refightkills++;
+	}
+	
+	//If we left wily 3 or gameovered, reset refight kills to 0
+	if (current.wilystage == 3 && current.xpos == 0 && current.ypos == 0) {
+		vars.refightkills = 0;
+	}
+	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Refight Kills: " + vars.refightkills);
 		
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
@@ -97,9 +108,16 @@ split {
 		}
 	}
 	
+	//Split if we are standing on final capsule after 8 robos are killed
+	if (vars.refightkills == 8 && current.xpos == 74 && current.ypos == 58) {
+		vars.refightkills = 0;
+		vars.stopwatch.Restart();
+		return true;
+	}
+	
 	//split if stopwatch is ready
 	if ((current.wilystage == 0 && vars.stopwatch.ElapsedMilliseconds > 16500) || (current.wilystage == 1 && vars.stopwatch.ElapsedMilliseconds > vars.ydteleport) //11.5 if killed small, 15.5 if killed big
-	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 11750)) {
+	 || (current.wilystage == 2 && vars.stopwatch.ElapsedMilliseconds > 11750) || (current.wilystage == 3 && vars.stopwatch.ElapsedMilliseconds > 250)) {
 		vars.stopwatch.Reset();
 		return true;
 	}
