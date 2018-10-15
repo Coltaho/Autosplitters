@@ -18,11 +18,10 @@ startup {
 	vars.stopwatch = new Stopwatch();
 	refreshRate = 1;
 	settings.Add("onteleport", true, "Split on teleport instead of on kill");
-	settings.Add("blank", true, "---");
-	settings.Add("info", true, "Now splits on capsule teleport out of Wily 3 (refights)!");
-	
-	settings.Add("main", false, "MM11 Autosplitter v1.6 by Coltaho");
-	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
+	settings.Add("blank", true, "---Just Info Below--");
+	settings.Add("info", false, "MM11 Autosplitter v1.6 by Coltaho");
+	settings.Add("info0", true, "Now splits on capsule teleport out of Wily 3 (refights)!", info);
+	settings.Add("info1", false, "- Website : https://github.com/Coltaho/Autosplitters", "info");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
