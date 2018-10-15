@@ -22,7 +22,7 @@ startup {
 	settings.Add("info", false, "MM11 Autosplitter v1.6 by Coltaho");
 	settings.Add("info0", false, "Now splits on capsule teleport out of Wily 3 (refights)!", "info");
 	settings.Add("info1", false, "- Website : https://github.com/Coltaho/Autosplitters", "info");
-	settings.SetToolTip("main", "Pretty cool, right?");
+	settings.SetToolTip("info", "Pretty cool, right?");
 }
 
 init {
