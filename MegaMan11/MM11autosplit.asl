@@ -22,9 +22,10 @@ startup {
 	settings.Add("options", true, "---Options---");
 	settings.Add("onteleport", true, "Split on teleport instead of on kill", "options");
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "MM11 Autosplitter v1.7 by Coltaho", "infosection");
+	settings.Add("info", true, "MM11 Autosplitter v1.8 by Coltaho", "infosection");
 	settings.Add("info0", true, "Now splits on capsule teleport out of Wily 3 (refights)!", "infosection");
-	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("info1", true, "Fixed occasional starting timer on game exit!", "infosection");
+	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
 
 init {
