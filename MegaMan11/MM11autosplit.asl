@@ -7,6 +7,7 @@ state("game") {
 	int ydform : 0xC3EF58, 0x230, 0x187C;  //Yellow Devil form indicator?
 	int selectedindex : 0xC3EF58, 0x358, 0x4688; //Currently selected index on main menu
 	int selecteddifficulty : 0xC3EF58, 0x358, 0x4684; //Selected difficulty on main menu
+	int currentdifficulty : 0xC3F6C0, 0x388C; //Actual difficulty being played. This is always 2 on the main menu
 	int igt : 0xC3F6C0, 0x3888; //frame counter starts slightly after difficulty select, resets on main menu
 	int roomid : 0xB87F60, 0x78C; //Room ID
 	int xpos : 0xC3EF58, 0x1D0, 0x1878; // X Pos
@@ -60,7 +61,7 @@ update {
 		vars.formattedcurrentroomtime = "IGT Not Started";
 	}
 
-	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Refight Kill Flags: " + current.refights);
+	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Difficulty: " + current.currentdifficulty + " | IGT: " + current.igt);
 		
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
@@ -71,7 +72,7 @@ update {
 }
 
 start {
-	return (current.igt == 0 && current.stage == 0 && old.stage == 4);
+	return (current.currentdifficulty == 2 && current.igt == 0 && current.stage == 0 && old.stage == 4);
 }
 
 reset {
