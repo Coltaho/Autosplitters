@@ -1,0 +1,2 @@
+$ cat .gitattributes
+*.asl linguist-language=csharp
