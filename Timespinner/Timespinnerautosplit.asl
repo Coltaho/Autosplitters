@@ -67,10 +67,10 @@ init {
         var splits = new Dictionary<string, bool>
         {
             { "bird", vars.Current("enemy1id", 48) && vars.Killed() },
-	    	{ "robokitty", vars.Current("enemy1id", 49) && vars.Killed() },
+			{ "robokitty", vars.Current("enemy1id", 49) && vars.Killed() },
             { "varndagroth", vars.Current("enemy1id", 50) && vars.Killed() },
             { "aelana", vars.Current("enemy1id", 51) && vars.Killed() },
-	    	{ "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
+			{ "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
             { "maw", vars.Current("enemy1id", 53) && vars.Killed() },
             { "genza", vars.Current("enemy1id", 54) && vars.Killed() },
             { "emporor", vars.Current("enemy1id", 55) && vars.Killed() },
