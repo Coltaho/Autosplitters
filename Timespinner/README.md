@@ -10,8 +10,8 @@ Auto Splitter for Timespinner (PC)
 - Automatically split on boss kill (Select which in Settings)
 
 --TODO--
-Start and Reset timer options
-More split options such as room transitions
+- Start and Reset timer options
+- More split options such as room transitions
 
 ## Installation 
 
