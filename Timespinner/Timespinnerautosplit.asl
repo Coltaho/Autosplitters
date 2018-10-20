@@ -22,7 +22,7 @@ startup {
 	
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Timespinner Autosplitter v1.0 by Coltaho", "infosection");
-  settings.Add("info0", true, "Currently only splits on bosses (no start)", "infosection");
+  	settings.Add("info0", true, "Currently only splits on bosses (no start)", "infosection");
 	settings.Add("info1", true, "Supports Timespinner v1.022", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
