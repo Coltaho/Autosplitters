@@ -34,12 +34,12 @@ init {
     IntPtr ptr = IntPtr.Zero;
     foreach (var page in game.MemoryPages()) {
     	var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
-	ptr = scanner.Scan(vars.scanTarget);
-	var c = (int)ptr & 0x0000000F;
-	if (ptr != IntPtr.Zero && c == 12) {
-	    vars.voxelse = (int)ptr - (int)game.Modules[0].BaseAddress;
-	    break;
-	}
+		ptr = scanner.Scan(vars.scanTarget);
+		var c = (int)ptr & 0x0000000F;
+		if (ptr != IntPtr.Zero && c == 12) {
+	    	vars.voxelse = (int)ptr - (int)game.Modules[0].BaseAddress;
+	    	break;
+		}
     }
 	
     if (ptr == IntPtr.Zero)
@@ -67,10 +67,10 @@ init {
         var splits = new Dictionary<string, bool>
         {
             { "bird", vars.Current("enemy1id", 48) && vars.Killed() },
-	    { "robokitty", vars.Current("enemy1id", 49) && vars.Killed() },
+	    	{ "robokitty", vars.Current("enemy1id", 49) && vars.Killed() },
             { "varndagroth", vars.Current("enemy1id", 50) && vars.Killed() },
             { "aelana", vars.Current("enemy1id", 51) && vars.Killed() },
-	    { "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
+	    	{ "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
             { "maw", vars.Current("enemy1id", 53) && vars.Killed() },
             { "genza", vars.Current("enemy1id", 54) && vars.Killed() },
             { "emporor", vars.Current("enemy1id", 55) && vars.Killed() },
