@@ -66,7 +66,7 @@ init {
 	if (ptr == IntPtr.Zero)
 		throw new Exception("--Couldn't find what I want! Game is still starting or an update broke things!");
 	
-    print("--Base Pointer Address: " + ((int)ptr).ToString("X") + " | First module base: " + ((int)game.Modules[0].BaseAddress).ToString("X"));
+	print("--Base Pointer Address: " + ((int)ptr).ToString("X") + " | First module base: " + ((int)game.Modules[0].BaseAddress).ToString("X"));
 	
 	vars.watchers = new MemoryWatcherList();
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x26C)) { Name = "enemy1hp" });
@@ -82,39 +82,39 @@ init {
 
 	
 	vars.Current = (Func<string, int, bool>)((name, value) =>
-    {
-        return vars.watchers[name].Current == value;
-    });
+	{
+		return vars.watchers[name].Current == value;
+	});
 	
 	vars.Obtained = (Func<string, bool>)((value) =>
-    {
-        return vars.watchers["toast"].Changed && vars.watchers["toast"].Current == value;
-    });
+	{
+		return vars.watchers["toast"].Changed && vars.watchers["toast"].Current == value;
+	});
 	
 	vars.Killed = (Func<bool>)(() =>
-    {
-        return vars.watchers["enemy1dead"].Old == false && vars.watchers["enemy1dead"].Current == true;
-    });
+	{
+		return vars.watchers["enemy1dead"].Old == false && vars.watchers["enemy1dead"].Current == true;
+	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
-    {
-        var splits = new Dictionary<string, bool>
-        {
+	{
+		var splits = new Dictionary<string, bool>
+		{
 			//Bosses
-            { "bird", vars.Current("enemy1id", 48) && vars.Killed() },
+			{ "bird", vars.Current("enemy1id", 48) && vars.Killed() },
 			{ "robokitty", vars.Current("enemy1id", 49) && vars.Killed() },
-            { "varndagroth", vars.Current("enemy1id", 50) && vars.Killed() },
-            { "aelana", vars.Current("enemy1id", 51) && vars.Killed() },
+			{ "varndagroth", vars.Current("enemy1id", 50) && vars.Killed() },
+			{ "aelana", vars.Current("enemy1id", 51) && vars.Killed() },
 			{ "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
-            { "maw", vars.Current("enemy1id", 53) && vars.Killed() },
-            { "genza", vars.Current("enemy1id", 54) && vars.Killed() },
-            { "emporor", vars.Current("enemy1id", 55) && vars.Killed() },
-            { "sandman", vars.Current("enemy1id", 56) && vars.Killed() },
-            { "nightmare", vars.Current("enemy1id", 57) && vars.Killed() },
-            { "raven", vars.Current("enemy1id", 58) && vars.Killed() },
-            { "xarion", vars.Current("enemy1id", 59) && vars.Killed() },
-            { "zel", vars.Current("enemy1id", 60) && vars.Killed() },
-            { "cantoran", vars.Current("enemy1id", 61) && vars.Killed() },
+			{ "maw", vars.Current("enemy1id", 53) && vars.Killed() },
+			{ "genza", vars.Current("enemy1id", 54) && vars.Killed() },
+			{ "emporor", vars.Current("enemy1id", 55) && vars.Killed() },
+			{ "sandman", vars.Current("enemy1id", 56) && vars.Killed() },
+			{ "nightmare", vars.Current("enemy1id", 57) && vars.Killed() },
+			{ "raven", vars.Current("enemy1id", 58) && vars.Killed() },
+			{ "xarion", vars.Current("enemy1id", 59) && vars.Killed() },
+			{ "zel", vars.Current("enemy1id", 60) && vars.Killed() },
+			{ "cantoran", vars.Current("enemy1id", 61) && vars.Killed() },
 			
 			//Relics
 			{ "wheel", vars.Obtained("Timespinner Wheel") },
@@ -138,9 +138,9 @@ init {
 			{ "gear3", vars.Obtained("Timespinner Gear 3") },
 			{ "sash", vars.Obtained("Celestial Sash") },
 			
-        };
+		};
 		return splits;
-    });
+	});
 
 	refreshRate = 60;
 }
@@ -160,14 +160,14 @@ reset {
 
 split {	
 
-    var splits = vars.GetSplitList();
+	var splits = vars.GetSplitList();
 
-    foreach (var split in splits)
-    {
-        if (settings[split.Key] && split.Value)
-        {
-            print("--[Autosplitter] Split: " + split.Key);
-            return true;
-        }
-    }
+	foreach (var split in splits)
+	{
+		if (settings[split.Key] && split.Value)
+		{
+			print("--[Autosplitter] Split: " + split.Key);
+			return true;
+		}
+	}
 }
