@@ -88,7 +88,7 @@ init {
 	
 	vars.Obtained = (Func<string, bool>)((value) =>
     {
-        return vars.watchers["toast"].Old != vars.watchers["toast"].Current && vars.watchers["toast"].Current == value;
+        return vars.watchers["toast"].Changed && vars.watchers["toast"].Current == value;
     });
 	
 	vars.Killed = (Func<bool>)(() =>
