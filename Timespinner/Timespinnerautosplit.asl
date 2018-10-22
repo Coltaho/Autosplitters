@@ -27,26 +27,35 @@ startup {
 	settings.Add("elevatorcard", false, "Elevator Keycard", "relics");
 	settings.Add("spindle", false, "Timespinner Spindle", "relics");
 	settings.Add("pyramidkey", false, "Twin Pyramid Key", "relics");
-	settings.Add("doublejump", false, "Succubus Hairpin", "relics");
+	settings.Add("doublejump", false, "Succubus Hairpin (Double Jump)", "relics");
 	settings.Add("jewelrybox", false, "Jewelry Box", "relics");
 	settings.Add("watermask", false, "Water Mask", "relics");
 	settings.Add("gasmask", false, "Gas Mask", "relics");
 	settings.Add("dash", false, "Talaria Attachment (Dash)", "relics");
+	settings.Add("sash", false, "Celestial Sash", "relics");
 	settings.Add("carda", false, "Security Card A", "relics");
 	settings.Add("cardb", false, "Security Card B", "relics");
 	settings.Add("cardc", false, "Security Card C", "relics");
 	settings.Add("cardd", false, "Security Card D", "relics");
 	settings.Add("cardv", false, "Library Card V", "relics");
-	settings.Add("gear1", false, "Timespinner Gear 1", "relics");
-	settings.Add("gear2", false, "Timespinner Gear 2", "relics");
-	settings.Add("gear3", false, "Timespinner Gear 3", "relics");
-	settings.Add("sash", false, "Celestial Sash", "relics");
+	settings.Add("gear1", false, "Timespinner Gear 1 (Lab)", "relics");
+	settings.Add("gear2", false, "Timespinner Gear 2 (Military Hangar)", "relics");
+	settings.Add("gear3", false, "Timespinner Gear 3 (Sealed Caves)", "relics");
+	
+	settings.Add("location", true, "---Location Based Events---");
+	settings.Add("firstpast", false, "First Past Transition", "location");
+	settings.Add("anyend", true, "Any % End", "location");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Timespinner Autosplitter v1.1 by Coltaho", "infosection");
+	settings.Add("info", true, "Timespinner Autosplitter v1.2 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Timespinner v1.022", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
+	vars.timer_OnStart = (EventHandler)((s, e) =>
+    {
+        vars.itemwatchers.ResetAll();
+    });
+    timer.OnStart += vars.timer_OnStart;
 }
 
 init {
@@ -69,16 +78,22 @@ init {
 	print("--Base Pointer Address: " + ((int)ptr).ToString("X") + " | First module base: " + ((int)game.Modules[0].BaseAddress).ToString("X"));
 	
 	vars.watchers = new MemoryWatcherList();
+	vars.itemwatchers = new MemoryWatcherList();
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x26C)) { Name = "enemy1hp" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x2D8)) { Name = "enemy1id" });
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x363)) { Name = "enemy1dead" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0xE4)) { Name = "era" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0xE8)) { Name = "levelid" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x11C)) { Name = "roomid" });
-	vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x68, 0x4, 0x8), 40) { Name = "toast" });
+	//vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x68, 0x4, 0x8), 256) { Name = "toast" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x0, 0x4)) { Name = "screen0" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x0, 0x4)) { Name = "screen1" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x10, 0x0, 0x4)) { Name = "screen2" });
+	vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x70, 0x4, 0x8), 256) { Name = "dialogue" });
+	for (int i = 0; i <= 16; i++) {
+		var itemoffset = 0x8 + i * 0x10;
+		vars.itemwatchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x78, 0x28, 0x24, 0x4, 0x8, itemoffset, 0x4, 0x8), 256) { Name = "item" + i.ToString() });
+	}
 
 	
 	vars.Current = (Func<string, int, bool>)((name, value) =>
@@ -88,12 +103,27 @@ init {
 	
 	vars.Obtained = (Func<string, bool>)((value) =>
 	{
-		return vars.watchers["toast"].Changed && vars.watchers["toast"].Current == value;
+		for (int i = 0; i <= 16; i++) {
+			var name = "item" + i.ToString();
+			if (vars.itemwatchers[name].Old != value && vars.itemwatchers[name].Current == value)
+				return true;
+		}
+		return false;
 	});
 	
 	vars.Killed = (Func<bool>)(() =>
 	{
 		return vars.watchers["enemy1dead"].Old == false && vars.watchers["enemy1dead"].Current == true;
+	});
+	
+	vars.Transitioned = (Func<string, int, int, bool>)((name, prev, value) =>
+	{
+		return vars.watchers[name].Old == prev && vars.watchers[name].Current == value;
+	});
+	
+	vars.StringContains = (Func<string, string, bool>)((name, value) =>
+	{
+		return !vars.watchers[name].Old.ToString().Contains(value) && vars.watchers[name].Current.ToString().Contains(value);
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -138,20 +168,35 @@ init {
 			{ "gear3", vars.Obtained("Timespinner Gear 3") },
 			{ "sash", vars.Obtained("Celestial Sash") },
 			
+			//Location Change Events
+			{ "firstpast", vars.Transitioned("roomid", 40, 28) },
+			{ "anyend", vars.StringContains("dialogue", "No. I'll stay here") || vars.StringContains("dialogue", "Yes... With most of my clan gone") },
+			
 		};
 		return splits;
 	});
 
 	refreshRate = 60;
+	vars.newgameplus = false;
+	vars.lastsplit = "";
 }
 
 update {
 	vars.watchers.UpdateAll(game);
-	print("--Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current);
+	vars.itemwatchers.UpdateAll(game);
+	print("--Last Split: " + vars.lastsplit + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
 }
 
 start {
-	return ((vars.watchers["screen1"].Current == 300 && vars.watchers["screen1"].Old == 312) || (vars.watchers["screen2"].Current == 300 && vars.watchers["screen2"].Old == 312));
+	if(vars.Transitioned("screen1", 300, 312)) {
+		vars.newgameplus = true;
+		return true;
+	}
+	if(vars.Transitioned("screen2", 300, 312)) {
+		vars.newgameplus = false;
+		return true;
+	}
+	return (false);
 }
 
 reset {
@@ -164,10 +209,17 @@ split {
 
 	foreach (var split in splits)
 	{
-		if (settings[split.Key] && split.Value)
+		if (vars.newgameplus && (split.Key == "soulscanner" || split.Key == "jewelrybox" || split.Key == "dash")) {
+			//don't do anything
+		} else if (settings[split.Key] && split.Value)
 		{
+			vars.lastsplit = split.Key;
 			print("--[Autosplitter] Split: " + split.Key);
 			return true;
 		}
 	}
+}
+
+shutdown {
+	timer.OnStart -= vars.timer_OnStart;
 }
