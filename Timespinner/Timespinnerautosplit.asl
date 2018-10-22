@@ -59,26 +59,32 @@ startup {
 }
 
 init {
-	vars.scanTarget = new SigScanTarget(0, "3C 01 ", String.Join(" ", Enumerable.Repeat("??", 129)), " 80");
+	vars.scanTarget = new SigScanTarget(288, "5B 00 53 00 74 00 65 00 61 00 6D 00 77 00 6F 00 72 00 6B 00 73 00 2E 00 4E 00 45 00 54 00 5D");
 
 	IntPtr ptr = IntPtr.Zero;
 	foreach (var page in game.MemoryPages()) {
 		var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
-		ptr = scanner.Scan(vars.scanTarget);
-		var c = (int)ptr & 0x0000000F;
-		if (ptr != IntPtr.Zero && (c == 4 || c == 8 || c == 12)) {
+		ptr = scanner.Scan(vars.scanTarget);		
+		if (ptr != IntPtr.Zero) {
 			vars.voxelse = (int)ptr - (int)game.Modules[0].BaseAddress;
 			break;
 		}
 	}
 	
 	if (ptr == IntPtr.Zero)
-		throw new Exception("--Couldn't find what I want! Game is still starting or an update broke things!");
+		throw new Exception("--Couldn't find a pointer I want! Game is still starting or an update broke things!");
 	
 	print("--Base Pointer Address: " + ((int)ptr).ToString("X") + " | First module base: " + ((int)game.Modules[0].BaseAddress).ToString("X"));
 	
 	vars.watchers = new MemoryWatcherList();
 	vars.itemwatchers = new MemoryWatcherList();
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x0, 0x4)) { Name = "screen0" });
+	vars.watchers.UpdateAll(game);
+	//Ensure we have a valid pointer by checking if screen0 isn't 0
+	if (vars.watchers["screen0"].Current == 0 || vars.watchers["screen0"].Current == 100)
+		throw new Exception("--Pointer doesn't look right! Game is still starting or an update broke things!");
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x0, 0x4)) { Name = "screen1" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x10, 0x0, 0x4)) { Name = "screen2" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x26C)) { Name = "enemy1hp" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x2D8)) { Name = "enemy1id" });
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x363)) { Name = "enemy1dead" });
@@ -86,9 +92,6 @@ init {
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0xE8)) { Name = "levelid" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x11C)) { Name = "roomid" });
 	//vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x68, 0x4, 0x8), 256) { Name = "toast" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x0, 0x4)) { Name = "screen0" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x0, 0x4)) { Name = "screen1" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x10, 0x0, 0x4)) { Name = "screen2" });
 	vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x70, 0x4, 0x8), 256) { Name = "dialogue" });
 	for (int i = 0; i <= 16; i++) {
 		var itemoffset = 0x8 + i * 0x10;
@@ -188,7 +191,7 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 	vars.itemwatchers.UpdateAll(game);
-	print("--Last Split: " + vars.lastsplit + " | Split Hash Count: " + vars.pastSplits.Count + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Screen2: " + vars.watchers["screen2"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
+	print("--Last Split: " + vars.lastsplit + " | Split Hash Count: " + vars.pastSplits.Count + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen0: " + vars.watchers["screen0"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
 }
 
 start {
