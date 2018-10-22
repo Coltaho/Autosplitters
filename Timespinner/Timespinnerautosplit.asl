@@ -57,7 +57,7 @@ init {
 		var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
 		ptr = scanner.Scan(vars.scanTarget);
 		var c = (int)ptr & 0x0000000F;
-		if (ptr != IntPtr.Zero && (c == 12 || c == 4 || c == 8 || c == 0)) {
+		if (ptr != IntPtr.Zero && (c == 12 || c == 4 || c == 8)) {
 			vars.voxelse = (int)ptr - (int)game.Modules[0].BaseAddress;
 			break;
 		}
