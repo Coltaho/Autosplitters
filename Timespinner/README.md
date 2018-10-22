@@ -7,11 +7,9 @@ Auto Splitter for Timespinner (PC)
 
 ## Features
 
+- Automatically start the timer when selecting a difficulty in Newgame or Newgame+
 - Automatically split on boss kill (Select which in Settings)
-
---TODO--
-- Start and Reset timer options
-- More split options such as room transitions
+- Automatically reset the timer when back at the main menu
 
 ## Installation 
 
