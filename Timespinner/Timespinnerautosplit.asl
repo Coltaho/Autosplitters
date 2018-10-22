@@ -47,7 +47,7 @@ startup {
 	settings.Add("anyend", true, "Any % End", "location");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Timespinner Autosplitter v1.3 by Coltaho", "infosection");
+	settings.Add("info", true, "Timespinner Autosplitter v1.4 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Timespinner v1.022", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
