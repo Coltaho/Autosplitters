@@ -12,7 +12,7 @@ startup {
 	settings.Add("aelana", true, "Aelana", "bosses");
 	settings.Add("maw", true, "Maw Gateway", "bosses");
 	settings.Add("genza", true, "Shapeshifter Genza", "bosses");
-	settings.Add("emporor", true, "Emporor", "bosses");
+	settings.Add("emperor", true, "Emperor", "bosses");
 	settings.Add("sandman", false, "Sandman", "bosses");
 	settings.Add("nightmare", true, "Nightmare", "bosses");
 	settings.Add("raven", false, "Raven Flock", "bosses");
@@ -47,7 +47,7 @@ startup {
 	settings.Add("anyend", true, "Any % End", "location");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Timespinner Autosplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info", true, "Timespinner Autosplitter v1.3 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Timespinner v1.022", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -138,7 +138,7 @@ init {
 			{ "incubus", vars.Current("enemy1id", 52) && vars.Killed() },
 			{ "maw", vars.Current("enemy1id", 53) && vars.Killed() },
 			{ "genza", vars.Current("enemy1id", 54) && vars.Killed() },
-			{ "emporor", vars.Current("enemy1id", 55) && vars.Killed() },
+			{ "emperor", vars.Current("enemy1id", 55) && vars.Killed() },
 			{ "sandman", vars.Current("enemy1id", 56) && vars.Killed() },
 			{ "nightmare", vars.Current("enemy1id", 57) && vars.Killed() },
 			{ "raven", vars.Current("enemy1id", 58) && vars.Killed() },
@@ -179,12 +179,16 @@ init {
 	refreshRate = 60;
 	vars.newgameplus = false;
 	vars.lastsplit = "";
+	vars.pastSplits = new HashSet<string>();
 }
 
 update {
+	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0)
+		vars.pastSplits.Clear();
+	
 	vars.watchers.UpdateAll(game);
 	vars.itemwatchers.UpdateAll(game);
-	print("--Last Split: " + vars.lastsplit + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Screen2: " + vars.watchers["screen2"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
+	print("--Last Split: " + vars.lastsplit + " | Split Hash Count: " + vars.pastSplits.Count + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Screen2: " + vars.watchers["screen2"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
 }
 
 start {
@@ -211,8 +215,9 @@ split {
 	{
 		if (vars.newgameplus && (split.Key == "soulscanner" || split.Key == "jewelrybox" || split.Key == "dash")) {
 			//don't do anything
-		} else if (settings[split.Key] && split.Value)
+		} else if (settings[split.Key] && split.Value && !vars.pastSplits.Contains(split.Key))
 		{
+			vars.pastSplits.Add(split.Key);
 			vars.lastsplit = split.Key;
 			print("--[Autosplitter] Split: " + split.Key);
 			return true;
