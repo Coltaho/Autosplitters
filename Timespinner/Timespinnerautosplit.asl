@@ -184,15 +184,15 @@ init {
 update {
 	vars.watchers.UpdateAll(game);
 	vars.itemwatchers.UpdateAll(game);
-	print("--Last Split: " + vars.lastsplit + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
+	print("--Last Split: " + vars.lastsplit + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Screen2: " + vars.watchers["screen2"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
 }
 
 start {
-	if(vars.Transitioned("screen1", 300, 312)) {
+	if(vars.Transitioned("screen1", 312, 300)) {
 		vars.newgameplus = true;
 		return true;
 	}
-	if(vars.Transitioned("screen2", 300, 312)) {
+	if(vars.Transitioned("screen2", 312, 300)) {
 		vars.newgameplus = false;
 		return true;
 	}
