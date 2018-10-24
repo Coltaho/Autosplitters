@@ -7,7 +7,6 @@ Auto Splitter for Mega Man X SNES
 
 **Supported emulators:**
  - SNES9x 1.55+ 32 and 64 bit
- - SNES9x 1.54 RR (COOP EMU)
  - Higan v105 and 106 (untested)
  
  Note that support for older versions is disabled!
