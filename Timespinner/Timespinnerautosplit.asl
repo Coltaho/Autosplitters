@@ -126,7 +126,10 @@ init {
 	
 	vars.StringContains = (Func<string, string, bool>)((name, value) =>
 	{
-		return !vars.watchers[name].Old.ToString().Contains(value) && vars.watchers[name].Current.ToString().Contains(value);
+		if (vars.watchers[name].Old != null && vars.watchers[name].Current != null)
+			return !vars.watchers[name].Old.ToString().Contains(value) && vars.watchers[name].Current.ToString().Contains(value);
+		else 
+			return false;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -189,9 +192,13 @@ update {
 	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0)
 		vars.pastSplits.Clear();
 	
+	string myspastsplits = "";
+	foreach (var split in vars.pastSplits) {
+		myspastsplits += split + ", ";
+	}
 	vars.watchers.UpdateAll(game);
 	vars.itemwatchers.UpdateAll(game);
-	print("--Last Split: " + vars.lastsplit + " | Split Hash Count: " + vars.pastSplits.Count + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen0: " + vars.watchers["screen0"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Dialogue: " + vars.watchers["dialogue"].Current);
+	print("--Last Split: " + vars.lastsplit + " | Enemy Killed: " + vars.Killed() + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen0: " + vars.watchers["screen0"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Pastsplits: " + myspastsplits);
 }
 
 start {
