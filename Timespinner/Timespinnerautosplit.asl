@@ -47,8 +47,8 @@ startup {
 	settings.Add("anyend", true, "Any % End", "location");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Timespinner Autosplitter v1.4 by Coltaho", "infosection");
-	settings.Add("info0", true, "Supports Timespinner v1.022", "infosection");
+	settings.Add("info", true, "Timespinner Autosplitter v1.5 by Coltaho", "infosection");
+	settings.Add("info0", true, "Supports Timespinner v1.025", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
 	vars.timer_OnStart = (EventHandler)((s, e) =>
@@ -85,14 +85,13 @@ init {
 		throw new Exception("--Pointer doesn't look right! Game is still starting or an update broke things!");
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x0, 0x4)) { Name = "screen1" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x10, 0x0, 0x4)) { Name = "screen2" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x26C)) { Name = "enemy1hp" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x2D8)) { Name = "enemy1id" });
-	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x54, 0x8, 0x8, 0x363)) { Name = "enemy1dead" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0xE4)) { Name = "era" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0xE8)) { Name = "levelid" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x54, 0x11C)) { Name = "roomid" });
-	//vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0xC, 0x68, 0x4, 0x8), 256) { Name = "toast" });
-	vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x70, 0x4, 0x8), 256) { Name = "dialogue" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0x54, 0x8, 0x8, 0x26C)) { Name = "enemy1hp" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0x54, 0x8, 0x8, 0x2D8)) { Name = "enemy1id" });
+	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0x54, 0x8, 0x8, 0x363)) { Name = "enemy1dead" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0xE4)) { Name = "era" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0xE8)) { Name = "levelid" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x50, 0x11C)) { Name = "roomid" });
+	vars.watchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x6C, 0x4, 0x8), 256) { Name = "dialogue" });
 	for (int i = 0; i <= 16; i++) {
 		var itemoffset = 0x8 + i * 0x10;
 		vars.itemwatchers.Add(new StringWatcher(new DeepPointer((vars.voxelse + 0x78), 0x34, 0x4, 0x8, 0x78, 0x28, 0x24, 0x4, 0x8, itemoffset, 0x4, 0x8), 256) { Name = "item" + i.ToString() });
@@ -198,7 +197,7 @@ update {
 	}
 	vars.watchers.UpdateAll(game);
 	vars.itemwatchers.UpdateAll(game);
-	print("--Last Split: " + vars.lastsplit + " | Enemy Killed: " + vars.Killed() + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen0: " + vars.watchers["screen0"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Pastsplits: " + myspastsplits);
+	print("--Last Split: " + vars.lastsplit + " | Enemy Killed: " + vars.Killed() + " | Era: " + vars.watchers["era"].Current + " | LevelID: " + vars.watchers["levelid"].Current + " | RoomID: " + vars.watchers["roomid"].Current + " | Screen0: " + vars.watchers["screen0"].Current + " | Screen1: " + vars.watchers["screen1"].Current + " | Item0: " + vars.itemwatchers["item0"].Current);
 }
 
 start {
