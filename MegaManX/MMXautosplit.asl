@@ -18,10 +18,10 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split (on heart pick up)", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split (on helmet ding)", "hundosplits");
 	
-	settings.Add("main", false, "Mega Man X AutoSplitter v1.5 by Coltaho");
-	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "main");
-	settings.SetToolTip("main", "Pretty cool, right?");
+	settings.Add("infosection", true, "---Info---");
+	settings.Add("info", true, "Mega Man X AutoSplitter v1.5 by Coltaho", "infosection");
+	settings.Add("info0", true, "- Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "infosection");
+	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
 	
 	vars.dostuff = (Action<Process, int>)((proc, mymodulesize) => {
@@ -29,22 +29,6 @@ startup
 	vars.othermemoryOffset = IntPtr.Zero;
 	switch (mymodulesize)
 	{
-		// case 5914624: //snes9x (1.53)
-			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBA4);
-			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x6EFBB4) + 0x2140 - 0xF7;
-			// break;
-		// case 6909952: //snes9x (1.53-x64)
-			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140405EC8);
-			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140594CD8);
-			// break;
-		// case 6447104: //snes9x (1.54.1)
-			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410D4);
-			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7410E4)+ 0x2140 - 0xF7;
-			// break;
-		// case 7946240: //snes9x (1.54.1-x64)
-			// vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1404DAF18);
-			// vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140669D28);
-			// break;
 		case 7729152 : //snes9x (1.54 RR/COOP)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x890F0C);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xA4FFD0);
@@ -76,17 +60,16 @@ startup
 			break;
 		case 9015296: //snes9x (1.56.2-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405D9298);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407680A8);  //all of these seem to be first mem  + 0x18EE10 for 64 bit
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407680A8);
 			break;
-		// case 12509184: //higan (v102)
-			// vars.memoryOffset = 0x915304;
-			// break;
-		// case 13062144: //higan (v103)
-			// vars.memoryOffset = 0x937324;
-			// break;
-		// case 15859712: //higan (v104)
-			// vars.memoryOffset = 0x952144;
-			// break;
+		case 6991872: //snes9x (1.57)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7A6EE4);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92A26C);
+			break;
+		case 9048064: //snes9x (1.57-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405ACC58);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140751F98);
+			break;
 		case 16756736: //higan (v105tr1)
 			vars.memoryOffset = 0x94F144;
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
