@@ -89,7 +89,7 @@ startup
 			new MemoryWatcher<byte>(memoryOffset + 0x1FB3) { Name = "mylives" }, //current lives
 			new MemoryWatcher<byte>(memoryOffset + 0x3C) { Name = "titleselection" }, //what cursor is on during title screen
 			new MemoryWatcher<byte>(memoryOffset + 0x1FAD) { Name = "currentlevel" }, //current stage
-			new MemoryWatcher<byte>(othermemoryOffset + vars.sfxoffset) { Name = "sfx" } //3 to 17 when teleporting       
+			new MemoryWatcher<byte>(othermemoryOffset + 0xF7) { Name = "sfx" } //3 to 17 when teleporting       
 		};
 	});
 }
