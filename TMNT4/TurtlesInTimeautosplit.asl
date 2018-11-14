@@ -52,7 +52,7 @@ init
 		case 6991872: //snes9x (1.57)
 			ptr = (IntPtr)game.ReadValue<int>((IntPtr)0x7A6EE4);
 			break;
-		case 9015296: //snes9x (1.57-x64)
+		case 9048064: //snes9x (1.57-x64)
 			ptr = (IntPtr)game.ReadValue<int>((IntPtr)0x1405ACC58);
 			break;
 		case 16756736: //higan (v105tr1)
