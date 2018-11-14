@@ -21,7 +21,6 @@ startup
 	vars.dostuff = (Action<Process, int>)((proc, mymodulesize) => {
 	vars.memoryOffset = IntPtr.Zero;
 	vars.othermemoryOffset = IntPtr.Zero;
-	vars.sfxoffset = 0xF7; //for nearly everything
 	switch (mymodulesize)
 	{
 		case 6602752: //snes9x (1.55)
@@ -54,8 +53,7 @@ startup
 			break;
 		case 6991872: //snes9x (1.57)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7A6EE4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x785EC8);
-			vars.sfxoffset = 0x2140; //for just 1.57 32-bit?
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92A26C);
 			break;
 		case 9048064: //snes9x (1.57-x64)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405ACC58);
