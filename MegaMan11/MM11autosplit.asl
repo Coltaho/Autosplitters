@@ -22,26 +22,25 @@ startup {
 	settings.Add("options", true, "---Options---");
 	settings.Add("onteleport", true, "Split on teleport instead of on kill", "options");
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "MM11 Autosplitter v1.8 by Coltaho", "infosection");
+	settings.Add("info", true, "MM11 Autosplitter v1.9 by Coltaho", "infosection");
 	settings.Add("info0", true, "Now splits on capsule teleport out of Wily 3 (refights)!", "infosection");
 	settings.Add("info1", true, "Fixed occasional starting timer on game exit!", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
 
 init {
-	if (modules.First().ModuleMemorySize != 234926080) {
-		throw new Exception("--This isn't Mega Man 11!");
-	} else {
-		print("--Found Mega Man 11");
-		refreshRate = 70;
-		vars.ydteleport = 15500;
-		vars.lastroomtime = 0;
-		vars.currentroomtime = 0;
-		vars.roomstart = 0;
-		vars.formattedigt = "";
-		vars.formattedcurrentroomtime = "";
-		vars.formattedlastroomtime = "";
+	if (modules.First().ModuleMemorySize != 234926080 && modules.First().ModuleMemorySize != 13430784) {
+		Console.WriteLine("Hmm, may not be Mega Man 11 or a patch was pushed? Ignoring though...");
 	}
+	print("--Found Mega Man 11");
+	refreshRate = 70;
+	vars.ydteleport = 15500;
+	vars.lastroomtime = 0;
+	vars.currentroomtime = 0;
+	vars.roomstart = 0;
+	vars.formattedigt = "";
+	vars.formattedcurrentroomtime = "";
+	vars.formattedlastroomtime = "";
 }
 
 update {
