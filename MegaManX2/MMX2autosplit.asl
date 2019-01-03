@@ -59,6 +59,14 @@ startup
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405ACC58);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140751F98);
 			break;
+		case 7000064: //snes9x (1.58)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7A7EE4);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92BA5C);
+			break;
+		case 9060352: //snes9x (1.58-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405AE848);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407547A8);
+			break;
 		case 16756736: //higan (v105tr1)
 			vars.memoryOffset = 0x94F144;
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
