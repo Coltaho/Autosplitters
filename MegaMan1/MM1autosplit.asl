@@ -10,6 +10,7 @@ state("fceux")
 	byte orb : 0x436B04, 0x501; //158 after orb grab/wily stages last boss kill
 	byte timer : 0x436B04, 0x3C; //Timer that tends to decrement waiting for animations
 	byte xpos : 0x436B04, 0x22;
+	byte bossid : 0x436B04, 0xAC; //10 is last wily phase
 }
 
 state("nestopia")
@@ -60,7 +61,9 @@ update {
 
 split
 {
-	if (current.orb == 158 && old.orb != 158) {
+	if ((current.stage < 6 && current.orb == 158 && old.orb != 158) ||
+	   (current.stage >= 6 && current.stage != 9 && (current.orb == 172 || current.orb == 158) && current.myhp > 0 && current.bosshp == 0 && old.bosshp > 0) ||
+	   (current.stage == 9 && current.orb == 172 && current.myhp > 0 && current.bosshp == 0 && old.bosshp > 0 && current.bossid == 10)) {
 		print("--Split--");
 		return true;
 	}	
