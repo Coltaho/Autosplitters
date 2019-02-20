@@ -33,7 +33,7 @@ state("nestopia")
 startup
 {
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 3 Autosplitter v1.1 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 3 Autosplitter v1.2 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : FCEUX, Netstopia (maybe)", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -103,9 +103,15 @@ update {
 
 split
 {
-	if (vars.waiting && (old.soundfx == 42 || old.soundfx == 43) && current.soundfx == 58) {
+	if (vars.waiting && current.stage < 8 && old.soundfx == 42 && current.soundfx == 58) {
 		vars.waiting = false;
-		print("--Split--");
+		print("--Split 8 Robos--");
+		return true;
+	}
+	
+	if (vars.waiting && current.stage >= 8 && old.soundfx == 43 && current.soundfx == 58) {
+		vars.waiting = false;
+		print("--Split past 8 Robos--");
 		return true;
 	}
 	
