@@ -33,7 +33,7 @@ state("nestopia")
 startup
 {
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 3 Autosplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 3 Autosplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : FCEUX, Netstopia (maybe)", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -114,7 +114,7 @@ split
 		return true;
 	}
 	
-	if (vars.waiting && current.myhp > 128 && current.enemyhp == 0) {
+	if (vars.waiting && current.stage == 17 && current.enemyid == 7 && current.myhp > 128 && current.enemyhp == 0) {
 		vars.waiting = false;
 		print("--Gamma killed! Game beaten!--");
 		return true;
