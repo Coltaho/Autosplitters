@@ -32,8 +32,11 @@ state("nestopia")
 
 startup
 {
+	settings.Add("optionsection", true, "---Options---");
+	settings.Add("breakman", true, "Split after the Breakman showdown", "optionsection");
+	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 3 Autosplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 3 Autosplitter v1.3 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : FCEUX, Netstopia (maybe)", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -115,7 +118,7 @@ split
 		return true;
 	}
 	
-	if ((old.stage == 15 || old.stage == 3) && current.stage == 22) {
+	if ((old.stage == 15 || (settings["breakman"] && old.stage == 3)) && current.stage == 22) {
 		print("--Breakman or Refight Split--");
 		return true;
 	}
