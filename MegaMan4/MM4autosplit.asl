@@ -63,7 +63,7 @@ update {
 
 split
 {
-	if (old.soundfx == 67 && current.soundfx == 65 && (current.levelscreen != 10 && current.stage != 3)) {
+	if (old.soundfx == 67 && current.soundfx == 65 && !(current.levelscreen == 10 && current.stage == 3)) {
 		print("--Teleport Split--");
 		return true;
 	}
