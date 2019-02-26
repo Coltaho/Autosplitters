@@ -13,6 +13,7 @@ state("fceux")
 	// byte xpos : 0x436B04, 0x22;
 	byte screen : 0x436B04, 0xCB; //1 on intro screen
 	byte selection : 0x436B04, 0x200; //151 on Game Start
+	byte levelscreen : 0x436B04, 0xF9 //actual screen num in stage
 }
 
 state("nestopia")
@@ -30,6 +31,7 @@ state("nestopia")
 	// byte xpos : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x8A;
 	byte screen : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x133;
 	byte selection : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x268;
+	byte levelscreen : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x161;
 }
 
 startup
@@ -38,7 +40,7 @@ startup
 	settings.Add("cossackfade", true, "Split at fade out after Cossack 4", "optionsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 4 Autosplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 4 Autosplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : FCEUX, Netstopia (maybe)", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -69,7 +71,7 @@ update {
 
 split
 {
-	if (old.soundfx == 67 && current.soundfx == 65) {
+	if (old.soundfx == 67 && current.soundfx == 65 && (current.levelscreen != 10 && current.stage != 3)) {
 		print("--Teleport Split--");
 		return true;
 	}
