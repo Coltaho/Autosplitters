@@ -58,7 +58,7 @@ reset {
 }
 
 update {
-	//print("--Stage: " + current.stage + " | Screen: " + current.screen + " | EnemyID: " + current.enemyid + " | EnemyHP: " + current.enemyhp + " | SFX: " + current.soundfx);
+	print("--Stage: " + current.stage + " | LevelScreen: " + current.levelscreen + " | EnemyID: " + current.enemyid + " | EnemyHP: " + current.enemyhp + " | SFX: " + current.soundfx);
 }
 
 split
