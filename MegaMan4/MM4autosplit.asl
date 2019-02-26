@@ -3,14 +3,10 @@
 state("fceux")
 {
 	byte enemyhp : 0x436B04, 0x467;
-	// byte secondenemyhp : 0x436B04, 0x4FE; //used for gemini
 	byte enemyid : 0x436B04, 0x44F; //Number the enemy appears in the stage, 255 if despawned
-	// byte secondenemyid : 0x436B04, 0x4DE;
-	// byte enemyidbreakman : 0x436B04, 0x4D2; //breakman is 12 in this slot whyyyy
 	byte myhp : 0x436B04, 0xB0; //128 is dead (disregards high bit)
 	byte soundfx : 0x436B04, 0x702; //65 is teleport
 	byte stage : 0x436B04, 0x22;
-	// byte xpos : 0x436B04, 0x22;
 	byte screen : 0x436B04, 0xCB; //1 on intro screen
 	byte selection : 0x436B04, 0x200; //151 on Game Start
 	byte levelscreen : 0x436B04, 0xF9 //actual screen num in stage
@@ -21,14 +17,10 @@ state("nestopia")
 	// base 0x0000 address of ROM : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x68;
 	// just add your fceux offset to 0x68 to get the final nestopia offset
 	byte enemyhp : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x4CF;
-	// byte secondenemyhp : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x566;
 	byte enemyid : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x4B7;
-	// byte secondenemyid : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x546;
-	// byte enemyidbreakman : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x53A;
 	byte myhp : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x118;
 	byte soundfx : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x76A;
 	byte stage : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x88;
-	// byte xpos : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x8A;
 	byte screen : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x133;
 	byte selection : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x268;
 	byte levelscreen : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x161;

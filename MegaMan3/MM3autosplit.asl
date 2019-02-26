@@ -64,7 +64,7 @@ reset {
 }
 
 update {
-	print("--Stage: " + current.stage + " | Enemy: " + current.enemyid + " | Second Enemy: " + current.secondenemyid + " | SFX: " + current.soundfx + " | Splitboss: " + vars.splitboss + " | Waiting: " + vars.waiting);
+	//print("--Stage: " + current.stage + " | Enemy: " + current.enemyid + " | Second Enemy: " + current.secondenemyid + " | SFX: " + current.soundfx + " | Splitboss: " + vars.splitboss + " | Waiting: " + vars.waiting);
 	
 	if (current.screen == 1 || current.myhp == 128 || current.enemyhp == 31) {
 			vars.waiting = false;
