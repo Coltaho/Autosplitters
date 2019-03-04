@@ -56,12 +56,12 @@ start {
 	}
 }
 
-reset {
-	if ((old.timer != 0 && current.timer == 0)) {
-		print("--Resetting--");
-		return true;
-	}
-}
+// reset {
+	// if ((old.timer != 0 && current.timer == 0)) {
+		// print("--Resetting--");
+		// return true;
+	// }
+// }
 
 update {
 	print("--screenassets: " + current.screenassets + " | otherscreenassets: " + current.otherscreenassets + " | Timer: " + current.timer + " | SFX: " + current.soundfx);
