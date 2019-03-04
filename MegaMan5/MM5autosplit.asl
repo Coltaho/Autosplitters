@@ -38,7 +38,7 @@ startup
 	settings.Add("darkfade", true, "Split at initial fade out after Dark 4", "optionsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 5 Autosplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 5 Autosplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : FCEUX, Netstopia (maybe)", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
