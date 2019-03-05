@@ -12,5 +12,6 @@
 ## Beta:
 ### Mega Man 3
 ### Mega Man 4
+### Mega Man 5
 ### Mega Man X2
 ### Before the Echo
