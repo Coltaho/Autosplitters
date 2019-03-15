@@ -1,6 +1,6 @@
-## Mega Man 6 Autosplitter
+## Mega Man  1-6 Autosplitter
  
-Auto Splitter for Mega Man 6 NES
+Auto Splitter for Mega Man 1-6 NES
 
 - [LiveSplit](http://livesplit.github.io/) - Here you can find out more about and download LiveSplit. It is a popular timer program typically used for speedruns.
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
@@ -11,10 +11,11 @@ Auto Splitter for Mega Man 6 NES
  
 ## Features
 
-- Automatically start the timer when you start a run. Timer starts after selecting the difficulty
-- Automatically split after refight screen transition and last boss kill hit
+- Automatically start the timer when you start a run (Assuming Mega Man 1).
+- Automatically split on teleport after stage clear except for after places with no audio cue which splits at screen fade and on kill hit of last boss.
 
--Optional to split on teleport or boss kill, defaults to teleport! If set to teleport, also split after Crusher is killed and screen transitions
+-Optionally there are 3 splits you can choose to do or not do. CHECK THE SETTINGS, as they default to on!
+
 
 ## Installation 
 
@@ -26,9 +27,9 @@ Auto Splitter for Mega Man 6 NES
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MegaMan6/MM6autosplit.asl
+- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MegaMan1-6/MM1to6autosplit.asl
 - Edit Layout
-- Add Other /Scriptable Componment / Script Path: Browse to the "MM6autosplit.asl" file you downloaded previously
+- Add Other /Scriptable Componment / Script Path: Browse to the "MM1to6autosplit.asl" file you downloaded previously
 - Enable Start/Split feature here
   
 ## Set-up (if auto-installed)
@@ -46,8 +47,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 
 ## Thanks
 
-- Thanks to [Resistingframe](http://twitch.tv/Resistingframe) for testing.
-- Thanks to [Kammesennin](http://twitch.tv/Kammesennin) for testing and feedback.
+- Thanks to [someone](http://twitch.tv/someone) for help learning the game.
 
 ## Contact
 
