@@ -13,7 +13,7 @@ Auto Splitter for Mega Man 5 NES
 
 - Automatically start the timer when you start a run.
 - Automatically split on teleport after stage clear except for after Dark 4 which splits at screen fade (optional, default on) and on kill hit of last boss.
-- Automatically reset the timer when you reset the game
+- ~~Automatically reset the timer when you reset the game~~ Currently disabled
 
 ## Installation 
 
