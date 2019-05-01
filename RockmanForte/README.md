@@ -17,6 +17,10 @@ Auto Splitter for Rockman & Forte SNES
 - Automatically split after teleporting out from a boss kill
 - Automatically split after killing Wily Capsule (Winning)
 
+- Optional: Split on Jet Kill
+- Optional: Split on shop exit
+- Optional: Split when entering the hallway before King Megazord (can be used for king skip or a normal kill this way)
+
 
 ## Installation 
 
@@ -28,9 +32,9 @@ Auto Splitter for Rockman & Forte SNES
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/Rockman&Forte/R&Fautosplit.asl
+- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/RockmanForte/RMFautosplit.asl
 - Edit Layout
-- Add Other /Scriptable Componment / Script Path: Browse to the "R&Fautosplit.asl" file you downloaded previously
+- Add Other /Scriptable Componment / Script Path: Browse to the "RMFautosplit.asl" file you downloaded previously
 - Enable Start/Split feature here
   
 ## Set-up (if auto-installed)
