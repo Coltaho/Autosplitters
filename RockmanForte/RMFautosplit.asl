@@ -146,7 +146,7 @@ start {
 split
 {
 	//Split after teleport sound for intro
-	if (vars.watchers["stage"].Current == 0 && vars.watchers["screen"].Current != 9 && vars.watchers["sfx"].Old == 57 && vars.watchers["sfx"].Current == 33) {
+	if (vars.watchers["stage"].Current == 0 && vars.watchers["screen"].Current == 10 && vars.watchers["sfx"].Old == 57 && vars.watchers["sfx"].Current == 33) {
 		print("--R&F Intro Teleport split!--");
 		return true;
 	}
