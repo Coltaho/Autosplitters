@@ -53,9 +53,9 @@ startup
 				new MemoryWatcher<ulong>((IntPtr)baseptr) { Name = "baseptr" },
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x38044) { Name = "myhp" }, 
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30E78) { Name = "menuselection" }, //0 for new game
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x030C44) { Name = "start" }, // = 328452       
-				new MemoryWatcher<ushort>((IntPtr)ewram + 0x03A862) { Name = "scorescreen" }, // changed   
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x03031C) { Name = "end" } // = 983060? actually 20?     
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x30C44) { Name = "start" }, // = 328452       
+				new MemoryWatcher<ushort>((IntPtr)ewram + 0x372BA) { Name = "scorescreen" }, // changed   
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" } // = 983060? actually 20?     
 			};
 		} else {
 			//JP addresses
@@ -88,7 +88,7 @@ init
 
 update {
 	vars.watchers.UpdateAll(game);
-	if (vars.watchers["baseptr"].Changed) {
+	if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
 		print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
