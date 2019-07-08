@@ -4,6 +4,8 @@ state("EmuHawk"){}
 
 startup
 {	
+	refreshRate = 1;
+
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.0 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win10 Bizhawk with VBA-Next Core", "infosection");
@@ -26,6 +28,9 @@ startup
 				break;
 			}
 		}
+		
+		if (vars.ptr == IntPtr.Zero)
+			throw new Exception("--Couldn't find a pointer I want! GBA Core probably not loaded!");
 		
 		List<int> offsets = new List<int> { 0x0, 0x70, 0x8, 0x8, 0x18, 0x28 };
 		
