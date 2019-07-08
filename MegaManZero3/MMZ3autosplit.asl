@@ -7,7 +7,7 @@ startup
 	refreshRate = 1;
 
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -60,7 +60,7 @@ startup
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30E78) { Name = "menuselection" }, //0 for new game
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30C44) { Name = "start" }, // = 328452       
 				new MemoryWatcher<ushort>((IntPtr)ewram + 0x372BA) { Name = "scorescreen" }, // changed   
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" } // = 983060? actually 20?     
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" } // = 983060    
 			};
 		} else {
 			//JP addresses
@@ -71,7 +71,7 @@ startup
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30B38) { Name = "menuselection" }, //0 for new game
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30904) { Name = "start" }, // = 328452
 				new MemoryWatcher<ushort>((IntPtr)ewram + 0x36F7A) { Name = "scorescreen" }, // changed
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FFDC) { Name = "end" } // = 20
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FFDC) { Name = "end" } // = 983060
 			};
 		}
 	});
@@ -98,7 +98,7 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | Menu Selection: " + vars.watchers["menuselection"].Current);
+	//print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | Menu Selection: " + vars.watchers["menuselection"].Current);
 }
 
 start { 
@@ -111,5 +111,5 @@ reset {
 
 split
 {
-	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["end"].Changed && vars.watchers["end"].Current == 20);
+	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["end"].Changed && vars.watchers["end"].Current == 983060);
 }
