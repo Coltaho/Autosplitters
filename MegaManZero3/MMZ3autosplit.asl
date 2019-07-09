@@ -7,8 +7,8 @@ startup
 	refreshRate = 1;
 
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.1 by Coltaho", "infosection");
-	settings.Add("info0", true, "- Supported emulators : Win10 Bizhawk with VBA-Next Core", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
 	vars.findpointers = (Action<Process, int>)((proc, mymodulesize) => {
@@ -16,15 +16,24 @@ startup
 		
 		vars.baseptr = IntPtr.Zero;
 		vars.ewram = IntPtr.Zero;
+		vars.scantest = new SigScanTarget[3];
 		vars.us = false;
 		
-		vars.scantest = new SigScanTarget(5, "83EC2048B9????????????????488B0949BB????????????????390941FF13488BF0488BCEE8");
+		vars.scantest[0] = new SigScanTarget(5, "83EC2048B9????????????????488B0949BB????????????????390941FF13488BF0488BCEE8");
+		vars.scantest[1] = new SigScanTarget(9, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB");
+		vars.scantest[2] = new SigScanTarget(4, "488BF8BA????????488B124885D20F84");
 		vars.ptr = IntPtr.Zero;
 
-		foreach (var page in proc.MemoryPages()) {
-			var scanner = new SignatureScanner(proc, page.BaseAddress, (int)page.RegionSize);		
-			if(vars.ptr == IntPtr.Zero && ((vars.ptr = scanner.Scan(vars.scantest)) != IntPtr.Zero)) {
-				print("--[Autosplitter] Ptr Found : " + (vars.ptr).ToString("X"));
+		for (int i = 0; i < 3; i++) {
+			print("--Searching for Window OS Signatures index: " + i);
+			foreach (var page in proc.MemoryPages()) {
+				var scanner = new SignatureScanner(proc, page.BaseAddress, (int)page.RegionSize);		
+				if(vars.ptr == IntPtr.Zero && ((vars.ptr = scanner.Scan(vars.scantest[i])) != IntPtr.Zero)) {
+					print("--Ptr Found : " + (vars.ptr).ToString("X"));
+					break;
+				}
+			}
+			if (vars.ptr != IntPtr.Zero) {
 				break;
 			}
 		}
