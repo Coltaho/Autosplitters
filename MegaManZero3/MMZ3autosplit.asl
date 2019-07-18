@@ -6,8 +6,11 @@ startup
 {	
 	refreshRate = 1;
 
+	settings.Add("options", true, "---Options---");
+	settings.Add("missiontimer", false, "Show Mission Timer", "options");
+	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.3 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -69,7 +72,8 @@ startup
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30E78) { Name = "menuselection" }, //0 for new game
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30C44) { Name = "start" }, // = 328452       
 				new MemoryWatcher<ushort>((IntPtr)ewram + 0x372BA) { Name = "scorescreen" }, // changed   
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" } // = 983060    
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" }, // = 983060
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x30168) { Name = "missiontimer" }
 			};
 		} else {
 			//JP addresses
@@ -80,10 +84,36 @@ startup
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30B38) { Name = "menuselection" }, //0 for new game
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30904) { Name = "start" }, // = 328452
 				new MemoryWatcher<ushort>((IntPtr)ewram + 0x36F7A) { Name = "scorescreen" }, // changed
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FFDC) { Name = "end" } // = 983060
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FFDC) { Name = "end" }, // = 983060
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FE28) { Name = "missiontimer" }
 			};
 		}
 	});
+	
+	vars.UpdateRoomTimer = (Action<Process>)((proc) => {
+        if(vars.textSettingMissionTimer == null) {
+            foreach (dynamic component in timer.Layout.Components) {
+                if (component.GetType().Name != "TextComponent") continue;
+                if (component.Settings.Text1 == "Mission Timer") vars.textSettingMissionTimer = component.Settings;
+            }
+
+            if(vars.textSettingMissionTimer == null)
+                vars.textSettingMissionTimer = vars.CreateTextComponent("Mission Timer");
+        }
+        vars.textSettingMissionTimer.Text2 = vars.FormatTimer(vars.watchers["missiontimer"].Current);       
+    });
+	
+	vars.CreateTextComponent = (Func<string, dynamic>)((name) => {
+        var textComponentAssembly = Assembly.LoadFrom("Components\\LiveSplit.Text.dll");
+        dynamic textComponent = Activator.CreateInstance(textComponentAssembly.GetType("LiveSplit.UI.Components.TextComponent"), timer);
+        timer.Layout.LayoutComponents.Add(new LiveSplit.UI.Components.LayoutComponent("LiveSplit.Text.dll", textComponent as LiveSplit.UI.Components.IComponent));
+        textComponent.Settings.Text1 = name;
+        return textComponent.Settings;
+    });
+	
+	vars.FormatTimer = (Func<uint, string>)((frames) => {
+        return (frames / 60 / 60 % 60).ToString("D2") + "'" + (frames / 60 % 60).ToString("D2") + "'" + (frames % 60).ToString("D2");
+    });
 }
 
 init
@@ -93,6 +123,7 @@ init
 	vars.baseptr = IntPtr.Zero;
 	vars.ewram = IntPtr.Zero;
 	vars.watchers = new MemoryWatcherList();
+	vars.textSettingMissionTimer = null;
 	
 	vars.findpointers(game, modules.First().ModuleMemorySize);
 	vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
@@ -102,6 +133,7 @@ init
 
 update {
 	vars.watchers.UpdateAll(game);
+	if(settings["missiontimer"]) vars.UpdateRoomTimer(game);
 	if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
 		print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
 		vars.findpointers(game, modules.First().ModuleMemorySize);
