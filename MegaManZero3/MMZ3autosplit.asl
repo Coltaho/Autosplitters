@@ -10,7 +10,7 @@ startup
 	settings.Add("missiontimer", false, "Show Mission Timer", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.3 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.4 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -112,7 +112,7 @@ startup
     });
 	
 	vars.FormatTimer = (Func<uint, string>)((frames) => {
-        return (frames / 60 / 60 % 60).ToString("D2") + "'" + (frames / 60 % 60).ToString("D2") + "'" + (frames % 60).ToString("D2");
+        return (frames / 60 / 60 % 60).ToString("D2") + "'" + (frames / 60 % 60).ToString("D2");
     });
 }
 
