@@ -1,6 +1,6 @@
-## Mega Man Zero 3 Autosplitter
+## Mega Man Zero 2 Autosplitter
  
-Auto Splitter for Mega Man Zero 3 GBA
+Auto Splitter for Mega Man Zero 2 GBA
 
 - [LiveSplit](http://livesplit.github.io/) - Here you can find out more about and download LiveSplit. It is a popular timer program typically used for speedruns.
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
@@ -13,7 +13,7 @@ Auto Splitter for Mega Man Zero 3 GBA
 
 - Automatically start the timer when you start a run. Time starts after selecting New Game
 - Automatically split at each score screen
-- Automatically split when Omega Zero is killed
+- Automatically split when Elpizo is killed
 - Automatically reset when the game is reset
 
 ## Installation 
@@ -26,9 +26,9 @@ Auto Splitter for Mega Man Zero 3 GBA
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MegaManZero3/MMZ3autosplit.asl
+- Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MegaManZero2/MMZ2autosplit.asl
 - Edit Layout
-- Add Other /Scriptable Componment / Script Path: Browse to the "MMZ3autosplit.asl" file you downloaded previously
+- Add Other /Scriptable Componment / Script Path: Browse to the "MMZ2autosplit.asl" file you downloaded previously
 - Enable Start/Split feature here
   
 ## Set-up (if auto-installed)
@@ -47,7 +47,6 @@ Here you can enable/disable the options for auto start and auto splitting.
 ## Thanks
 
 - Thanks to [Entu](http://twitch.tv/entu) for tons of help learning the speedrun
-- Thanks to [Spiraster](http://twitch.tv/Spiraster) for help with memory stuffs.
 
 ## Contact
 
