@@ -46,7 +46,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 
 ## Thanks
 
-- Thanks to [Entu](http://twitch.tv/entu) for tons of help learning the speedrun
+- Thanks to [Hetfield](http://twitch.tv/hetfield90) for help with the RAM addresses used
 
 ## Contact
 
