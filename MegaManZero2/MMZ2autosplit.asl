@@ -62,7 +62,7 @@ startup {
 			new MemoryWatcher<ulong>((IntPtr)baseptr) { Name = "baseptr" }, // 0x37F0C is sword xp, 0x37F0A is buster xp, 0x37F0E is chain, 0x37F10 is shield
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x37D94) { Name = "myhp" },
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x2F8B4) { Name = "menuselection" }, //0 for new game
-			new MemoryWatcher<uint>((IntPtr)ewram + 0x3E8D0) { Name = "start" }, // = 137321452
+			new MemoryWatcher<uint>((IntPtr)ewram + 0x2F684) { Name = "start" }, // = 772
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x36BBE) { Name = "scorescreen" }, // changed
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2EC38) { Name = "end" }, // = 165
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2EBF8) { Name = "missiontimer" }
@@ -121,11 +121,11 @@ update {
 }
 
 start { 
-	return (vars.watchers["menuselection"].Current == 0 && vars.watchers["start"].Current == 137321452);
+	return (vars.watchers["menuselection"].Current == 0 && vars.watchers["start"].Current == 772);
 }
 
 reset { 
-	return vars.watchers["start"].Current == 262916 || vars.watchers["start"].Current == 512 || vars.watchers["start"].Current == 1280 || vars.watchers["start"].Current == 66308;
+	return (vars.watchers["start"].Changed && (vars.watchers["start"].Current == 16777476 || vars.watchers["start"].Current == 512) && vars.watchers["scorescreen"].Current == 0);
 }
 
 split {
