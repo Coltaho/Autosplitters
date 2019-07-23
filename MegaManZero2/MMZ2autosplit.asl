@@ -61,10 +61,11 @@ startup {
 		{
 			new MemoryWatcher<ulong>((IntPtr)baseptr) { Name = "baseptr" }, // 0x37F0C is sword xp, 0x37F0A is buster xp, 0x37F0E is chain, 0x37F10 is shield
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x37D94) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)ewram + 0x3BBF4) { Name = "bosshp" },
+			new MemoryWatcher<ushort>((IntPtr)ewram + 0x3BBE8) { Name = "bossid" },
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x2F8B4) { Name = "menuselection" }, //0 for new game
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2F684) { Name = "start" }, // = 772
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x36BBE) { Name = "scorescreen" }, // changed
-			new MemoryWatcher<uint>((IntPtr)ewram + 0x2EC38) { Name = "end" }, // = 165
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2EBF8) { Name = "missiontimer" }
 		};
 	});
@@ -117,7 +118,7 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | Menu Selection: " + vars.watchers["menuselection"].Current);
+	// print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | BossHP: " + vars.watchers["bosshp"].Current + " | BossID: " + vars.watchers["bossid"].Current);
 }
 
 start { 
@@ -129,5 +130,5 @@ reset {
 }
 
 split {
-	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["end"].Changed && vars.watchers["end"].Current == 165);
+	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && vars.watchers["bossid"].Current == 4953 && vars.watchers["myhp"].Current > 0);
 }
