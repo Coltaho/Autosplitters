@@ -118,7 +118,7 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	// print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | BossHP: " + vars.watchers["bosshp"].Current + " | BossID: " + vars.watchers["bossid"].Current);
+	// print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current + " | BossHP: " + vars.watchers["bosshp"].Current + " | BossID: " + vars.watchers["bossid"].Current);
 }
 
 start { 

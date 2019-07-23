@@ -2,15 +2,14 @@
 
 state("EmuHawk"){}
 
-startup
-{	
+startup {	
 	refreshRate = 1;
 
 	settings.Add("options", true, "---Options---");
 	settings.Add("missiontimer", false, "Show Mission Timer", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.4 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.5 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -61,18 +60,18 @@ startup
 		}
 	});
 	
-	vars.GetWatcherList = (Func<IntPtr, IntPtr, MemoryWatcherList>)((baseptr, ewram) =>
-	{
+	vars.GetWatcherList = (Func<IntPtr, IntPtr, MemoryWatcherList>)((baseptr, ewram) =>	{
 		if (vars.us) {
 			//US addresses
 			return new MemoryWatcherList
 			{
 				new MemoryWatcher<ulong>((IntPtr)baseptr) { Name = "baseptr" },
-				new MemoryWatcher<byte>((IntPtr)ewram + 0x38044) { Name = "myhp" }, 
+				new MemoryWatcher<byte>((IntPtr)ewram + 0x38044) { Name = "myhp" },
+				new MemoryWatcher<byte>((IntPtr)ewram + 0x3BE44) { Name = "bosshp" },
+				new MemoryWatcher<ushort>((IntPtr)ewram + 0x3BE38) { Name = "bossid" }, // 54945 for omega zero
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30E78) { Name = "menuselection" }, //0 for new game
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x30C44) { Name = "start" }, // = 328452       
-				new MemoryWatcher<ushort>((IntPtr)ewram + 0x372BA) { Name = "scorescreen" }, // changed   
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x3031C) { Name = "end" }, // = 983060
+				new MemoryWatcher<uint>((IntPtr)ewram + 0x30C44) { Name = "start" }, // = 328452
+				new MemoryWatcher<ushort>((IntPtr)ewram + 0x372BA) { Name = "scorescreen" }, // changed
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30168) { Name = "missiontimer" }
 			};
 		} else {
@@ -81,10 +80,11 @@ startup
 			{
 				new MemoryWatcher<ulong>((IntPtr)baseptr) { Name = "baseptr" },
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x37D04) { Name = "myhp" },
+				new MemoryWatcher<byte>((IntPtr)ewram + 0x3BB04) { Name = "bosshp" },
+				new MemoryWatcher<ushort>((IntPtr)ewram + 0x3BAF8) { Name = "bossid" }, // 55001 for omega zero
 				new MemoryWatcher<byte>((IntPtr)ewram + 0x30B38) { Name = "menuselection" }, //0 for new game
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x30904) { Name = "start" }, // = 328452
 				new MemoryWatcher<ushort>((IntPtr)ewram + 0x36F7A) { Name = "scorescreen" }, // changed
-				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FFDC) { Name = "end" }, // = 983060
 				new MemoryWatcher<uint>((IntPtr)ewram + 0x2FE28) { Name = "missiontimer" }
 			};
 		}
@@ -116,8 +116,7 @@ startup
     });
 }
 
-init
-{
+init {
 	print("--Setting init variables!--");
 
 	vars.baseptr = IntPtr.Zero;
@@ -139,7 +138,7 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	//print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | End: " + vars.watchers["end"].Current + " | HP: " + vars.watchers["myhp"].Current + " | Menu Selection: " + vars.watchers["menuselection"].Current);
+	// print("--Start: " + vars.watchers["start"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current + " | BossHP: " + vars.watchers["bosshp"].Current + " | BossID: " + vars.watchers["bossid"].Current);
 }
 
 start { 
@@ -150,7 +149,6 @@ reset {
 	return vars.watchers["start"].Current == 262916 || vars.watchers["start"].Current == 512 || vars.watchers["start"].Current == 1280 || vars.watchers["start"].Current == 66308;
 }
 
-split
-{
-	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["end"].Changed && vars.watchers["end"].Current == 983060);
+split {
+	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && (vars.watchers["bossid"].Current == 54945 || vars.watchers["bossid"].Current == 55001) && vars.watchers["myhp"].Current > 0);
 }
