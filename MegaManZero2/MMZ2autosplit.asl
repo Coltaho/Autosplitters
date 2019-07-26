@@ -92,7 +92,7 @@ startup {
     });
 	
 	vars.FormatTimer = (Func<uint, string>)((frames) => {
-        return (frames / 60 / 60 % 60).ToString("D2") + "'" + (frames / 60 % 60).ToString("D2") + "'" + (frames % 60).ToString("D2");
+        return (frames / 60 / 60 % 60).ToString("D2") + "'" + (frames / 60 % 60).ToString("D2");
     });
 }
 
