@@ -83,8 +83,8 @@ startup
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		case 16019456: //higan (v106)
-			vars.memoryOffset = (IntPtr)0x94D144;
-			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
+			vars.memoryOffset = (IntPtr)0x8AB144;
+			vars.othermemoryOffset = (IntPtr)0x8CB437 - 0xF7;
 			break;
 		default:
 			vars.memoryOffset = IntPtr.Zero;
