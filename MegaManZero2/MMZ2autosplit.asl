@@ -126,9 +126,9 @@ start {
 }
 
 reset { 
-	return (vars.watchers["start"].Changed && (vars.watchers["start"].Current == 16777476 || vars.watchers["start"].Current == 512) && vars.watchers["scorescreen"].Current == 0);
+	return (vars.watchers["start"].Changed && (vars.watchers["start"].Current == 16777476 || vars.watchers["start"].Current == 512));
 }
 
 split {
-	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && vars.watchers["bossid"].Current == 4953 && vars.watchers["myhp"].Current > 0);
+	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current <= 0 && vars.watchers["bossid"].Current == 4953 && vars.watchers["myhp"].Current > 0);
 }
