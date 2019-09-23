@@ -9,7 +9,7 @@ startup {
 	settings.Add("missiontimer", false, "Show Mission Timer", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.5 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.6 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -18,15 +18,16 @@ startup {
 		
 		vars.baseptr = IntPtr.Zero;
 		vars.ewram = IntPtr.Zero;
-		vars.scantest = new SigScanTarget[3];
+		vars.scantest = new SigScanTarget[4];
 		vars.us = false;
 		
-		vars.scantest[0] = new SigScanTarget(5, "83EC2048B9????????????????488B0949BB????????????????390941FF13488BF0488BCEE8");
-		vars.scantest[1] = new SigScanTarget(9, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB");
-		vars.scantest[2] = new SigScanTarget(4, "488BF8BA????????488B124885D20F84");
+		vars.scantest[0] = new SigScanTarget(38, "448B41104489442438488BCA488D5424404C8D442428E8");
+		vars.scantest[1] = new SigScanTarget(5, "83EC2048B9????????????????488B0949BB????????????????390941FF13488BF0488BCEE8");
+		vars.scantest[2] = new SigScanTarget(9, "488B00E9????????BA????????488B1248B9????????????????E8????????488BC849BB");
+		vars.scantest[3] = new SigScanTarget(4, "488BF8BA????????488B124885D20F84");
 		vars.ptr = IntPtr.Zero;
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			print("--Searching for Window OS Signatures index: " + i);
 			foreach (var page in proc.MemoryPages()) {
 				var scanner = new SignatureScanner(proc, page.BaseAddress, (int)page.RegionSize);		
