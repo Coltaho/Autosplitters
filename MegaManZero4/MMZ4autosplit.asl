@@ -10,7 +10,7 @@ startup {
 	settings.Add("refightsplit", false, "Split on first door after refights", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -65,9 +65,9 @@ startup {
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x2F3B7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x2F606) { Name = "start" }, //main menu fade? goes to 31 as screen fades
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x2F3B4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
-			new MemoryWatcher<ushort>((IntPtr)ewram + 0x3A4E4) { Name = "bosshp" },
-			new MemoryWatcher<ushort>((IntPtr)ewram + 0x3A4D8) { Name = "bossid" }, //prolly not actual boss id but 46129 only at last weil form
-			new MemoryWatcher<byte>((IntPtr)ewram + 0x2E912) { Name = "checkpoint" }, //5 after refights
+			// new MemoryWatcher<ushort>((IntPtr)ewram + 0x3A4E4) { Name = "bosshp" },
+			// new MemoryWatcher<ushort>((IntPtr)ewram + 0x3A4D8) { Name = "bossid" }, //prolly not actual boss id but 46129 only at last weil form
+			new MemoryWatcher<byte>((IntPtr)ewram + 0x2E912) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x2E910) { Name = "stage" }, //16 for last stage
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x3591C) { Name = "scorescreen" }, // changed
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2E8E8) { Name = "missiontimer" }
@@ -122,7 +122,7 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	// print("--Gamestate: " + vars.watchers["gamestate"].Current + " | MenuScreen: " + vars.watchers["menuscreen"].Current + " | MenuFade: " + vars.watchers["start"].Current + " | BossID: " + vars.watchers["bossid"].Current + " | BossHP: " + vars.watchers["bosshp"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current);
+	// print("--Gamestate: " + vars.watchers["gamestate"].Current + " | MenuScreen: " + vars.watchers["menuscreen"].Current + " | MenuFade: " + vars.watchers["start"].Current + " | Checkpoint: " + vars.watchers["checkpoint"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current);
 }
 
 start { 
@@ -134,5 +134,5 @@ reset {
 }
 
 split {
-	return (settings["refightsplit"] && vars.watchers["stage"].Current == 16 && vars.watchers["checkpoint"].Old == 3 && vars.watchers["checkpoint"].Current == 5) || (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["myhp"].Current > 0 && vars.watchers["bossid"].Current == 46129  && vars.watchers["bosshp"].Current == 0 && vars.watchers["bosshp"].Old >= 1);
+	return (settings["refightsplit"] && vars.watchers["stage"].Current == 16 && vars.watchers["checkpoint"].Old == 3 && vars.watchers["checkpoint"].Current == 5) || (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["stage"].Current == 16 && vars.watchers["checkpoint"].Old == 6  && vars.watchers["checkpoint"].Current == 9);
 }
