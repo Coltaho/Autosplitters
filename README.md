@@ -1,17 +1,3 @@
 # Autosplitters
 
-## Release:
-### Mega Man 1
-### Mega Man 2
-### Mega Man 6
-### Mega Man X
-### Mega Man 11
-### Timespinner
-### Turtles in Time
-
-## Beta:
-### Mega Man 3
-### Mega Man 4
-### Mega Man 5
-### Mega Man X2
-### Before the Echo
+The repo for all autosplitters I've created. Check each directory for more detailed information.
