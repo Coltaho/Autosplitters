@@ -6,7 +6,7 @@ state("emuhawk") {
 }
 
 state("RXC2") {
-    uint igt : 0x3DD7814, 0x178;
+	uint igt : 0x3DD7814, 0x178;
 }
 
 startup {
@@ -30,7 +30,7 @@ update {
 }
 
 isLoading {
-    return true;
+	return true;
 }
 
 gameTime {
