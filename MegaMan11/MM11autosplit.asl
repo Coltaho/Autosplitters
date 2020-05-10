@@ -61,7 +61,7 @@ update {
 		vars.formattedcurrentroomtime = "IGT Not Started";
 	}
 
-	print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Difficulty: " + current.currentdifficulty + " | IGT: " + current.igt);
+	//print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Difficulty: " + current.currentdifficulty + " | IGT: " + current.igt);
 		
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
