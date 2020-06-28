@@ -21,16 +21,58 @@ startup {
 	refreshRate = 1;
 	settings.Add("options", true, "---Options---");
 	settings.Add("onteleport", true, "Split on teleport instead of on kill", "options");
+	settings.Add("currentroomtimer", false, "Show Current Room Timer (resource intensive)", "options");
+	settings.Add("lastroomtimer", true, "Show Last Room Timer", "options");
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "MM11 Autosplitter v1.9 by Coltaho", "infosection");
-	settings.Add("info0", true, "Now splits on capsule teleport out of Wily 3 (refights)!", "infosection");
-	settings.Add("info1", true, "Fixed occasional starting timer on game exit!", "infosection");
-	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("info", true, "MM11 Autosplitter v2.0 by Coltaho", "infosection");
+	settings.Add("info0", true, "Added option to display current/last room timer without ASL Viewer component", "infosection");
+	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	
+	vars.UpdateCurrentRoomTimer = (Action<Process>)((proc) => {
+        if(vars.textSettingCurrentRoomTimer == null) {
+            foreach (dynamic component in timer.Layout.Components) {
+                if (component.GetType().Name != "TextComponent") continue;
+                if (component.Settings.Text1 == "Current Room") vars.textSettingCurrentRoomTimer = component.Settings;
+            }
+
+            if(vars.textSettingCurrentRoomTimer == null)
+                vars.textSettingCurrentRoomTimer = vars.CreateTextComponent("Current Room");
+        }
+		vars.textSettingCurrentRoomTimer.Text2 = vars.FormatTimer(vars.currentroomtime);
+    });
+
+	vars.UpdateLastRoomTimer = (Action<Process>)((proc) => {
+        if(vars.textSettingLastRoomTimer == null) {
+            foreach (dynamic component in timer.Layout.Components) {
+                if (component.GetType().Name != "TextComponent") continue;
+                if (component.Settings.Text1 == "Last Room") vars.textSettingLastRoomTimer = component.Settings;
+            }
+
+            if(vars.textSettingLastRoomTimer == null)
+                vars.textSettingLastRoomTimer = vars.CreateTextComponent("Last Room");
+        }
+		vars.textSettingLastRoomTimer.Text2 = vars.FormatTimer(vars.lastroomtime);
+    });
+	
+	vars.CreateTextComponent = (Func<string, dynamic>)((name) => {
+        var textComponentAssembly = Assembly.LoadFrom("Components\\LiveSplit.Text.dll");
+        dynamic textComponent = Activator.CreateInstance(textComponentAssembly.GetType("LiveSplit.UI.Components.TextComponent"), timer);
+        timer.Layout.LayoutComponents.Add(new LiveSplit.UI.Components.LayoutComponent("LiveSplit.Text.dll", textComponent as LiveSplit.UI.Components.IComponent));
+        textComponent.Settings.Text1 = name;
+        return textComponent.Settings;
+    });
+	
+	vars.FormatTimer = (Func<int, string>)((ms) => {
+		if (ms <= 0)
+			return "No Time";
+		else
+			return (ms / 60 / 60).ToString("D2") + ":" + (ms / 60 % 60).ToString("D2") + ":" + (ms % 60).ToString("D2");
+    });
 }
 
 init {
 	if (modules.First().ModuleMemorySize != 234926080 && modules.First().ModuleMemorySize != 13430784) {
-		Console.WriteLine("Hmm, may not be Mega Man 11 or a patch was pushed? Ignoring though...");
+		Console.WriteLine("--Hmm, may not be Mega Man 11 or a patch was pushed? Ignoring though... " + modules.First().ModuleMemorySize);
 	}
 	print("--Found Mega Man 11");
 	refreshRate = 70;
@@ -38,30 +80,32 @@ init {
 	vars.lastroomtime = 0;
 	vars.currentroomtime = 0;
 	vars.roomstart = 0;
-	vars.formattedigt = "";
-	vars.formattedcurrentroomtime = "";
-	vars.formattedlastroomtime = "";
+	vars.textSettingCurrentRoomTimer = null;
+	vars.textSettingLastRoomTimer = null;
 }
 
 update {
-	if (current.igt != 0) {
+	if ((settings["currentroomtimer"]) || (settings["lastroomtimer"]) && current.igt != 0) {
 		if (current.roomid != old.roomid) {
 			vars.lastroomtime = current.igt - vars.roomstart;
 			vars.roomstart = current.igt;
 		}
 		vars.currentroomtime = current.igt - vars.roomstart;
-		vars.formattedigt = "(H:M:S:Frames) " + (current.igt / 60 / 60 / 60 % 60) + ":" + (current.igt / 60 / 60 % 60).ToString("D2") + ":" + (current.igt / 60 % 60).ToString("D2") + ":" + (current.igt % 60).ToString("D2");
-		vars.formattedcurrentroomtime = (vars.currentroomtime / 60 / 60).ToString("D2") + ":" + (vars.currentroomtime / 60 % 60).ToString("D2") + ":" + (vars.currentroomtime % 60).ToString("D2");
-		vars.formattedlastroomtime = (vars.lastroomtime / 60 / 60).ToString("D2") + ":" + (vars.lastroomtime / 60 % 60).ToString("D2") + ":" + (vars.lastroomtime % 60).ToString("D2");
+		if (settings["currentroomtimer"])
+			vars.UpdateCurrentRoomTimer(game);
+		if (settings["lastroomtimer"])
+			vars.UpdateLastRoomTimer(game);
 	} else {
 		vars.currentroomtime = 0;
 		vars.lastroomtime = 0;
 		vars.roomstart = 0;
-		vars.formattedigt = "IGT Not Started";
-		vars.formattedcurrentroomtime = "IGT Not Started";
+		if (settings["currentroomtimer"])
+			vars.UpdateCurrentRoomTimer(game);
+		if (settings["lastroomtimer"])
+			vars.UpdateLastRoomTimer(game);
 	}
 
-	//print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Difficulty: " + current.currentdifficulty + " | IGT: " + current.igt);
+	// print("--Health: " + current.myhp + " | stage: " + current.stage + " | wilystage: " + current.wilystage + " | Boss Health: " + current.bosshp + " | EnemyID: " + current.enemyid + " | Position: " + current.xpos + ", " + current.ypos + " | Difficulty: " + current.currentdifficulty + " | IGT: " + current.igt);
 		
 	if (current.selecteddifficulty == 2 && current.selectedindex == 2 && old.selectedindex == 0) {
 		print("--We appear to be selecting a difficulty!");
