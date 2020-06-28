@@ -22,7 +22,9 @@ startup {
 	settings.Add("options", true, "---Options---");
 	settings.Add("onteleport", true, "Split on teleport instead of on kill", "options");
 	settings.Add("currentroomtimer", false, "Show Current Room Timer (resource intensive)", "options");
+	settings.Add("currentroomid", false, "Show Current Room ID", "options");
 	settings.Add("lastroomtimer", true, "Show Last Room Timer", "options");
+	settings.Add("lastroomid", true, "Show Last Room ID", "options");
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "MM11 Autosplitter v2.0 by Coltaho", "infosection");
 	settings.Add("info0", true, "Added option to display current/last room timer without ASL Viewer component", "infosection");
@@ -38,7 +40,10 @@ startup {
             if(vars.textSettingCurrentRoomTimer == null)
                 vars.textSettingCurrentRoomTimer = vars.CreateTextComponent("Current Room");
         }
-		vars.textSettingCurrentRoomTimer.Text2 = vars.FormatTimer(vars.currentroomtime);
+		if (vars.showcurrentroomid)
+			vars.textSettingCurrentRoomTimer.Text2 = "Room " + vars.currentroomid + " - " + vars.FormatTimer(vars.currentroomtime);
+		else
+			vars.textSettingCurrentRoomTimer.Text2 = vars.FormatTimer(vars.currentroomtime);
     });
 
 	vars.UpdateLastRoomTimer = (Action<Process>)((proc) => {
@@ -51,7 +56,10 @@ startup {
             if(vars.textSettingLastRoomTimer == null)
                 vars.textSettingLastRoomTimer = vars.CreateTextComponent("Last Room");
         }
-		vars.textSettingLastRoomTimer.Text2 = vars.FormatTimer(vars.lastroomtime);
+		if (vars.showlastroomid)
+			vars.textSettingLastRoomTimer.Text2 = "Room " + vars.lastroomid + " - " + vars.FormatTimer(vars.lastroomtime);
+		else
+			vars.textSettingLastRoomTimer.Text2 = vars.FormatTimer(vars.lastroomtime);
     });
 	
 	vars.CreateTextComponent = (Func<string, dynamic>)((name) => {
@@ -80,17 +88,25 @@ init {
 	vars.lastroomtime = 0;
 	vars.currentroomtime = 0;
 	vars.roomstart = 0;
+	vars.currentroomid = 0;
+	vars.lastroomid = 0;
+	vars.showlastroomid = settings["lastroomid"];
+	vars.showcurrentroomid = settings["currentroomid"];
 	vars.textSettingCurrentRoomTimer = null;
 	vars.textSettingLastRoomTimer = null;
 }
 
 update {
+	vars.showlastroomid = settings["lastroomid"];
+	vars.showcurrentroomid = settings["currentroomid"];
 	if ((settings["currentroomtimer"]) || (settings["lastroomtimer"]) && current.igt != 0) {
-		if (current.roomid != old.roomid) {
+		if (current.roomid != old.roomid && current.roomid != -1) {
 			vars.lastroomtime = current.igt - vars.roomstart;
+			vars.lastroomid = old.roomid;
 			vars.roomstart = current.igt;
 		}
 		vars.currentroomtime = current.igt - vars.roomstart;
+		vars.currentroomid = current.roomid;
 		if (settings["currentroomtimer"])
 			vars.UpdateCurrentRoomTimer(game);
 		if (settings["lastroomtimer"])
