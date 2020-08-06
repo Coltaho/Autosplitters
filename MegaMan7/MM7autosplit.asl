@@ -9,8 +9,13 @@ startup
 	vars.stopwatch = new Stopwatch();
 	refreshRate = 1;
 	
+	// settings.Add("options", true, "---Options---");
+	// settings.Add("currentroomtimer", false, "Show Current Room Timer", "options");
+	// settings.Add("currentroomid", false, "Show Current Room ID", "options");
+	// settings.Add("lastroomtimer", true, "Show Last Room Timer", "options");
+	// settings.Add("lastroomid", true, "Show Last Room ID", "options");
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man 7 AutoSplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man 7 AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -88,7 +93,9 @@ startup
 			new MemoryWatcher<byte>(memoryOffset + 0x39) { Name = "titleselection" }, //what cursor is on during title screen
 			new MemoryWatcher<byte>(memoryOffset + 0x13C) { Name = "start" }, //something that seems to work for starting game 3->57
 			new MemoryWatcher<byte>(memoryOffset + 0xB73) { Name = "stage" }, //current stage
-			new MemoryWatcher<byte>(memoryOffset + 0xB7D) { Name = "screeny" }, //current stage
+			new MemoryWatcher<byte>(memoryOffset + 0xB7D) { Name = "screen1" }, //current screen 1 ?
+			new MemoryWatcher<byte>(memoryOffset + 0xB7E) { Name = "screen2" }, //current screen 2 ?
+			new MemoryWatcher<byte>(memoryOffset + 0xBC6) { Name = "transitioning" }, //transitioning/input locked
 			new MemoryWatcher<byte>(othermemoryOffset + 0xF7) { Name = "sfx" } //61 to 60 for teleport after weapon get, 60 is teleport sound    
 		};
 	});
@@ -127,11 +134,17 @@ update {
         return false;
 	
 	vars.watchers.UpdateAll(game);
-	print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " StartVal: " + vars.watchers["start"].Current);
+	// print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " StartVal: " + vars.watchers["start"].Current + " Screen1: " + vars.watchers["screen1"].Current + " Screen2: " + vars.watchers["screen2"].Current + " Transitioning: " + vars.watchers["transitioning"].Current);
 }
 
 start { 
+	//US
 	if (vars.watchers["start"].Old == 3 && vars.watchers["start"].Current == 57 && vars.watchers["titleselection"].Current == 0) {
+		print("--Here we go!--");
+		return true;
+	}
+	//JP
+	if (vars.watchers["start"].Old == 65 && (vars.watchers["start"].Current == 1 || vars.watchers["start"].Current == 0) && vars.watchers["titleselection"].Current == 0) {
 		print("--Here we go!--");
 		return true;
 	}
