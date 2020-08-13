@@ -25,8 +25,11 @@ startup {
 	settings.Add("currentroomid", false, "Show Current Room ID", "options");
 	settings.Add("lastroomtimer", true, "Show Last Room Timer", "options");
 	settings.Add("lastroomid", true, "Show Last Room ID", "options");
+	settings.Add("shopdiscount", false, "Trick game into thinking it is Saturday", "options");
+		//default         - 48 C1 FA 17 48 8B C2 48 C1 E8 3F 48 03 D0
+		//always Saturday - 48 33 D2 BA A9 1F 1E 6B 90 90 90 90 90 90
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "MM11 Autosplitter v2.0 by Coltaho", "infosection");
+	settings.Add("info", true, "MM11 Autosplitter v2.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "Added option to display current/last room timer without ASL Viewer component", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -94,6 +97,11 @@ init {
 	vars.showcurrentroomid = settings["currentroomid"];
 	vars.textSettingCurrentRoomTimer = null;
 	vars.textSettingLastRoomTimer = null;
+	
+	if(settings["shopdiscount"]) {
+		print("--Making it always Saturday--");
+		game.WriteBytes((IntPtr)0x140911386, new byte[] {0x48, 0x33, 0xD2, 0xBA, 0xA9, 0x1F, 0x1E, 0x6B, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90});
+	}
 }
 
 update {
