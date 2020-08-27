@@ -9,15 +9,18 @@ state("RXC2") {
 	uint igt : 0x3DD7814, 0x178;
 }
 
+state("ePSXe") {
+	uint igt : "ePSXe.exe", 0xB4EFBC;
+}
+
 startup {
 	refreshRate = 1;
 	
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man X6 AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Compare against Game Time, does not autosplit", "infosection");
-	settings.Add("info1", true, "- Supported emulators : Bizhawk and PC XLC", "infosection");
+	settings.Add("info1", true, "- Supported emulators : Bizhawk, ePSXe, and PC XLC", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
-	
 }
 
 init {
