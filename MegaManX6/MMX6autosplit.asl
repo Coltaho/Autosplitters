@@ -18,7 +18,7 @@ state("ePSXe", "v2.0.5") {
 state("Dolphin", "v5.0") {
 	//got the first offset from the RE2 Dolphin autosplitter (https://www.speedrun.com/re2/thread/izb1f/)
 	//got the second offset by subtracting the address I found in Cheat Engine from the game memory start (Dolphin.exe+DCE040)
-	byte4 igtAOB: "Dolphin.exe", 0xDCE040, 0xB369B4;
+	byte4 igtAOB: "Dolphin.exe", 0xDCE040, 0xB369F0;
 }
 
 startup {
