@@ -42,7 +42,7 @@ update {
 	//print("--IGT: " + vars.igt);
 	
 	//reverse bytes for Dolphin
-	if(current.igtAOB[0] <= 0) {
+	if(game.ProcessName == "Dolphin") {
 		Array.Reverse(current.igtAOB);
 	}
 	vars.igt = BitConverter.ToUInt32(current.igtAOB, 0);
