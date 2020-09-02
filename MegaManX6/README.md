@@ -7,6 +7,8 @@ Auto Splitter for Mega Man X6 PS1 and X Legacy Collection on PC
 
 **Supported emulators:**
  - Bizhawk with Octoshock core
+ - ePSXe version 2.0.5
+ - Dolphin version 5.0
  - X Legacy Collection on PC
  
 ## Features
