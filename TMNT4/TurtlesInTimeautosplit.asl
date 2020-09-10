@@ -89,7 +89,6 @@ init
 			}
 			break;
 		default:
-			print(modules.First().ModuleMemorySize.ToString());
 			ptr = IntPtr.Zero;
 			break;
 	}
