@@ -1,6 +1,7 @@
 state("snes9x"){}
 state("snes9x-x64"){}
 state("higan"){}
+state("retroarch") {}
 
 startup
 {
@@ -17,7 +18,7 @@ startup
 	settings.Add("infosection2", true, "-Splits at each stage increase (during transition)", "infosection");
 	settings.Add("infosection3", true, "-Splits upon losing control after final shredder", "infosection");
 	settings.Add("infosection4", true, "-Resets on ... reset", "infosection");
-	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "infosection");
+	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit, Retroarch with 'Snes9X - Current Core'", "infosection");
 	settings.Add("infosection6", true, "Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	settings.SetToolTip("infosection", "Pretty cool, right?");
 }
@@ -67,7 +68,24 @@ init
 		case 16019456: //higan (v106)
 			ptr = (IntPtr)0x94D144;
 			break;
+		case 21250048: //retroarchX64 - 'Snes9x - Current'
+			ProcessModuleWow64Safe libretromodule = modules.Where(m => m.ModuleName == "snes9x_libretro.dll").First();
+			IntPtr baseAddress = libretromodule.BaseAddress;
+			if (game.Is64Bit())
+			{
+				IntPtr result = IntPtr.Zero;
+				SigScanTarget target = new SigScanTarget(13, "83 F9 01 74 10 83 F9 02 75 2C 48 8B 05 ?? ?? ?? ?? 48 8B 40 ??");
+				SignatureScanner scanner = new SignatureScanner(game, baseAddress, (int)libretromodule.ModuleMemorySize);
+				IntPtr codeOffset = scanner.Scan(target);
+				int memoryReference = memory.ReadValue<int>(codeOffset) + (int) codeOffset + 0x04 +  - (int) libretromodule.BaseAddress;
+				byte memoryReferenceoffset = memory.ReadValue<byte>(codeOffset + 7);
+				IntPtr outOffset;
+				new DeepPointer("snes9x_libretro.dll", memoryReference, memoryReferenceoffset, 0x0).DerefOffsets(game, out outOffset);
+				ptr = (IntPtr)outOffset;
+			}
+			break;
 		default:
+			print(modules.First().ModuleMemorySize.ToString());
 			ptr = IntPtr.Zero;
 			break;
 	}
@@ -90,7 +108,7 @@ init
 
 update {
 	vars.watchers.UpdateAll(game);
-	print("--Stage: " + vars.watchers["stage"].Current + " | ControlFlag: " + vars.watchers["controlflag"].Current + " | Loading: " + vars.watchers["loading"].Current + " | Turtle Active: " + vars.watchers["turtleactive"].Current);
+	//print("--Stage: " + vars.watchers["stage"].Current + " | ControlFlag: " + vars.watchers["controlflag"].Current + " | Loading: " + vars.watchers["loading"].Current + " | Turtle Active: " + vars.watchers["turtleactive"].Current);
 }
 
 start { 
@@ -120,7 +138,7 @@ split
 		split = true;
 	//Split upon losing control on final stage
 	if (vars.watchers["stage"].Current == 9 && vars.watchers["controlflag"].Changed && vars.watchers["controlflag"].Current == 192)
-		split = true;		
+		split = true;
 		
 	return split;
 }
