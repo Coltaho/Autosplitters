@@ -1,3 +1,6 @@
+//Created by Coltaho
+//Updated by JohnnyGo 9/9/2020
+
 state("snes9x"){}
 state("snes9x-x64"){}
 state("higan"){}
@@ -18,7 +21,7 @@ startup
 	settings.Add("infosection2", true, "-Splits at each stage increase (during transition)", "infosection");
 	settings.Add("infosection3", true, "-Splits upon losing control after final shredder", "infosection");
 	settings.Add("infosection4", true, "-Resets on ... reset", "infosection");
-	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit, Retroarch with 'Snes9X - Current Core'", "infosection");
+	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit, Retroarch with 'Snes9X - Current' Core", "infosection");
 	settings.Add("infosection6", true, "Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	settings.SetToolTip("infosection", "Pretty cool, right?");
 }
@@ -68,6 +71,7 @@ init
 		case 16019456: //higan (v106)
 			ptr = (IntPtr)0x94D144;
 			break;
+		//Retroarch sigscan copied from BenInSweeden's update to the SMW Autosplitter
 		case 21250048: //retroarchX64 - 'Snes9x - Current'
 			ProcessModuleWow64Safe libretromodule = modules.Where(m => m.ModuleName == "snes9x_libretro.dll").First();
 			IntPtr baseAddress = libretromodule.BaseAddress;

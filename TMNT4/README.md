@@ -8,6 +8,7 @@ Auto Splitter for TMNT IV: Turtles In Time SNES
 **Supported emulators:**
  - SNES9x 1.55+ 32 and 64 bit
  - Higan v105 and 106 (untested)
+ - RetroarchX64 with 'Snes9X - Current' Core
  
  Note that support for older versions is disabled!
  
