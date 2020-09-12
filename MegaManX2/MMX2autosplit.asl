@@ -14,7 +14,7 @@ startup
 
 	settings.Add("main", false, "Mega Man X2 AutoSplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55-1.58, 1.60 32 and 64 bit", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55-1.60 32 and 64 bit (excluding 1.59)", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 	
 	
@@ -97,7 +97,7 @@ startup
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		default:
-			print(mymodulesize.ToString());
+			//print(mymodulesize.ToString());
 			vars.memoryOffset = IntPtr.Zero;
 			vars.othermemoryOffset = IntPtr.Zero;
 			break;
