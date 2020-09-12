@@ -7,14 +7,14 @@ state("higan"){}
 startup
 {
 	vars.stopwatch = new Stopwatch();
-	refreshRate = 60;		
+	refreshRate = 60;
 	
 	settings.Add("onding", true, "Split on helmet ding instead of boss kill");
 	settings.SetToolTip("onding", "Turn off if you want to split on boss kill - Except for X-Hunters who talk before blowing up");
-
+	
 	settings.Add("main", false, "Mega Man X2 AutoSplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55-1.60 32 and 64 bit (excluding 1.59)", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.51 v7.1 rerecording, 1.55-1.60 32 and 64 bit (excluding 1.59)", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 	
 	
@@ -102,7 +102,7 @@ startup
 			vars.othermemoryOffset = IntPtr.Zero;
 			break;
 	}});
-
+	
 	//sfx is 5 the frame X puts his gun out on selecting game start (3rd frame after hitting start)
 	//sfx is 17 the frame X teleports after killing the intro boss (blue line)
 	
@@ -135,7 +135,6 @@ init
 	vars.othermemoryOffset = IntPtr.Zero;
 	vars.watchers = new MemoryWatcherList();
 	vars.stopwatch.Restart();
-
 	
 	print("--Setting init variables!--");
 	vars.introboss = 14; //multi slot, was in 3rd
@@ -160,7 +159,7 @@ init
 	vars.shoryget = 0;
 }
 
-start { 
+start {
 	if (vars.watchers["sfx"].Current == 5 && vars.watchers["titleselection"].Current == 0) {
 		print("--Starting, Reset vars!--");
 		vars.currentBossSlot = -1;
@@ -174,13 +173,13 @@ start {
 
 update {
 	if (vars.stopwatch.ElapsedMilliseconds > 1500)
-    {
-        vars.dostuff(game, modules.First().ModuleMemorySize);
+	{
+		vars.dostuff(game, modules.First().ModuleMemorySize);
 		print("--My Mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
-        if (vars.memoryOffset != IntPtr.Zero && vars.othermemoryOffset != IntPtr.Zero)
-        {
+		if (vars.memoryOffset != IntPtr.Zero && vars.othermemoryOffset != IntPtr.Zero)
+		{
 			print("--Found offsets!");
-            vars.watchers = vars.GetWatcherList(vars.memoryOffset, vars.othermemoryOffset);
+			vars.watchers = vars.GetWatcherList(vars.memoryOffset, vars.othermemoryOffset);
 			vars.enemyids[0] = vars.watchers["enemyid"];
 			vars.enemyids[1] = vars.watchers["enemyid2"];
 			vars.enemyids[2] = vars.watchers["enemyid3"];
@@ -189,17 +188,17 @@ update {
 			vars.enemyhps[1] = vars.watchers["enemyhp2"];
 			vars.enemyhps[2] = vars.watchers["enemyhp3"];
 			vars.enemyhps[3] = vars.watchers["enemyhp4"];
-            vars.stopwatch.Reset();
-        }
-        else
-        {
+			vars.stopwatch.Reset();
+		}
+		else
+	{
 			print("--Still looking for offsets... Next check in 1.5 seconds...");
-            vars.stopwatch.Restart();
-            return false;
-        }
-    }
-    else if (vars.watchers.Count == 0)
-        return false;
+			vars.stopwatch.Restart();
+			return false;
+		}
+	}
+	else if (vars.watchers.Count == 0)
+		return false;
 	
 	vars.watchers.UpdateAll(game);
 	//print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
