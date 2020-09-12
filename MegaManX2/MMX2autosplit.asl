@@ -14,7 +14,7 @@ startup
 
 	settings.Add("main", false, "Mega Man X2 AutoSplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit", "main");
+	settings.Add("main1", false, "- Supported emulators : Higan 105/106, Snes9X 1.55-1.58, 1.60 32 and 64 bit", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 	
 	
@@ -23,6 +23,11 @@ startup
 	vars.othermemoryOffset = IntPtr.Zero;
 	switch (mymodulesize)
 	{
+		case 10244096: //snes9x (1.51 v7.1 rerecording)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28C4);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28D4) + 0x2049;
+			print(vars.othermemoryOffset.ToString());
+			break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x97046C);
@@ -67,6 +72,22 @@ startup
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1405AE848);
 			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1407547A8);
 			break;
+		case 8953856: //snes9x (1.59.2)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x975E40);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xAF95D0);
+			break;
+		case 12537856: //snes9x (1.59.2-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1408D86F8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140A8B280);
+			break;
+		case 9027584: //snes9x (1.60)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92CAF8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xAD16B0);
+			break;
+		case 12836864: //snes9x (1.60-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1408D8BE8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140A87520);
+			break;
 		case 16756736: //higan (v105tr1)
 			vars.memoryOffset = 0x94F144;
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
@@ -76,13 +97,17 @@ startup
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		default:
+			print(mymodulesize.ToString());
 			vars.memoryOffset = IntPtr.Zero;
 			vars.othermemoryOffset = IntPtr.Zero;
 			break;
 	}});
 
+	//sfx is 5 the frame X puts his gun out on selecting game start (3rd frame after hitting start)
+	//sfx is 17 the frame X teleports after killing the intro boss (blue line)
+	
 	vars.GetWatcherList = (Func<IntPtr, IntPtr, MemoryWatcherList>)((memoryOffset, othermemoryOffset) =>
-	{   
+	{
 		return new MemoryWatcherList
 		{
 			new MemoryWatcher<byte>(memoryOffset + 0xD3F) { Name = "enemyhp" }, //enemy health (first slot in a section used for all enemies)
@@ -97,7 +122,7 @@ startup
 			new MemoryWatcher<byte>(memoryOffset + 0x1FB3) { Name = "mylives" }, //current lives
 			new MemoryWatcher<byte>(memoryOffset + 0x3C) { Name = "titleselection" }, //what cursor is on during title screen
 			new MemoryWatcher<byte>(memoryOffset + 0x1FAD) { Name = "currentlevel" }, //current stage
-			new MemoryWatcher<byte>(othermemoryOffset + 0xF7) { Name = "sfx" } //3 to 17 when teleporting       
+			new MemoryWatcher<byte>(othermemoryOffset + 0xF7) { Name = "sfx" } //3 to 17 when teleporting
 		};
 	});
 }
