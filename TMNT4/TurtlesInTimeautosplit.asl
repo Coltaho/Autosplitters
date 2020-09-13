@@ -21,7 +21,7 @@ startup
 	settings.Add("infosection2", true, "-Splits at each stage increase (during transition)", "infosection");
 	settings.Add("infosection3", true, "-Splits upon losing control after final shredder", "infosection");
 	settings.Add("infosection4", true, "-Resets on ... reset", "infosection");
-	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.55+ 32 and 64 bit, Retroarch with 'Snes9X - Current' Core", "infosection");
+	settings.Add("infosection5", true, "Supported emulators : Higan 105/106, Snes9X 1.51 v7.1 rerecording, 1.55-1.60 32 and 64 bit (excluding 1.59), Retroarch with 'Snes9X - Current' Core", "infosection");
 	settings.Add("infosection6", true, "Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	settings.SetToolTip("infosection", "Pretty cool, right?");
 }
@@ -32,6 +32,10 @@ init
 	IntPtr ptr = IntPtr.Zero;
 	switch (modules.First().ModuleMemorySize)
 	{
+		case 10244096: //snes9x (1.51 v7.1 rerecording)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28C4);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28D4) + 0x2049;
+			break;
 		case 6602752: //snes9x (1.55)
 			ptr = (IntPtr)game.ReadValue<int>((IntPtr)0x762874);
 			break;
@@ -64,6 +68,22 @@ init
 			break;
 		case 9060352: //snes9x (1.58-x64)
 			ptr = (IntPtr)game.ReadValue<int>((IntPtr)0x1405AE848);
+			break;
+		case 8953856: //snes9x (1.59.2)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x975E40);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xAF95D0);
+			break;
+		case 12537856: //snes9x (1.59.2-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1408D86F8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140A8B280);
+			break;
+		case 9027584: //snes9x (1.60)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x92CAF8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0xAD16B0);
+			break;
+		case 12836864: //snes9x (1.60-x64)
+			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x1408D8BE8);
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x140A87520);
 			break;
 		case 16756736: //higan (v105tr1)
 			ptr = (IntPtr)0x94F144;
