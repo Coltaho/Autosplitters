@@ -6,8 +6,10 @@ Auto Splitter for TMNT IV: Turtles In Time SNES
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators:**
- - SNES9x 1.55+ 32 and 64 bit
+ - SNES9x 1.51 v7.1 rerecording
+ - SNES9x 1.55+ 32 and 64 bit (excluding 1.59)
  - Higan v105 and 106 (untested)
+ - RetroarchX64 with 'Snes9X - Current' Core
  
  Note that support for older versions is disabled!
  
