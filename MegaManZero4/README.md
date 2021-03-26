@@ -1,6 +1,6 @@
 ## Mega Man Zero 4 Autosplitter
  
-Auto Splitter for Mega Man Zero 4 GBA
+Auto Splitter for Mega Man Zero 4 GBA and ZZXLC
 
 - [LiveSplit](http://livesplit.github.io/) - Here you can find out more about and download LiveSplit. It is a popular timer program typically used for speedruns.
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
@@ -8,6 +8,7 @@ Auto Splitter for Mega Man Zero 4 GBA
 **Supported emulators:**
  - Bizhawk using the VBA-NEXT core! (This is the only allowed core for the Zero games)
  - There might also be a limitation with Win10 only. If you have issues when not on Win10, please message me on Discord.
+ - Also supports Steam version of ZZXLC
 
 ## Features
 
