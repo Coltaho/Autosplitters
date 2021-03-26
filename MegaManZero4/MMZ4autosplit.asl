@@ -1,6 +1,7 @@
 //Made by Coltaho 9/22/2019
 
 state("EmuHawk"){}
+state("MZZXLC") {}
 
 startup {	
 	refreshRate = 1;
@@ -10,15 +11,17 @@ startup {
 	settings.Add("refightsplit", false, "Split on first door after refights", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.1 by Coltaho", "infosection");
-	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
-	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk 2.3 with VBA-Next Core", "infosection");
+	settings.Add("info1", true, "- Supported PC : Steam ZZXLC", "infosection");
+	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	
+	vars.baseptr = IntPtr.Zero;
+	vars.ewram = IntPtr.Zero;
 	
 	vars.findpointers = (Action<Process, int>)((proc, mymodulesize) => {
 		print("--Scanning for pointers!--");
-		
-		vars.baseptr = IntPtr.Zero;
-		vars.ewram = IntPtr.Zero;
+
 		vars.scantest = new SigScanTarget[4];
 		
 		vars.scantest[0] = new SigScanTarget(38, "448B41104489442438488BCA488D5424404C8D442428E8");
@@ -56,7 +59,7 @@ startup {
 		}
 	});
 	
-	vars.GetWatcherList = (Func<IntPtr, IntPtr, MemoryWatcherList>)((baseptr, ewram) =>
+	vars.GetEmuWatcherList = (Func<IntPtr, IntPtr, MemoryWatcherList>)((baseptr, ewram) =>
 	{
 		return new MemoryWatcherList
 		{
@@ -71,6 +74,21 @@ startup {
 			new MemoryWatcher<byte>((IntPtr)ewram + 0x2E910) { Name = "stage" }, //16 for last stage
 			new MemoryWatcher<ushort>((IntPtr)ewram + 0x3591C) { Name = "scorescreen" }, // changed
 			new MemoryWatcher<uint>((IntPtr)ewram + 0x2E8E8) { Name = "missiontimer" }
+		};
+	});
+	
+	vars.GetXLCWatcherList = (Func<IntPtr, MemoryWatcherList>)((baseAddress) =>
+	{
+		return new MemoryWatcherList
+		{
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x253FAB8) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23F3BA7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F4072) { Name = "start" }, //main menu fade? goes to 31 as screen fades
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F3BA4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FCE42) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FCE40) { Name = "stage" }, //16 for last stage
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x251FE70) { Name = "scorescreen" }, // changed
+			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x2634B04) { Name = "missiontimer" }
 		};
 	});
 	
@@ -108,8 +126,12 @@ init {
 	vars.watchers = new MemoryWatcherList();
 	vars.textSettingMissionTimer = null;
 	
-	vars.findpointers(game, modules.First().ModuleMemorySize);
-	vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	if (game.ProcessName == "EmuHawk") {
+		vars.findpointers(game, modules.First().ModuleMemorySize);
+		vars.watchers = vars.GetEmuWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	} else {
+		vars.watchers = vars.GetXLCWatcherList(modules.First().BaseAddress);
+	}
 	
 	refreshRate = 60;
 }
@@ -117,10 +139,10 @@ init {
 update {
 	vars.watchers.UpdateAll(game);
 	if(settings["missiontimer"]) vars.UpdateRoomTimer(game);
-	if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
+	if (game.ProcessName == "EmuHawk" && (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0)) {
 		print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
 		vars.findpointers(game, modules.First().ModuleMemorySize);
-		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+		vars.watchers = vars.GetEmuWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
 	// print("--Gamestate: " + vars.watchers["gamestate"].Current + " | MenuScreen: " + vars.watchers["menuscreen"].Current + " | MenuFade: " + vars.watchers["start"].Current + " | Checkpoint: " + vars.watchers["checkpoint"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current);
 }
@@ -130,7 +152,7 @@ start {
 }
 
 reset { 
-	return (vars.watchers["gamestate"].Old != 1 && vars.watchers["gamestate"].Current == 1);
+	return (vars.watchers["gamestate"].Old != 1 && vars.watchers["gamestate"].Current == 1) || (vars.watchers["gamestate"].Old == 256 && vars.watchers["gamestate"].Current == 512);
 }
 
 split {
