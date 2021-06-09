@@ -1,7 +1,7 @@
 state("Astalon") {}
 
 startup {
-	print("--Starting up!--");
+	print("--[Autosplitter] Starting up!--");
 	refreshRate = 2;
 	
 	settings.Add("bosses", true, "---Bosses---");
@@ -18,7 +18,7 @@ startup {
 	settings.Add("testloc", false, "TestLoc", "location");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -45,7 +45,7 @@ init {
 	if (vars.ptr == IntPtr.Zero)
 		throw new Exception("--Couldn't find a pointer I want! Game is still starting or an update broke things!");
 	
-	print("--Sig scan addr: " + ((int)vars.ptr).ToString("X"));
+	print("--[Autosplitter] Sig scan addr: " + ((int)vars.ptr).ToString("X"));
 	
 	vars.watchers = new MemoryWatcherList();
 	vars.watchers.Add(new MemoryWatcher<byte>(new DeepPointer(vars.ptr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
