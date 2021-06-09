@@ -48,7 +48,7 @@ init {
 	print("--[Autosplitter] Sig scan addr: " + ((int)vars.ptr).ToString("X"));
 	
 	vars.watchers = new MemoryWatcherList();
-	vars.watchers.Add(new MemoryWatcher<byte>(new DeepPointer(vars.ptr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
+	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.ptr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" });
 
@@ -84,6 +84,16 @@ init {
 		return false;
 	});
 	
+	vars.ReallyKilled = (Func<string, bool>)((value) =>
+	{
+		for (int i = 0; i <= 4; i++) {
+			var name = "boss" + i.ToString();
+			if (vars.bosswatchers[name].Old == value && vars.bosswatchers[name].Current == value)
+				return true;
+		}
+		return false;
+	});
+	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
 		return vars.watchers["currentRoom"].Current == prev && vars.watchers["currentRoom"].Current == value;
@@ -98,7 +108,7 @@ init {
 			{ "volantis", vars.Killed("Volantis") },
 			{ "gemini", vars.Killed("Gemini") },
 			{ "solaria", vars.Killed("Solaria") },
-			{ "medusa", vars.Killed("Medusa") },
+			{ "medusa", vars.ReallyKilled("Medusa") },
 			
 			// Items
 			// { "wheel", vars.Obtained("Wheel") },
@@ -120,11 +130,11 @@ update {
 	vars.bosswatchers.UpdateAll(game);
 	vars.watchers.UpdateAll(game);
 	
-	// vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | Boss0: " + vars.bosswatchers["boss0"].Current;
-	// if (vars.paststring != vars.mystring) {
-		// print(vars.mystring);
-		// vars.paststring = vars.mystring;
-	// }
+	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | Boss3: " + vars.bosswatchers["boss3"].Current;
+	if (vars.paststring != vars.mystring) {
+		print(vars.mystring);
+		vars.paststring = vars.mystring;
+	}
 }
 
 start {
@@ -138,7 +148,6 @@ reset {
 }
 
 split {	
-
 	var splits = vars.GetSplitList();
 
 	foreach (var split in splits)
