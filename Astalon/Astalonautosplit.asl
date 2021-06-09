@@ -1,11 +1,8 @@
-state("Astalon") {
-	ulong igt : "GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0x94;
-	bool mainmenuopen : "GameAssembly.dll", 0x01D17EC4, 0x5C, 0x0, 0x10, 0xC;
-	int currentroom : "GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xA0;
-}
+state("Astalon") {}
 
 startup {
 	print("--Starting up!--");
+	refreshRate = 2;
 	
 	settings.Add("bosses", true, "---Bosses---");
 	settings.Add("tauros", true, "Tauros (Red Gem)", "bosses");
@@ -32,14 +29,35 @@ startup {
     timer.OnStart += vars.timer_OnStart;
 }
 
-init {
+init {	
+	vars.scanTarget = new SigScanTarget(0, "A1 ???????? 83 C4 08 8B 40 5C 8B 00 85 C0 0F84 ???????? 8B 40 10 85 C0 0F84 ???????? 6A 00 50 E8 ???????? 83 C4 08 A1 ???????? 8B 40 5C 8B 30");
+
+	vars.ptr = IntPtr.Zero;
+	foreach (var module in modules) {
+		if (module.ModuleName != "GameAssembly.dll")  continue;
+		var scanner = new SignatureScanner(game, module.BaseAddress, module.ModuleMemorySize);
+		vars.ptr = scanner.Scan(vars.scanTarget);
+		if (vars.ptr != IntPtr.Zero) {			
+			break;
+		}
+	}
+	
+	if (vars.ptr == IntPtr.Zero)
+		throw new Exception("--Couldn't find a pointer I want! Game is still starting or an update broke things!");
+	
+	print("--Sig scan addr: " + ((int)vars.ptr).ToString("X"));
+	
+	vars.watchers = new MemoryWatcherList();
+	vars.watchers.Add(new MemoryWatcher<byte>(new DeepPointer(vars.ptr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" });
+
 	vars.bosswatchers = new MemoryWatcherList();
-	// vars.bosswatchers.Add(new MemoryWatcher<int>(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "test" });
-	vars.bosswatchers.Add(new StringWatcher(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x10, 0xC), 16) { Name = "boss0" });
-	vars.bosswatchers.Add(new StringWatcher(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x14, 0xC), 16) { Name = "boss1" });
-	vars.bosswatchers.Add(new StringWatcher(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x18, 0xC), 16) { Name = "boss2" });
-	vars.bosswatchers.Add(new StringWatcher(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x1C, 0xC), 16) { Name = "boss3" });
-	vars.bosswatchers.Add(new StringWatcher(new DeepPointer("GameAssembly.dll", 0x1D17FF0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x20, 0xC), 16) { Name = "boss4" });
+	vars.bosswatchers.Add(new StringWatcher(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x10, 0xC), 16) { Name = "boss0" });
+	vars.bosswatchers.Add(new StringWatcher(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x14, 0xC), 16) { Name = "boss1" });
+	vars.bosswatchers.Add(new StringWatcher(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x18, 0xC), 16) { Name = "boss2" });
+	vars.bosswatchers.Add(new StringWatcher(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x1C, 0xC), 16) { Name = "boss3" });
+	vars.bosswatchers.Add(new StringWatcher(new DeepPointer(vars.ptr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, 0x20, 0xC), 16) { Name = "boss4" });
 	
 	// for (int i = 0; i <= 16; i++) {
 		// var itemoffset = 0x8 + i * 0x10;
@@ -68,7 +86,7 @@ init {
 	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
-		return old.currentroom == prev && current.currentroom == value;
+		return vars.watchers["currentRoom"].Current == prev && vars.watchers["currentRoom"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -90,6 +108,9 @@ init {
 	});
 	
 	vars.pastSplits = new HashSet<string>();
+	vars.mystring = "";
+	vars.paststring = "";
+	refreshRate = 60;
 }
 
 update {
@@ -97,18 +118,23 @@ update {
 		vars.pastSplits.Clear();
 	
 	vars.bosswatchers.UpdateAll(game);
-	// vars.itemwatchers.UpdateAll(game);
-	// print("--MainMenuOpen: " + current.mainmenuopen + " | IGT: " + current.igt + " | CurrentRoom: " + current.currentroom + " | Boss0: " + vars.bosswatchers["boss0"].Current);
+	vars.watchers.UpdateAll(game);
+	
+	// vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | Boss0: " + vars.bosswatchers["boss0"].Current;
+	// if (vars.paststring != vars.mystring) {
+		// print(vars.mystring);
+		// vars.paststring = vars.mystring;
+	// }
 }
 
 start {
-	if(old.igt == 0 && current.igt == 1) {
+	if(vars.watchers["igt"].Old == 0 && vars.watchers["igt"].Current == 1) {
 		return true;
 	}
 }
 
 reset {
-	return (current.mainmenuopen);
+	return (vars.watchers["mainMenuOpen"].Current);
 }
 
 split {	
@@ -131,7 +157,7 @@ isLoading {
 }
 
 gameTime {
-	return TimeSpan.FromSeconds(current.igt);
+	return TimeSpan.FromSeconds(vars.watchers["igt"].Current);
 }
 
 shutdown {
