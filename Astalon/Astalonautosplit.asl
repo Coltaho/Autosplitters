@@ -53,22 +53,35 @@ startup {
 	settings.Add("MagicBlock", false, "MagicBlock", "items");
 	
 	settings.Add("elevators", true, "---Elevators---");
-	settings.Add("testele", false, "TestEle", "elevators");
+	settings.Add("apex", false, "The Apex", "elevators");
+	settings.Add("roa2", false, "Ruins of Ash 2", "elevators");
+	settings.Add("roa1", false, "Ruins of Ash 1", "elevators");
+	settings.Add("hop", false, "Hall of Phantoms", "elevators");
+	settings.Add("mech2", false, "Mechanism 2", "elevators");
+	settings.Add("mech1", false, "Mechanism 1", "elevators");
+	settings.Add("gt2", false, "Gorgon Tomb 2", "elevators");
+	settings.Add("gt1", false, "Gorgon Tomb 1", "elevators");
+	settings.Add("sub1", false, "Subterranea 1", "elevators");
+	settings.Add("sub2", false, "Subterranea 2", "elevators");
+	settings.Add("roots", false, "Tower Roots", "elevators");
 	
-	settings.Add("location", true, "---Location Based Events---");
-	settings.Add("testloc", false, "TestLoc", "location");
+	settings.Add("cutsceneevents", true, "---Cutscenes---");
+	settings.Add("forceddeath", false, "Forced Death", "cutsceneevents");
+	
+	settings.Add("roomtransitions", true, "---Room Transitions---");
+	settings.Add("entertauros", false, "Enter Tauros", "roomtransitions");
+	settings.Add("bk1enter", false, "Enter Black Knight 1", "roomtransitions");
+	settings.Add("bk1leave", false, "Leave Black Knight 1", "roomtransitions");
+	settings.Add("entervolantis", false, "Enter Volantis", "roomtransitions");
+	settings.Add("bk2enter", false, "Enter Black Knight 2", "roomtransitions");
+	settings.Add("bk2leave", false, "Leave Black Knight 2", "roomtransitions");
+	settings.Add("emptyheadenter", false, "Enter Empty Three Head", "roomtransitions");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.3 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
-	vars.timer_OnStart = (EventHandler)((s, e) =>
-    {
-        vars.bosswatchers.ResetAll();
-		vars.medusakilled = false;
-    });
-    timer.OnStart += vars.timer_OnStart;
 }
 
 init {	
@@ -91,6 +104,7 @@ init {
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "defeatedBosses_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" });
+	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" });
 	
 	
 	
@@ -125,9 +139,22 @@ init {
 		return false;
 	});
 	
+	vars.ElevatorFound = (Func<int, bool>)((value) =>
+	{
+		if (vars.watchers["elevatorsFound_size"].Old != vars.watchers["elevatorsFound_size"].Current) {
+			return vars.watchers["currentRoom"].Current == value;
+		}
+		return false;
+	});
+	
+	vars.checkBool = (Func<string, bool>)((value) =>
+	{
+		return vars.watchers[value].Current;
+	});
+	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
-		return vars.watchers["currentRoom"].Current == prev && vars.watchers["currentRoom"].Current == value;
+		return vars.watchers["currentRoom"].Old == prev && vars.watchers["currentRoom"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -182,6 +209,31 @@ init {
 			{ "BiggerLoot", vars.ItemObtained(43) },
 			{ "MagicBlock", vars.ItemObtained(44) },
 			
+			// Elevators
+			{ "apex", vars.ElevatorFound(4109) },
+			{ "roa2", vars.ElevatorFound(8771) },
+			{ "roa1", vars.ElevatorFound(1080) },
+			{ "hop", vars.ElevatorFound(10535) },
+			{ "mech2", vars.ElevatorFound(803) },
+			{ "mech1", vars.ElevatorFound(3947) },
+			{ "gt2", vars.ElevatorFound(248) },
+			{ "gt1", vars.ElevatorFound(6629) },
+			{ "sub1", vars.ElevatorFound(61) },
+			{ "sub2", vars.ElevatorFound(2574) },
+			{ "roots", vars.ElevatorFound(2705) },
+			
+			// Cutscenes
+			{ "forcedDeath", vars.checkBool("forcedDeath") },			
+			
+			// Room Transitions
+			{ "entertauros", vars.Transitioned(248, 64) },			
+			{ "bk1enter", vars.Transitioned(342, 7210) },
+			{ "bk1leave", vars.Transitioned(7210, 342) },
+			{ "entervolantis", vars.Transitioned(803, 802) },
+			{ "bk2enter", vars.Transitioned(1080, 884) },
+			{ "bk2leave", vars.Transitioned(884, 1054) },	
+			{ "emptyheadenter", vars.Transitioned(4080, 4079) },	
+			
 		};
 		return splits;
 	});
@@ -194,16 +246,18 @@ init {
 }
 
 update {
-	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0)
+	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0) {
 		vars.pastSplits.Clear();
+		vars.medusakilled = false;
+	}
 	
 	vars.watchers.UpdateAll(game);
 
-	// vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | defeatedBosses: " + vars.watchers["defeatedBosses_size"].Current;
-	// if (vars.paststring != vars.mystring) {
-		// print(vars.mystring);
-		// vars.paststring = vars.mystring;
-	// }
+	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | elevatorsFound: " + vars.watchers["elevatorsFound_size"].Current;
+	if (vars.paststring != vars.mystring) {
+		print(vars.mystring);
+		vars.paststring = vars.mystring;
+	}
 }
 
 start {
@@ -243,8 +297,4 @@ isLoading {
 
 gameTime {
 	return TimeSpan.FromSeconds(vars.watchers["igt"].Current);
-}
-
-shutdown {
-	timer.OnStart -= vars.timer_OnStart;
 }
