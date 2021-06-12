@@ -9,7 +9,7 @@ startup {
 	settings.Add("Volantis", true, "Volantis (Blue)", "bosses");
 	settings.Add("Gemini", true, "Gemini (Basement)", "bosses");
 	settings.Add("Solaria", true, "Solaria (Green)", "bosses");
-	settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
+	// settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
 	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
 	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");	
 	settings.Add("seperater", true, "-----------Final Events--(Leave on)-----------", "bosses");
@@ -199,7 +199,7 @@ init {
 			{ "Volantis", vars.Killed("Volantis") },
 			{ "Gemini", vars.Killed("Gemini") },
 			{ "Solaria", vars.Killed("Solaria") },
-			{ "bkFinalDead", vars.checkBoolFinalRoom("bkFinalDead") },
+			// { "bkFinalDead", vars.checkBoolFinalRoom("bkFinalDead") },
 			// { "medusaPhase1Dead", vars.checkBoolFinalRoom("medusaPhase1Dead") },
 			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
