@@ -95,6 +95,7 @@ startup {
 	settings.Add("info", true, "Astalon Autosplitter v1.6 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("debug", false, "Print Debug Info", "infosection");
 	
 }
 
@@ -298,11 +299,13 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 
-	// vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
-	// if (vars.paststring != vars.mystring) {
-		// print(vars.mystring);
-		// vars.paststring = vars.mystring;
-	// }
+	if (settings["debug"]) {
+		vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
+		if (vars.paststring != vars.mystring) {
+			print(vars.mystring);
+			vars.paststring = vars.mystring;
+		}
+	}
 }
 
 start {
