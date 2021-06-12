@@ -298,11 +298,11 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 
-	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
-	if (vars.paststring != vars.mystring) {
-		print(vars.mystring);
-		vars.paststring = vars.mystring;
-	}
+	// vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
+	// if (vars.paststring != vars.mystring) {
+		// print(vars.mystring);
+		// vars.paststring = vars.mystring;
+	// }
 }
 
 start {
