@@ -85,8 +85,14 @@ startup {
 	settings.Add("entersolaria", false, "Enter Solaria", "roomtransitions");
 	settings.Add("finalbossenter", false, "Enter Final Boss", "roomtransitions");
 	
+	settings.Add("bossrush", true, "---Boss Rush---");
+	settings.Add("TaurosBR", true, "Tauros BR", "bossrush");
+	settings.Add("VolantisBR", true, "Volantis BR", "bossrush");
+	settings.Add("SolariaBR", true, "Solaria BR", "bossrush");
+	settings.Add("GeminiBR", true, "Gemini BR", "bossrush");
+	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.5 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.6 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -144,7 +150,7 @@ init {
 		if (vars.watchers["defeatedBosses_size"].Old != vars.watchers["defeatedBosses_size"].Current) {
 			for (int i = 0; i < vars.watchers["defeatedBosses_size"].Current; i++) {
 				var itemoffset = 0x10 + i * 0x4;
-				var boss = new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, itemoffset, 0xC).DerefString(game, 16);				
+				var boss = new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0x8, itemoffset, 0xC).DerefString(game, 20);				
 				if (boss == value && value == "Medusa") {
 					vars.medusakilled = true;
 					return false;
@@ -266,6 +272,12 @@ init {
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
 			{ "finalbossenter", vars.Transitioned(4112, 5000) },
+			
+			// Boss Rush
+			{ "TaurosBR", vars.Killed("TaurosBR") },
+			{ "VolantisBR", vars.Killed("VolantisBR") },
+			{ "SolariaBR", vars.Killed("SolariaBR") },
+			{ "GeminiBR", vars.Killed("GeminiBR") },
 			
 		};
 		return splits;
