@@ -10,7 +10,7 @@ Auto Splitter for Astalon  (PC)
 Time is sync'd with ingame timer. This timer automatically removes loads and stops when the final boss is killed.
 
 - Automatically start the timer when you start a run. Timer starts after initial load on a new save file
-- Automatically split either on boss kill (3 colored orb gorgons, Gemini, and Medusa)
+- Automatically split on a multitude of events - check Settings!
 - Automatically reset when you are in the main menu
 
 ## Installation 
