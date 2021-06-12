@@ -13,6 +13,7 @@ startup {
 	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
 	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");
 	settings.Add("Medusa", true, "Medusa (Final)", "bosses");
+	settings.Add("gameCompleted", true, "Game Completed", "bosses");
 	
 	settings.Add("items", true, "---Items---");
 	settings.Add("AmuletOfSol", false, "AmuletOfSol", "items");
@@ -85,7 +86,7 @@ startup {
 	settings.Add("finalbossenter", false, "Enter Final Boss", "roomtransitions");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.4 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.5 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -108,6 +109,7 @@ init {
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "defeatedBosses_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" });
@@ -193,6 +195,7 @@ init {
 			// { "medusaPhase1Dead", vars.checkBoolFinalRoom("medusaPhase1Dead") },
 			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
+			{ "gameCompleted", vars.checkBoolFinalRoom("gameCompleted") },
 			
 			// Items
 			{ "AmuletOfSol", vars.ItemObtained(0) },
@@ -283,7 +286,7 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 
-	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | BK Final dead: " + vars.watchers["bkFinalDead"].Current;
+	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
 	if (vars.paststring != vars.mystring) {
 		print(vars.mystring);
 		vars.paststring = vars.mystring;
@@ -297,7 +300,7 @@ start {
 }
 
 reset {
-	return (vars.watchers["mainMenuOpen"].Current);
+	return (!vars.watchers["mainMenuOpen"].Old && vars.watchers["mainMenuOpen"].Current);
 }
 
 split {
