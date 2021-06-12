@@ -2,7 +2,11 @@ state("Astalon") {}
 
 startup {
 	print("--[Autosplitter] Starting up!--");
-	refreshRate = 2;
+	refreshRate = 2;	
+	
+	settings.Add("finalevents", true, "---Final Events--(Leave on)---");
+	settings.Add("Medusa", true, "Medusa (Final)", "finalevents");
+	settings.Add("gameCompleted", true, "Game Completed (Failsafe)", "finalevents");
 	
 	settings.Add("bosses", true, "---Bosses---");
 	settings.Add("Tauros", true, "Tauros (Red)", "bosses");
@@ -11,10 +15,7 @@ startup {
 	settings.Add("Solaria", true, "Solaria (Green)", "bosses");
 	// settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
 	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
-	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");	
-	settings.Add("seperater", true, "-----------Final Events--(Leave on)-----------", "bosses");
-	settings.Add("Medusa", true, "Medusa (Final)", "bosses");
-	settings.Add("gameCompleted", true, "Game Completed (Failsafe)", "bosses");
+	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");
 	
 	settings.Add("items", true, "---Items---");
 	settings.Add("AmuletOfSol", false, "AmuletOfSol", "items");
@@ -92,15 +93,78 @@ startup {
 	settings.Add("SolariaBR", true, "Solaria BR", "bossrush");
 	settings.Add("GeminiBR", true, "Gemini BR", "bossrush");
 	
-	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.6 by Coltaho", "infosection");
-	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
-	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
-	settings.Add("debug", false, "Print Debug Info", "infosection");
+	settings.Add("scriptsection", true, "---Script Options---");
+	settings.Add("RunInBackground", true, "Allow the game to run in background", "scriptsection");
+	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
+	settings.Add("infosection", true, "---Info---");
+	settings.Add("info", true, "Astalon Autosplitter v1.7 by Coltaho", "infosection");
+	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
-init {	
+init {
+	
+	//Run in background code courtesy of Voxelse#3117	
+	vars.GetAbsoluteAddress = (Func<IntPtr, IntPtr>)((ptr) => ptr + 0x4 + game.ReadValue<int>(ptr));
+
+    vars.SetRunInBackground = (Action<bool>)((value) => {
+        if(vars.runInBackgroundPtr != IntPtr.Zero) {
+            game.WriteValue<bool>((IntPtr)vars.runInBackgroundPtr, value);
+			print("--[Autosplitter] Run in background set to: " + value);
+        }
+	});
+
+    vars.runInBackgroundPtr = IntPtr.Zero;
+	vars.runInBackgroundSigAddr = IntPtr.Zero;
+	vars.runInBackgroundOldSetting = false;
+	vars.runInBackgroundTokenSource = new CancellationTokenSource();
+
+    vars.runInBackgroundFunc = new ThreadStart(() => {
+		SigScanTarget runInBackgroundScanTarget = new SigScanTarget(0x0, "E8 ???????? 85 C0 74 0C E8 ???????? 8A 80 C0 01 00 00 C3 32 C0 C3");
+		
+        ProcessModuleWow64Safe unityModule = null;
+		SignatureScanner unityScanner = null;
+
+        vars.runInBackgroundSigAddr = IntPtr.Zero;
+        
+		while(!vars.runInBackgroundTokenSource.IsCancellationRequested) {
+
+            if(unityModule == null) {
+                try {
+                    unityModule = game.ModulesWow64Safe().FirstOrDefault(m => m.ModuleName == "UnityPlayer.dll");
+                } catch {
+                    print("--[Autosplitter] UnityPlayer module not initialized");
+                    Thread.Sleep(500);
+                    continue;
+                }
+                unityScanner = new SignatureScanner(game, unityModule.BaseAddress, unityModule.ModuleMemorySize);
+            }
+
+            print("--[Autosplitter] Scanning runInBackground memory");
+
+            if((vars.runInBackgroundSigAddr = unityScanner.Scan(runInBackgroundScanTarget)) != IntPtr.Zero) {
+                print("--[Autosplitter] Sig scan runInBackground addr: " + vars.runInBackgroundSigAddr.ToString("X"));
+
+                IntPtr unityGetSettings = vars.GetAbsoluteAddress(vars.runInBackgroundSigAddr + 0xA);
+                IntPtr unityGetManager = vars.GetAbsoluteAddress(unityGetSettings + 0x3);
+                IntPtr unityGetContext = game.ReadPointer((IntPtr)game.ReadValue<int>(unityGetManager + 0x9));
+
+                if(unityGetContext == IntPtr.Zero) {
+                    print("--[Autosplitter] runInBackground Pointer not initialized");
+                    Thread.Sleep(500);
+                    continue;
+                }
+
+                vars.runInBackgroundPtr = unityGetContext + 0x1C0;
+                vars.SetRunInBackground(true);
+
+                break;
+            }
+            Thread.Sleep(1000);
+        }
+        print("--[Autosplitter] Exit runInBackground thread scan");
+    });
+	
 	vars.scanTarget = new SigScanTarget(0, "A1 ???????? 83 C4 08 8B 40 5C 8B 00 85 C0 0F84 ???????? 8B 40 10 85 C0 0F84 ???????? 6A 00 50 E8 ???????? 83 C4 08 A1 ???????? 8B 40 5C 8B 30");
 	
 	var mymodule = modules.Where(m => m.ModuleName == "GameAssembly.dll").First();
@@ -123,7 +187,7 @@ init {
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" });
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" });
 	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xB8)) { Name = "bkfinalhealth" });
-	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xE6)) { Name = "bkFinalDead" });
+	// vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xE6)) { Name = "bkFinalDead" });
 	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xB8)) { Name = "medusaPhase1health" });
 	// vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xE6)) { Name = "medusaPhase1Dead" });
 	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x80, 0xB8)) { Name = "medusaPhase2health" });
@@ -293,6 +357,22 @@ init {
 }
 
 update {
+	if(settings["RunInBackground"] != vars.runInBackgroundOldSetting) {
+		vars.runInBackgroundOldSetting = settings["RunInBackground"];
+		if(vars.runInBackgroundOldSetting) {
+			if(vars.runInBackgroundSigAddr == IntPtr.Zero) {
+				vars.runInBackgroundTokenSource.Cancel();
+				vars.runInBackgroundTokenSource = new CancellationTokenSource();
+				new Thread(vars.runInBackgroundFunc).Start();
+			} else {
+				vars.SetRunInBackground(true);
+			}
+		} else {
+			vars.runInBackgroundTokenSource.Cancel();
+			vars.SetRunInBackground(false);
+		}
+	}
+	
 	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0) {
 		vars.pastSplits.Clear();
 		vars.medusakilled = false;
@@ -346,4 +426,13 @@ isLoading {
 
 gameTime {
 	return TimeSpan.FromSeconds(vars.watchers["igt"].Current);
+}
+
+exit {
+    vars.runInBackgroundTokenSource.Cancel();
+}
+
+shutdown {
+	vars.runInBackgroundTokenSource.Cancel();
+    vars.SetRunInBackground(false);
 }

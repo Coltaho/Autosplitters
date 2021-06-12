@@ -13,6 +13,8 @@ Time is sync'd with ingame timer. This timer automatically removes loads and sto
 - Automatically split on a multitude of events - check Settings!
 - Automatically reset when you are in the main menu
 
+- By default the script will cause the game to run in the background. This prevents IGT from freezing when focus is lost. It currently does not allow background input, though. This option should be left on.
+
 ## Installation 
 
 - Go to "Edit Splits.." in LiveSplit
@@ -44,6 +46,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 ## Thanks
 
 - Thanks to JonLepage a dev for the game who changed some things for better splitting!
+- Thanks to [Voxelse](http://twitch.tv/Voxelse) for help with advanced ASL coding practices.
 
 ## Contact
 
