@@ -11,9 +11,10 @@ startup {
 	settings.Add("Solaria", true, "Solaria (Green)", "bosses");
 	settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
 	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
-	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");
+	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");	
+	settings.Add("seperater", true, "-----------Final Events--(Leave on)-----------", "bosses");
 	settings.Add("Medusa", true, "Medusa (Final)", "bosses");
-	settings.Add("gameCompleted", true, "Game Completed", "bosses");
+	settings.Add("gameCompleted", true, "Game Completed (Failsafe)", "bosses");
 	
 	settings.Add("items", true, "---Items---");
 	settings.Add("AmuletOfSol", false, "AmuletOfSol", "items");
