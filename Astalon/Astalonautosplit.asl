@@ -273,7 +273,7 @@ init {
 			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
-			{ "finalbossenter", vars.Transitioned(4112, 5000) },
+			{ "finalbossenter", vars.Transitioned(4111, 5000) },
 			
 			// Boss Rush
 			{ "TaurosBR", vars.Killed("TaurosBR") },
