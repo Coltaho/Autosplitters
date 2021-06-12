@@ -9,6 +9,9 @@ startup {
 	settings.Add("Volantis", true, "Volantis (Blue)", "bosses");
 	settings.Add("Gemini", true, "Gemini (Basement)", "bosses");
 	settings.Add("Solaria", true, "Solaria (Green)", "bosses");
+	settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
+	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
+	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");
 	settings.Add("Medusa", true, "Medusa (Final)", "bosses");
 	
 	settings.Add("items", true, "---Items---");
@@ -66,7 +69,7 @@ startup {
 	settings.Add("roots", false, "Tower Roots", "elevators");
 	
 	settings.Add("cutsceneevents", true, "---Cutscenes---");
-	settings.Add("forceddeath", false, "Forced Death", "cutsceneevents");
+	settings.Add("forcedDeath", false, "Forced Death", "cutsceneevents");
 	
 	settings.Add("roomtransitions", true, "---Room Transitions---");
 	settings.Add("entertauros", false, "Enter Tauros", "roomtransitions");
@@ -76,9 +79,13 @@ startup {
 	settings.Add("bk2enter", false, "Enter Black Knight 2", "roomtransitions");
 	settings.Add("bk2leave", false, "Leave Black Knight 2", "roomtransitions");
 	settings.Add("emptyheadenter", false, "Enter Empty Three Head", "roomtransitions");
+	settings.Add("darkroomsenter", false, "Enter Dark Rooms", "roomtransitions");
+	settings.Add("darkroomsleave", false, "Leave Dark Rooms", "roomtransitions");
+	settings.Add("entersolaria", false, "Enter Solaria", "roomtransitions");
+	settings.Add("finalbossenter", false, "Enter Final Boss", "roomtransitions");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.3 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.4 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
@@ -105,6 +112,14 @@ init {
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" });
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" });
+	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xB8)) { Name = "bkfinalhealth" });
+	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xE6)) { Name = "bkFinalDead" });
+	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xB8)) { Name = "medusaPhase1health" });
+	// vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xE6)) { Name = "medusaPhase1Dead" });
+	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x80, 0xB8)) { Name = "medusaPhase2health" });
+	// vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x80, 0xE6)) { Name = "medusaPhase2Dead" });
+	// vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x84, 0xB8)) { Name = "medusaPhase3health" });
+	// vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x84, 0xE6)) { Name = "medusaPhase3dead" });
 	
 	
 	
@@ -152,6 +167,14 @@ init {
 		return vars.watchers[value].Current;
 	});
 	
+	vars.checkBoolFinalRoom = (Func<string, bool>)((value) =>
+	{
+		if (vars.watchers["currentRoom"].Current == 5000)
+			return vars.watchers[value].Current;
+		else
+			return false;
+	});
+	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
 		return vars.watchers["currentRoom"].Old == prev && vars.watchers["currentRoom"].Current == value;
@@ -166,6 +189,9 @@ init {
 			{ "Volantis", vars.Killed("Volantis") },
 			{ "Gemini", vars.Killed("Gemini") },
 			{ "Solaria", vars.Killed("Solaria") },
+			{ "bkFinalDead", vars.checkBoolFinalRoom("bkFinalDead") },
+			// { "medusaPhase1Dead", vars.checkBoolFinalRoom("medusaPhase1Dead") },
+			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
 			
 			// Items
@@ -223,16 +249,20 @@ init {
 			{ "roots", vars.ElevatorFound(2705) },
 			
 			// Cutscenes
-			{ "forcedDeath", vars.checkBool("forcedDeath") },			
+			{ "forcedDeath", vars.checkBool("forcedDeath") },
 			
 			// Room Transitions
-			{ "entertauros", vars.Transitioned(248, 64) },			
+			{ "entertauros", vars.Transitioned(248, 64) },
 			{ "bk1enter", vars.Transitioned(342, 7210) },
 			{ "bk1leave", vars.Transitioned(7210, 342) },
 			{ "entervolantis", vars.Transitioned(803, 802) },
 			{ "bk2enter", vars.Transitioned(1080, 884) },
-			{ "bk2leave", vars.Transitioned(884, 1054) },	
-			{ "emptyheadenter", vars.Transitioned(4080, 4079) },	
+			{ "bk2leave", vars.Transitioned(884, 1054) },
+			{ "emptyheadenter", vars.Transitioned(4080, 4079) },
+			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
+			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
+			{ "entersolaria", vars.Transitioned(10017, 10015) },
+			{ "finalbossenter", vars.Transitioned(4112, 5000) },
 			
 		};
 		return splits;
@@ -253,7 +283,7 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 
-	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | elevatorsFound: " + vars.watchers["elevatorsFound_size"].Current;
+	vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | BK Final dead: " + vars.watchers["bkFinalDead"].Current;
 	if (vars.paststring != vars.mystring) {
 		print(vars.mystring);
 		vars.paststring = vars.mystring;
