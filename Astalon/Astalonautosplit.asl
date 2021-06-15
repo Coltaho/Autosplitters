@@ -181,7 +181,8 @@ init {
 	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x1, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" });
-	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" });
+	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA8)) { Name = "previousRoom" });
+	vars.watchers.Add(new MemoryWatcher<bool>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "defeatedBosses_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" });
 	vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.sigAddr + 0x2C, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" });
@@ -251,7 +252,7 @@ init {
 	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
-		return vars.watchers["currentRoom"].Old == prev && vars.watchers["currentRoom"].Current == value;
+		return vars.watchers["previousRoom"].Current == prev && vars.watchers["currentRoom"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -381,7 +382,7 @@ update {
 	vars.watchers.UpdateAll(game);
 
 	if (settings["debug"]) {
-		vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
+		vars.mystring = "--MainMenuOpen: " + vars.watchers["mainMenuOpen"].Current + " | IGT: " + vars.watchers["igt"].Current + " | PreviousRoom: " + vars.watchers["previousRoom"].Current + " | CurrentRoom: " + vars.watchers["currentRoom"].Current + " | GameCompleted: " + vars.watchers["gameCompleted"].Current;
 		if (vars.paststring != vars.mystring) {
 			print(vars.mystring);
 			vars.paststring = vars.mystring;
