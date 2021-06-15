@@ -98,7 +98,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.7 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.8 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
