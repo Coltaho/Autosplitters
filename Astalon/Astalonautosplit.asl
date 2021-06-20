@@ -98,7 +98,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.8 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.9 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
@@ -179,6 +179,7 @@ init {
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameLoaderAsm, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" },
                     
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" },
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x90)) { Name = "gameMode" },
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" },
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA8)) { Name = "previousRoom" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" },
@@ -286,17 +287,24 @@ init {
 		return vars.watchers[value].Current;
 	});
 	
-	vars.checkBoolFinalRoom = (Func<string, bool>)((value) =>
+	vars.checkBoolGameCompleted = (Func<bool>)(() =>
 	{
-		if (vars.watchers["currentRoom"].Current == 5000)
-			return vars.watchers[value].Current;
-		else
+		if (vars.watchers["gameCompleted"].Current && vars.watchers["gameMode"].Current == 1) {
+			vars.bkfinished = true;
 			return false;
+		}
+		else 
+			return vars.watchers["gameCompleted"].Current;
 	});
 	
 	vars.Transitioned = (Func<int, int, bool>)((prev, value) =>
 	{
 		return vars.watchers["previousRoom"].Current == prev && vars.watchers["currentRoom"].Current == value;
+	});
+	
+	vars.JustTransitioned = (Func<int, bool>)((value) =>
+	{
+		return vars.watchers["currentRoom"].Current != value && vars.watchers["currentRoom"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -312,7 +320,7 @@ init {
 			// { "medusaPhase1Dead", vars.checkBoolFinalRoom("medusaPhase1Dead") },
 			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
-			{ "gameCompleted", vars.checkBoolFinalRoom("gameCompleted") },
+			{ "gameCompleted", vars.checkBoolGameCompleted() },
 			
 			// Items
 			{ "AmuletOfSol", vars.ItemObtained(0) },
@@ -382,7 +390,7 @@ init {
 			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
-			{ "finalbossenter", vars.Transitioned(4111, 5000) },
+			{ "finalbossenter", vars.JustTransitioned(5000) },
 			
 			// Boss Rush
 			{ "TaurosBR", vars.Killed("TaurosBR") },
@@ -396,6 +404,7 @@ init {
 	
 	vars.pastSplits = new HashSet<string>();
 	vars.medusakilled = false;
+	vars.bkfinished = false;
 	vars.mystring = "";
 	vars.paststring = "";
 }
@@ -415,6 +424,7 @@ update {
 	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0) {
 		vars.pastSplits.Clear();
 		vars.medusakilled = false;
+		vars.bkfinished = false;
 	}
 	vars.watchers.UpdateAll(game);
 
@@ -442,6 +452,12 @@ split {
 	if (vars.medusakilled == true && vars.watchers["igt"].Old != vars.watchers["igt"].Current) {
 		print("--[Autosplitter] Split: Medusa");
 		vars.medusakilled = false;
+		return true;
+	}
+	
+	if (vars.bkfinished == true && vars.watchers["igt"].Old != vars.watchers["igt"].Current) {
+		print("--[Autosplitter] Split: BK Completed");
+		vars.bkfinished = false;
 		return true;
 	}
 	
