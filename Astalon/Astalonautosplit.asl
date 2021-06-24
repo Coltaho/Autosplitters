@@ -12,9 +12,10 @@ startup {
 	settings.Add("Volantis", true, "Volantis (Blue)", "bosses");
 	settings.Add("Gemini", true, "Gemini (Basement)", "bosses");
 	settings.Add("Solaria", true, "Solaria (Green)", "bosses");
-	// settings.Add("bkFinalDead", false, "Black Knight (Final) (beta test)", "bosses");
-	// settings.Add("medusaPhase1Dead", false, "Medusa (Phase 1)", "bosses");
-	// settings.Add("medusaPhase2Dead", false, "Medusa (Phase 2)", "bosses");
+	
+	settings.Add("minibosses", true, "---Mini Bosses---");
+	settings.Add("deadmaiden", false, "Dead Maiden", "minibosses");
+	settings.Add("cyclopsprince", false, "Cyclops Prince", "minibosses");
 	
 	settings.Add("items", true, "---Items---");
 	settings.Add("AmuletOfSol", false, "AmuletOfSol", "items");
@@ -72,6 +73,7 @@ startup {
 	
 	settings.Add("cutsceneevents", true, "---Cutscenes---");
 	settings.Add("forcedDeath", false, "Forced Death", "cutsceneevents");
+	settings.Add("finalplatformride", false, "Final Platform Ride", "cutsceneevents");
 	
 	settings.Add("roomtransitions", true, "---Room Transitions---");
 	settings.Add("entertauros", false, "Enter Tauros", "roomtransitions");
@@ -84,7 +86,8 @@ startup {
 	settings.Add("darkroomsenter", false, "Enter Dark Rooms", "roomtransitions");
 	settings.Add("darkroomsleave", false, "Leave Dark Rooms", "roomtransitions");
 	settings.Add("entersolaria", false, "Enter Solaria", "roomtransitions");
-	settings.Add("finalbossenter", false, "Enter Final Boss", "roomtransitions");
+	settings.Add("dullahanleave", false, "Leave Dullahan", "roomtransitions");
+	settings.Add("finalbossenter", false, "Enter Final Boss (broken?)", "roomtransitions");
 	
 	settings.Add("bossrush", true, "---Boss Rush---");
 	settings.Add("TaurosBR", true, "Tauros BR", "bossrush");
@@ -98,7 +101,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.9 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.10 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
@@ -187,14 +190,9 @@ init {
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" },
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" },
-                    // new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xB8)) { Name = "bkfinalhealth" },
-                    // new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x14, 0xE6)) { Name = "bkFinalDead" },
-                    // new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xB8)) { Name = "medusaPhase1health" },
-                    // new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x6C, 0xE6)) { Name = "medusaPhase1Dead" },
-                    // new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x80, 0xB8)) { Name = "medusaPhase2health" },
-                    // new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x80, 0xE6)) { Name = "medusaPhase2Dead" },
-                    // new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x84, 0xB8)) { Name = "medusaPhase3health" },
-                    // new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x14, 0x5C, 0x8, 0x84, 0xE6)) { Name = "medusaPhase3dead" },
+                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B7)) { Name = "finalplatformride" },
+                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C8)) { Name = "cyclopsprince" },
+                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xD4)) { Name = "deadmaiden" },
                 };
 
                 vars.watchersInitialized = true;
@@ -304,7 +302,7 @@ init {
 	
 	vars.JustTransitioned = (Func<int, bool>)((value) =>
 	{
-		return vars.watchers["currentRoom"].Current != value && vars.watchers["currentRoom"].Current == value;
+		return vars.watchers["currentRoom"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -321,6 +319,11 @@ init {
 			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
 			{ "gameCompleted", vars.checkBoolGameCompleted() },
+			
+			//Mini bosses
+			{ "cyclopsprince", vars.checkBool("cyclopsprince") },
+			{ "deadmaiden", vars.checkBool("deadmaiden") },
+			
 			
 			// Items
 			{ "AmuletOfSol", vars.ItemObtained(0) },
@@ -378,6 +381,7 @@ init {
 			
 			// Cutscenes
 			{ "forcedDeath", vars.checkBool("forcedDeath") },
+			{ "finalplatformride", vars.checkBool("finalplatformride") },
 			
 			// Room Transitions
 			{ "entertauros", vars.Transitioned(248, 64) },
@@ -390,6 +394,7 @@ init {
 			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
+			{ "dullahanleave", vars.Transitioned(9067, 9066) },
 			{ "finalbossenter", vars.JustTransitioned(5000) },
 			
 			// Boss Rush
