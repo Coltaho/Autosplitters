@@ -86,6 +86,7 @@ startup {
 	settings.Add("darkroomsenter", false, "Enter Dark Rooms", "roomtransitions");
 	settings.Add("darkroomsleave", false, "Leave Dark Rooms", "roomtransitions");
 	settings.Add("entersolaria", false, "Enter Solaria", "roomtransitions");
+	settings.Add("cyclopsdenenter", false, "Enter Cyclops Den", "roomtransitions");
 	settings.Add("dullahanleave", false, "Leave Dullahan", "roomtransitions");
 	settings.Add("finalbossenter", false, "Enter Final Boss (broken?)", "roomtransitions");
 	
@@ -101,7 +102,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.10 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.11 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
@@ -191,6 +192,7 @@ init {
                     new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B7)) { Name = "finalplatformride" },
+                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C0)) { Name = "cyclopsDenKey" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C8)) { Name = "cyclopsprince" },
                     new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xD4)) { Name = "deadmaiden" },
                 };
@@ -358,7 +360,7 @@ init {
 			{ "MonsterBall", vars.ItemObtained(34) },
 			{ "BloodChalice", vars.ItemObtained(35) },
 			{ "MorningStar", vars.ItemObtained(36) },
-			{ "CyclopsIdol", vars.ItemObtained(37) },
+			{ "CyclopsIdol", vars.CheckBool("cyclopsDenKey") },
 			{ "BoreasGauntlet", vars.ItemObtained(39) },
 			{ "FamiliarGil", vars.ItemObtained(40) },
 			{ "Bestiary", vars.ItemObtained(41) },
@@ -394,6 +396,7 @@ init {
 			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
+			{ "cyclopsdenenter", vars.Transitioned(3728, 7359) },
 			{ "dullahanleave", vars.Transitioned(9067, 9066) },
 			{ "finalbossenter", vars.JustTransitioned(5000) },
 			
