@@ -102,7 +102,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Astalon Autosplitter v1.11 by Coltaho", "infosection");
+	settings.Add("info", true, "Astalon Autosplitter v1.12 by Coltaho", "infosection");
 	settings.Add("info0", true, "Supports Astalon v1.0+", "infosection");	
 }
 
@@ -360,7 +360,7 @@ init {
 			{ "MonsterBall", vars.ItemObtained(34) },
 			{ "BloodChalice", vars.ItemObtained(35) },
 			{ "MorningStar", vars.ItemObtained(36) },
-			{ "CyclopsIdol", vars.CheckBool("cyclopsDenKey") },
+			{ "CyclopsIdol", vars.checkBool("cyclopsDenKey") },
 			{ "BoreasGauntlet", vars.ItemObtained(39) },
 			{ "FamiliarGil", vars.ItemObtained(40) },
 			{ "Bestiary", vars.ItemObtained(41) },
