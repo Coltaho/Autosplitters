@@ -98,7 +98,7 @@ startup {
 	
 	settings.Add("scriptsection", true, "---Script Options---");
 	settings.Add("RunInBackground", true, "Allow the game to run in background", "scriptsection");
-    settings.Add("AllowInputBackground", false, "Allow game inputs while in background", "scriptsection");
+	settings.Add("AllowInputBackground", false, "Allow game inputs while in background", "scriptsection");
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
@@ -110,137 +110,136 @@ init {
 	
 	//Run in background code courtesy of Voxelse#3117	
 	vars.GetAbsoluteAddress = (Func<IntPtr, IntPtr>)((ptr) => ptr + 0x4 + game.ReadValue<int>(ptr));
-
-    vars.SetRunInBackground = (Action<bool>)((value) => {
-        if(vars.runInBackgroundPtr != IntPtr.Zero) {
-            game.WriteValue<bool>((IntPtr)vars.runInBackgroundPtr, value);
-            vars.runInBackground = value;
+	
+	vars.SetRunInBackground = (Action<bool>)((value) => {
+		if(vars.runInBackgroundPtr != IntPtr.Zero) {
+			game.WriteValue<bool>((IntPtr)vars.runInBackgroundPtr, value);
+			vars.runInBackground = value;
 			print("--[Autosplitter] Run in background set to: " + value);
-        }
+		}
 	});
 
-    vars.SetIgnoreInputs = (Action<bool>)((value) => {
-        if(vars.ignoreInputsPtr != IntPtr.Zero) {
-            game.WriteValue<bool>((IntPtr)vars.ignoreInputsPtr, value);
-            vars.ignoreInputs = value;
+	vars.SetIgnoreInputs = (Action<bool>)((value) => {
+		if(vars.ignoreInputsPtr != IntPtr.Zero) {
+			game.WriteValue<bool>((IntPtr)vars.ignoreInputsPtr, value);
+			vars.ignoreInputs = value;
 			print("--[Autosplitter] Ignore inputs in background set to: " + value);
-        }
+		}
 	});
-
-    vars.runInBackgroundPtr = IntPtr.Zero;
-    vars.runInBackground = false;
 	
-    vars.ignoreInputsPtr = IntPtr.Zero;
-    vars.ignoreInputs = true;
+	vars.runInBackgroundPtr = IntPtr.Zero;
+	vars.runInBackground = false;
 	
-    vars.tokenSource = new CancellationTokenSource();
-
-    vars.watchersInitialized = false;
-
-    vars.threadScan = new Thread(() => {
+	vars.ignoreInputsPtr = IntPtr.Zero;
+	vars.ignoreInputs = true;
+	
+	vars.tokenSource = new CancellationTokenSource();
+	
+	vars.watchersInitialized = false;
+	
+	vars.threadScan = new Thread(() => {
 		SignatureScanner unityScanner = null;
 		SignatureScanner gameAssemblyScanner = null;
-
-        SigScanTarget gameScanTarget = new SigScanTarget(0x0, "A1 ???????? 83 C4 08 8B 40 5C 8B 00 85 C0 0F84 ???????? 8B 40 10 85 C0 0F84 ???????? 6A 00 50 E8 ???????? 83 C4 08 A1 ???????? 8B 40 5C 8B 30");
-        IntPtr gameSigAddr = IntPtr.Zero;
+		
+		SigScanTarget gameScanTarget = new SigScanTarget(0x0, "A1 ???????? 83 C4 08 8B 40 5C 8B 00 85 C0 0F84 ???????? 8B 40 10 85 C0 0F84 ???????? 6A 00 50 E8 ???????? 83 C4 08 A1 ???????? 8B 40 5C 8B 30");
+		IntPtr gameSigAddr = IntPtr.Zero;
         
 		SigScanTarget runInBackgroundScanTarget = new SigScanTarget(0x0, "E8 ???????? 85 C0 74 0C E8 ???????? 8A 80 C0 01 00 00 C3 32 C0 C3");
-        IntPtr runInBackgroundSigAddr = IntPtr.Zero;
-
-        SigScanTarget ignoreInputsScanTarget = new SigScanTarget(0x9, "0F1F 84 00 00000000 A1 ???????? F6 80 BB000000 02 74 ?? 83 78 74 00 75 0E 50 E8 ???????? A1 ???????? 83 C4 04 8B 40 5C 8B 40 18 85 C0 74 ?? 8B 40 08 85 C0 74");
-        IntPtr ignoreInputsSigAddr = IntPtr.Zero;
-        
+		IntPtr runInBackgroundSigAddr = IntPtr.Zero;
+		
+		SigScanTarget ignoreInputsScanTarget = new SigScanTarget(0x9, "0F1F 84 00 00000000 A1 ???????? F6 80 BB000000 02 74 ?? 83 78 74 00 75 0E 50 E8 ???????? A1 ???????? 83 C4 04 8B 40 5C 8B 40 18 85 C0 74 ?? 8B 40 08 85 C0 74");
+		IntPtr ignoreInputsSigAddr = IntPtr.Zero;
+		
 		while(!vars.tokenSource.IsCancellationRequested) {
-            if(unityScanner == null || gameAssemblyScanner == null) {
-                ProcessModuleWow64Safe[] loadedModules = null;
-                try {
-                    loadedModules = game.ModulesWow64Safe();
-                } catch {
-                    loadedModules = new ProcessModuleWow64Safe[0];
-                }
+			if(unityScanner == null || gameAssemblyScanner == null) {
+				ProcessModuleWow64Safe[] loadedModules = null;
+				try {
+					loadedModules = game.ModulesWow64Safe();
+				} catch {
+					loadedModules = new ProcessModuleWow64Safe[0];
+				}
 
-                ProcessModuleWow64Safe unityModule = loadedModules.FirstOrDefault(m => m.ModuleName == "UnityPlayer.dll");
-                ProcessModuleWow64Safe gameAssemblyModule = loadedModules.FirstOrDefault(m => m.ModuleName == "GameAssembly.dll");
-                if(unityModule == null || gameAssemblyModule == null) {
-                    print("--[Autosplitter] Modules not initialized");
-                    Thread.Sleep(500);
-                    continue;
-                }
+				ProcessModuleWow64Safe unityModule = loadedModules.FirstOrDefault(m => m.ModuleName == "UnityPlayer.dll");
+				ProcessModuleWow64Safe gameAssemblyModule = loadedModules.FirstOrDefault(m => m.ModuleName == "GameAssembly.dll");
+				if(unityModule == null || gameAssemblyModule == null) {
+					print("--[Autosplitter] Modules not initialized");
+					Thread.Sleep(500);
+					continue;
+				}
 
-                unityScanner = new SignatureScanner(game, unityModule.BaseAddress, unityModule.ModuleMemorySize);
-                gameAssemblyScanner = new SignatureScanner(game, gameAssemblyModule.BaseAddress, gameAssemblyModule.ModuleMemorySize);
-            }
+				unityScanner = new SignatureScanner(game, unityModule.BaseAddress, unityModule.ModuleMemorySize);
+				gameAssemblyScanner = new SignatureScanner(game, gameAssemblyModule.BaseAddress, gameAssemblyModule.ModuleMemorySize);
+			}
 
-            print("--[Autosplitter] Scanning memory");
+			print("--[Autosplitter] Scanning memory");
 
-            if(gameSigAddr == IntPtr.Zero && (gameSigAddr = gameAssemblyScanner.Scan(gameScanTarget)) != IntPtr.Zero) {
-                print("--[Autosplitter] Sig scan game addr: " + gameSigAddr.ToString("X"));
+			if(gameSigAddr == IntPtr.Zero && (gameSigAddr = gameAssemblyScanner.Scan(gameScanTarget)) != IntPtr.Zero) {
+				print("--[Autosplitter] Sig scan game addr: " + gameSigAddr.ToString("X"));
 
-                vars.gameLoaderAsm = gameSigAddr + 0x1;
-                vars.gameManagerAsm = gameSigAddr + 0x2C;
-                
-                vars.watchers = new MemoryWatcherList() {
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameLoaderAsm, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" },
-                    
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" },
+				vars.gameLoaderAsm = gameSigAddr + 0x1;
+				vars.gameManagerAsm = gameSigAddr + 0x2C;
+				
+				vars.watchers = new MemoryWatcherList() {
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameLoaderAsm, 0x0, 0x5C, 0x0, 0x10, 0xC)) { Name = "mainMenuOpen" },					
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x94)) { Name = "igt" },
 					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x90)) { Name = "gameMode" },
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" },
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA8)) { Name = "previousRoom" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" },
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "defeatedBosses_size" },
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" },
-                    new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B7)) { Name = "finalplatformride" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C0)) { Name = "cyclopsDenKey" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C8)) { Name = "cyclopsprince" },
-                    new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xD4)) { Name = "deadmaiden" },
-                };
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA0)) { Name = "currentRoom" },
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xA8)) { Name = "previousRoom" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x170)) { Name = "gameCompleted" },
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC8, 0xC)) { Name = "defeatedBosses_size" },
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xC4, 0xC)) { Name = "elevatorsFound_size" },
+					new MemoryWatcher<int>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xF0, 0xC)) { Name = "collectedItems_size" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B5)) { Name = "forcedDeath" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1B7)) { Name = "finalplatformride" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C0)) { Name = "cyclopsDenKey" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0x1C8)) { Name = "cyclopsprince" },
+					new MemoryWatcher<bool>(new DeepPointer(vars.gameManagerAsm, 0x0, 0x5C, 0x0, 0x28, 0x144, 0xD4)) { Name = "deadmaiden" },
+				};
 
-                vars.watchersInitialized = true;
-            }	
+				vars.watchersInitialized = true;
+			}	
 
-            if(vars.runInBackgroundPtr == IntPtr.Zero
-            && (runInBackgroundSigAddr != IntPtr.Zero || (runInBackgroundSigAddr = unityScanner.Scan(runInBackgroundScanTarget)) != IntPtr.Zero)) {
-                print("--[Autosplitter] Sig scan runInBackground addr: " + runInBackgroundSigAddr.ToString("X"));
-                
-                IntPtr unityGetSettings = vars.GetAbsoluteAddress(runInBackgroundSigAddr + 0xA);
-                IntPtr unityGetManager = vars.GetAbsoluteAddress(unityGetSettings + 0x3);
-                IntPtr unityGetContext = game.ReadPointer((IntPtr)game.ReadValue<int>(unityGetManager + 0x9));
+			if(vars.runInBackgroundPtr == IntPtr.Zero
+			&& (runInBackgroundSigAddr != IntPtr.Zero || (runInBackgroundSigAddr = unityScanner.Scan(runInBackgroundScanTarget)) != IntPtr.Zero)) {
+				print("--[Autosplitter] Sig scan runInBackground addr: " + runInBackgroundSigAddr.ToString("X"));
+				
+				IntPtr unityGetSettings = vars.GetAbsoluteAddress(runInBackgroundSigAddr + 0xA);
+				IntPtr unityGetManager = vars.GetAbsoluteAddress(unityGetSettings + 0x3);
+				IntPtr unityGetContext = game.ReadPointer((IntPtr)game.ReadValue<int>(unityGetManager + 0x9));
 
-                if(unityGetContext == IntPtr.Zero) {
-                    print("--[Autosplitter] runInBackground pointer not initialized");
-                } else {
-                    vars.runInBackgroundPtr = unityGetContext + 0x1C0;
-                    print("--[Autosplitter] runInBackground addr: " + vars.runInBackgroundPtr.ToString("X"));
-                }
-            }
+				if(unityGetContext == IntPtr.Zero) {
+					print("--[Autosplitter] runInBackground pointer not initialized");
+				} else {
+					vars.runInBackgroundPtr = unityGetContext + 0x1C0;
+					print("--[Autosplitter] runInBackground addr: " + vars.runInBackgroundPtr.ToString("X"));
+				}
+			}
 
-            if(vars.ignoreInputsPtr == IntPtr.Zero
-            && (ignoreInputsSigAddr != IntPtr.Zero || (ignoreInputsSigAddr = gameAssemblyScanner.Scan(ignoreInputsScanTarget)) != IntPtr.Zero)) {
-                print("--[Autosplitter] Sig scan ignoreInput addr: " + ignoreInputsSigAddr.ToString("X"));
-                
-                IntPtr rewired = game.ReadPointer((IntPtr)game.ReadValue<int>(ignoreInputsSigAddr));
-                IntPtr platform = game.ReadPointer(rewired + 0x5C);
-                
-                if(platform == IntPtr.Zero) {
-                    print("--[Autosplitter] ignoreInput pointer not initialized");
-                } else {
-                    vars.ignoreInputsPtr = platform + 0x5C;
-                    print("--[Autosplitter] ignoreInput addr: " + vars.ignoreInputsPtr.ToString("X"));
-                }
-            }
+			if(vars.ignoreInputsPtr == IntPtr.Zero
+			&& (ignoreInputsSigAddr != IntPtr.Zero || (ignoreInputsSigAddr = gameAssemblyScanner.Scan(ignoreInputsScanTarget)) != IntPtr.Zero)) {
+				print("--[Autosplitter] Sig scan ignoreInput addr: " + ignoreInputsSigAddr.ToString("X"));
+				
+				IntPtr rewired = game.ReadPointer((IntPtr)game.ReadValue<int>(ignoreInputsSigAddr));
+				IntPtr platform = game.ReadPointer(rewired + 0x5C);
+				
+				if(platform == IntPtr.Zero) {
+					print("--[Autosplitter] ignoreInput pointer not initialized");
+				} else {
+					vars.ignoreInputsPtr = platform + 0x5C;
+					print("--[Autosplitter] ignoreInput addr: " + vars.ignoreInputsPtr.ToString("X"));
+				}
+			}
 
-            if(runInBackgroundSigAddr != IntPtr.Zero && vars.runInBackgroundPtr != IntPtr.Zero && vars.ignoreInputsPtr != IntPtr.Zero) {
-                break;
-            }
+			if(runInBackgroundSigAddr != IntPtr.Zero && vars.runInBackgroundPtr != IntPtr.Zero && vars.ignoreInputsPtr != IntPtr.Zero) {
+				break;
+			}
 
 			print("--[Autosplitter] Couldn't find the pointers I want! Game is still starting or an update broke things!");
-            Thread.Sleep(2000);
-        }
-        print("--[Autosplitter] Exit thread scan");
-    });
-    vars.threadScan.Start();
+			Thread.Sleep(2000);
+			}
+			print("--[Autosplitter] Exit thread scan");
+	});
+	vars.threadScan.Start();
 	
 	
 	vars.ItemObtained = (Func<int, bool>)((value) =>
@@ -316,9 +315,6 @@ init {
 			{ "Volantis", vars.Killed("Volantis") },
 			{ "Gemini", vars.Killed("Gemini") },
 			{ "Solaria", vars.Killed("Solaria") },
-			// { "bkFinalDead", vars.checkBoolFinalRoom("bkFinalDead") },
-			// { "medusaPhase1Dead", vars.checkBoolFinalRoom("medusaPhase1Dead") },
-			// { "medusaPhase2Dead", vars.checkBoolFinalRoom("medusaPhase2Dead") },
 			{ "Medusa", vars.Killed("Medusa") },
 			{ "gameCompleted", vars.checkBoolGameCompleted() },
 			
@@ -491,11 +487,11 @@ gameTime {
 }
 
 exit {
-    vars.tokenSource.Cancel();
+	vars.tokenSource.Cancel();
 }
 
 shutdown {
 	vars.tokenSource.Cancel();
-    vars.SetRunInBackground(false);
-    vars.SetIgnoreInputs(true);
+	vars.SetRunInBackground(false);
+	vars.SetIgnoreInputs(true);
 }
