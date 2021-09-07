@@ -94,7 +94,7 @@ startup {
 	//create settings
 	settings.Add("useGameTime", true, "Updates the timer to use in game time");
 	settings.SetToolTip("useGameTime", "Turn off if you don't want to track game time");
-	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk 2.3.1 and Steam XLC2");
+	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk 2.3.1 - 2.3.3 and Steam XLC2");
 	settings.SetToolTip("autosplit", "Turn on if you want to autosplit");
 
 	//setup reset action
@@ -157,7 +157,10 @@ update {
 			vars.convertedGameTime = current.gameTime;
 			vars.convertedDemoTime = current.demoTime;
 		}
-		
+	}
+	
+	if(settings["autosplit"])
+	{
 		//flag to determine the final boss fight has started, resets the flag if you die
 		if(current.level == 12 && current.stage == 1 && current.bossHealth == 127 && current.playerHealth > 0)
 		{
