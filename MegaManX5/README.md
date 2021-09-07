@@ -54,4 +54,4 @@ Here you can enable/disable the options for auto start and auto splitting.
 If you encounter any issues or have feature requests, please let me know! 
 
 - [Coltaho](http://twitch.tv/Coltaho) or Coltaho#2016 on Discord
-- [JohnnyGo] (https://www.twitch.tv/johnny_go) or JohnnyGo#7790 on Discord
+- [JohnnyGo](https://www.twitch.tv/johnnygo) or JohnnyGo#7790 on Discord
