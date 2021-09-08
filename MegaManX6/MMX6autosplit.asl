@@ -46,7 +46,7 @@ state("emuhawk") { //2.3.1
 	byte playerHealth: "octoshock.dll", 0x1B497C;
 	byte bossHealth: "octoshock.dll", 0x1AC824;
 	byte triggerExit: "octoshock.dll", 0x1EA75F; //see comment above
-	byte teleporting: "octoshock.dll", 0x1B498A; //normally set to 7 (3 for XLC2), set to 0 on teleport after boss, level select, boss door transitions, and some other times
+	byte teleporting: "octoshock.dll", 0x1B498A; //normally set to 7 (3 for XLC2, 216 for Dolphin), set to 0 on teleport after boss, level select, boss door transitions, and some other times
 	byte gameStart1: "octoshock.dll", 0x1EAC79; //2 when choice is made on initial three options
 	byte gameStart2: "octoshock.dll", 0x1EAC7A; //0, changes based on title option currently selected
 	byte gameStart3: "octoshock.dll", 0x1EAE1E; //142 (144 for XLC2), changes based on title option currently selected
@@ -77,8 +77,18 @@ state("Dolphin", "v5.0") {
 	//Dolphin uses big endian 
 	//got the first offset from the RE2 Dolphin autosplitter (https://www.speedrun.com/re2/thread/izb1f/)
 	//got the second offset by subtracting the address I found in Cheat Engine from the game memory start (Dolphin.exe+DCE040)
-	byte4 gameTime: "Dolphin.exe", 0xDCE040, 0xB369F0;
-	byte4 demoTime: "Dolphin.exe", 0xDCE040, 0xB36D90;
+	uint gameTime: "Dolphin.exe", 0xDCE040, 0xB369F0; //converted these to uints so we can do easy comparisons for the autosplitter
+	uint demoTime: "Dolphin.exe", 0xDCE040, 0xB36D90;
+	byte level: "Dolphin.exe", 0xDCE040, 0xB36930;
+	byte stage: "Dolphin.exe", 0xDCE040, 0xB36931;
+	byte playerHealth: "Dolphin.exe", 0xDCE040, 0xB3682C;
+	byte bossHealth: "Dolphin.exe", 0xDCE040, 0xB348DC;
+	byte triggerExit: "Dolphin.exe", 0xDCE040, 0xB36933;
+	byte teleporting: "Dolphin.exe", 0xDCE040, 0xB36839;
+	byte gameStart1: "Dolphin.exe", 0xDCE040, 0xB36D8D;
+	byte gameStart2: "Dolphin.exe", 0xDCE040, 0xB28E0B;
+	byte gameStart3: "Dolphin.exe", 0xDCE040, 0xB28DD1;
+	byte gameStart4: "Dolphin.exe", 0xDCE040, 0xB36D8E;
 }
 
 startup {
@@ -87,14 +97,14 @@ startup {
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man X6 AutoSplitter v3.0 by Coltaho and JohnnyGo", "infosection");
 	settings.Add("info0", true, "- IGT: Bizhawk, ePSXe, Dolphin, and Steam XLC2", "infosection");
-	settings.Add("info1", true, "- Autosplit: Bizhawk, and Steam XLC2", "infosection");
+	settings.Add("info1", true, "- Autosplit: Bizhawk, Dolphin, and Steam XLC2", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	settings.Add("info3", true, "- Website : https://github.com/Johnny-Go/Autosplitters", "infosection");
 	
 	//create settings
 	settings.Add("useGameTime", true, "Updates the timer to use in game time");
 	settings.SetToolTip("useGameTime", "Turn off if you don't want to track game time");
-	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk 2.3.1 - 2.3.3 and Steam XLC2");
+	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk 2.3.1 - 2.3.3, Dolphin, and Steam XLC2");
 	settings.SetToolTip("autosplit", "Turn on if you want to autosplit");
 
 	//setup reset action
@@ -140,10 +150,13 @@ update {
 		//reverse bytes for Dolphin
 		if(game.ProcessName == "Dolphin")
 		{
-			Array.Reverse(current.gameTime);
-			Array.Reverse(current.demoTime);
-			vars.convertedGameTime = BitConverter.ToUInt32(current.gameTime, 0);
-			vars.convertedDemoTime = BitConverter.ToUInt32(current.demoTime, 0);
+			//pull into variables so we can reverse without changing the current value
+			var gameTimeBytes = BitConverter.GetBytes(current.gameTime);
+			var demoTimeBytes = BitConverter.GetBytes(current.demoTime);
+			Array.Reverse(gameTimeBytes);
+			Array.Reverse(demoTimeBytes);
+			vars.convertedGameTime = BitConverter.ToUInt32(gameTimeBytes, 0);
+			vars.convertedDemoTime = BitConverter.ToUInt32(demoTimeBytes, 0);
 		}
 		//convert float to uint for XLC2
 		else if(game.ProcessName == "RXC2")

@@ -6,19 +6,20 @@ Auto Splitter for Mega Man X6 PS1, GameCube X Collection, and X Legacy Collectio
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators for Game Time:**
- - Bizhawk with Octoshock core
+ - Bizhawk with Octoshock core versions 2.3.1 - 2.3.3
  - ePSXe version 2.0.5
  - Dolphin version 5.0
  - X Legacy Collection on PC
 
 **Supported emulators for autosplitting:**
- - Bizhawk with Octoshock core
+ - Bizhawk with Octoshock core versions 2.3.1 - 2.3.3
+ - Dolphin version 5.0
  - X Legacy Collection on PC
 
 ## Features
 
 - Locks game time to actual ingame time. In LiveSplit compare against Game Time to see this!
-- Currently supports autosplitting for Bizhawk and XLC2.
+- Currently supports autosplitting for Bizhawk, Dolphin, and XLC2.
 
 ## Installation 
 
