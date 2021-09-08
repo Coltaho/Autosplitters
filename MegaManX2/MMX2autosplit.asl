@@ -25,8 +25,7 @@ startup
 	{
 		case 10244096: //snes9x (1.51 v7.1 rerecording)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28C4);
-			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28D4) + 0x2049;
-			print(vars.othermemoryOffset.ToString());
+			vars.othermemoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x7B28D4) + 0x2049;			
 			break;
 		case 6602752: //snes9x (1.55)
 			vars.memoryOffset = (IntPtr)proc.ReadValue<int>((IntPtr)0x762874);
@@ -97,7 +96,7 @@ startup
 			vars.othermemoryOffset = (IntPtr)0x96D437 - 0xF7;
 			break;
 		default:
-			//print(mymodulesize.ToString());
+			//print("module size: " + mymodulesize.ToString());
 			vars.memoryOffset = IntPtr.Zero;
 			vars.othermemoryOffset = IntPtr.Zero;
 			break;
@@ -203,7 +202,7 @@ update {
 	vars.watchers.UpdateAll(game);
 	//print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
 	//print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " level: " + vars.watchers["currentlevel"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
-	print("--SFX: " + vars.watchers["sfx"].Current + " Stage: " + vars.watchers["currentlevel"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Enemy3 ID: " + vars.watchers["enemyid3"].Current  + " Enemy3HP: " + vars.watchers["enemyhp3"].Current + " Enemy4 ID: " + vars.watchers["enemyid4"].Current  + " Enemy4HP: " + vars.watchers["enemyhp4"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	//print("--SFX: " + vars.watchers["sfx"].Current + " Stage: " + vars.watchers["currentlevel"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " Enemy3 ID: " + vars.watchers["enemyid3"].Current  + " Enemy3HP: " + vars.watchers["enemyhp3"].Current + " Enemy4 ID: " + vars.watchers["enemyid4"].Current  + " Enemy4HP: " + vars.watchers["enemyhp4"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
 }
 
 split
@@ -274,7 +273,7 @@ split
 	}
 	
 	//split after we kill a boss and hear teleport out
-	if (settings["onding"] && (vars.watchers["sfx"].Old == 3 || vars.watchers["sfx"].Old == 250) && (vars.watchers["sfx"].Current == 17 || vars.watchers["sfx"].Current == 29) && vars.currentBossSlot != -1) {
+	if (settings["onding"] && (vars.watchers["sfx"].Old == 3 || vars.watchers["sfx"].Old == 143 || vars.watchers["sfx"].Old == 250) && (vars.watchers["sfx"].Current == 17 || vars.watchers["sfx"].Current == 29) && vars.currentBossSlot != -1) {
 		print("--After Boss Kill Teleport!--");
 		return true;
 	}
