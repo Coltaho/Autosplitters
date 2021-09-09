@@ -37,7 +37,7 @@
 128 for refight teleporters, or restarts the stage
 */
 
-state("emuhawk") {
+state("emuhawk") { //2.3.1
 	//Add 0x11D880 to RAM watch address to get these
 	uint gameTime: "octoshock.dll", 0x1EA81C;
 	uint demoTime: "octoshock.dll", 0x1EAC7C;
