@@ -37,7 +37,7 @@
 128 for refight teleporters, or restarts the stage
 */
 
-state("emuhawk") { //2.3.1
+state("emuhawk") {
 	//Add 0x11D880 to RAM watch address to get these
 	uint gameTime: "octoshock.dll", 0x1EA81C;
 	uint demoTime: "octoshock.dll", 0x1EAC7C;
@@ -71,6 +71,16 @@ state("RXC2") {
 state("ePSXe", "v2.0.5") {
 	uint gameTime: "ePSXe.exe", 0xB4EFBC;
 	uint demoTime: "ePSXe.exe", 0xB4F41C;
+	byte level: "ePSXe.exe", 0xB4EEFC;
+	byte stage: "ePSXe.exe", 0xB4EEFD;
+	byte playerHealth: "ePSXe.exe", 0xB1911C;
+	byte bossHealth: "ePSXe.exe", 0xB10FC4;
+	byte triggerExit: "ePSXe.exe", 0xB4EEFF;
+	byte teleporting: "ePSXe.exe", 0xB1912A;
+	byte gameStart1: "ePSXe.exe", 0xB4F419;
+	byte gameStart2: "ePSXe.exe", 0xB4F41A;
+	byte gameStart3: "ePSXe.exe", 0xB4F5BE;
+	byte gameStart4: "ePSXe.exe", 0xB4F5F7;
 }
 
 state("Dolphin", "v5.0") {
@@ -97,14 +107,14 @@ startup {
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man X6 AutoSplitter v3.0 by Coltaho and JohnnyGo", "infosection");
 	settings.Add("info0", true, "- IGT: Bizhawk, ePSXe, Dolphin, and Steam XLC2", "infosection");
-	settings.Add("info1", true, "- Autosplit: Bizhawk, Dolphin, and Steam XLC2", "infosection");
+	settings.Add("info1", true, "- Autosplit: Bizhawk, ePSXe, Dolphin, and Steam XLC2", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	settings.Add("info3", true, "- Website : https://github.com/Johnny-Go/Autosplitters", "infosection");
 	
 	//create settings
 	settings.Add("useGameTime", true, "Updates the timer to use in game time");
 	settings.SetToolTip("useGameTime", "Turn off if you don't want to track game time");
-	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk 2.3.1 - 2.3.3, Dolphin, and Steam XLC2");
+	settings.Add("autosplit", false, "Enables autosplitting for Bizhawk, Dolphin, ePSXe, and Steam XLC2");
 	settings.SetToolTip("autosplit", "Turn on if you want to autosplit");
 
 	//setup reset action
