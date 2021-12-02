@@ -389,7 +389,7 @@ init {
 			{ "bk2enter", vars.Transitioned(1080, 884) },
 			{ "bk2leave", vars.Transitioned(884, 1054) },
 			{ "emptyheadenter", vars.Transitioned(4080, 4079) },
-			{ "darkroomsenter", vars.Transitioned(8762, 8763) },
+			{ "darkroomsenter", vars.Transitioned(4106, 8793) },
 			{ "darkroomsleave", vars.Transitioned(8862, 4107) },
 			{ "entersolaria", vars.Transitioned(10017, 10015) },
 			{ "cyclopsdenenter", vars.Transitioned(3728, 7359) },
