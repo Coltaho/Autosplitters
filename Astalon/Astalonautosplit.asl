@@ -283,7 +283,7 @@ init {
 	
 	vars.checkBool = (Func<string, bool>)((value) =>
 	{
-		return vars.watchers[value].Current;
+		return vars.watchers[value].Old == false && vars.watchers[value].Current == true;
 	});
 	
 	vars.checkBoolGameCompleted = (Func<bool>)(() =>
