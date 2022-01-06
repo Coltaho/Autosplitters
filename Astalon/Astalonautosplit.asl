@@ -236,8 +236,8 @@ init {
 
 			print("--[Autosplitter] Couldn't find the pointers I want! Game is still starting or an update broke things!");
 			Thread.Sleep(2000);
-			}
-			print("--[Autosplitter] Exit thread scan");
+		}
+		print("--[Autosplitter] Exit thread scan");
 	});
 	vars.threadScan.Start();
 	
