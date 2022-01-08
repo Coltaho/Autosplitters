@@ -6,7 +6,7 @@ Auto Splitter for Mega Man 1 NES
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported emulators:**
- - FCEUX 2.2.2+
+ - FCEUX 2.2.3
  - Nestopia 1.40 (untested)
  
 ## Features
