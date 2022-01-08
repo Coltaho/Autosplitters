@@ -246,7 +246,7 @@ init {
 			{ "neonbulbs", vars.starObtained(406) },
 			{ "marcy", vars.starObtained(407) },
 			{ "lynx8", vars.starObtained(408) },
-			{ "fargo", vars.starObtained(422) },
+			{ "fargo", vars.starObtained(484) },
 			{ "deadhead", vars.starObtained(423) },
 			{ "3devas", vars.starObtained(427) },
 			{ "giantgloop", vars.starObtained(429) },
