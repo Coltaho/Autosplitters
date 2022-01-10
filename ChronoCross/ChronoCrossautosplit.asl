@@ -140,7 +140,11 @@ init {
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DC)) { Name = "keyitems5" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DD)) { Name = "keyitems6" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DE)) { Name = "keyitems7" },
-			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DF)) { Name = "keyitems8" }
+			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DF)) { Name = "keyitems8" },
+			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F30A)) { Name = "marcyMaxHP" },
+			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6EBDE)) { Name = "sergeMaxHP" },
+			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6FD66)) { Name = "harleMaxHP" },
+			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F172)) { Name = "karshMaxHP" }
 		};
 
 		vars.watchersInitialized = true;
@@ -226,7 +230,7 @@ init {
 	
 	vars.noStarBoss = (Func<int, bool>)((value) =>
 	{
-		return false;
+		return  vars.watchers["groupID"].Current == value && (vars.watchers["marcyMaxHP"].Changed || vars.watchers["sergeMaxHP"].Changed || vars.watchers["harleMaxHP"].Changed || vars.watchers["karshMaxHP"].Changed);
 	});
 	
 	vars.chronoCrossUsed = (Func<bool>)(() =>
@@ -275,8 +279,8 @@ init {
 			{ "dragongod", vars.starObtained(471) },
 			
 			// No Star Bosses
-			{ "soltnpeppor2nd", vars.noStarBoss(0) },
-			{ "dario", vars.noStarBoss(0) },
+			{ "soltnpeppor2nd", vars.noStarBoss(474) },
+			{ "dario", vars.noStarBoss(464) },
 			
 			// Key Items
 			{ "teleporter", vars.keyItemObtained("keyitems1", 1) },
@@ -360,7 +364,7 @@ update {
 	vars.watchers.UpdateAll(game);
 	
 	if (settings["debug"]) {
-		vars.mystring = "--[Autosplitter] GroupID: " + vars.watchers["groupID"].Current + " | maxStars: " + vars.watchers["maxStars"].Current;
+		vars.mystring = "--[Autosplitter] GrpID: " + vars.watchers["groupID"].Current + " | Stars: " + vars.watchers["maxStars"].Current + " | M: " + vars.watchers["marcyMaxHP"].Current + " | S: " + vars.watchers["sergeMaxHP"].Current + " | H: " + vars.watchers["harleMaxHP"].Current + " | K: " + vars.watchers["karshMaxHP"].Current;
 		if (vars.paststring != vars.mystring) {
 			print(vars.mystring);
 			vars.paststring = vars.mystring;
