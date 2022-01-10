@@ -8,47 +8,64 @@ startup {
 	print("--[Autosplitter] Starting up!");
 	
 	settings.Add("finalevents", true, "---Final Events--(Leave on)---");
-	settings.Add("chronoCross", true, "Chrono Cross Used", "finalevents");
+	settings.Add("chronocrossused", true, "Chrono Cross Used", "finalevents");
+	settings.Add("timedevourer", true, "Time Devourer Killed", "finalevents");
 	
 	settings.Add("stars", true, "---Stars---");
 	settings.Add("mamaKomodo", true, "Mama Komodo (1)", "stars");
 	settings.Add("karshSP", true, "Karsh, S&P (2)", "stars");
 	settings.Add("soltnpeppor3", true, "Solt & Peppor (3)", "stars");
+	settings.Add("vipermansionguards", false, "Viper Mansion Guards (4)", "stars");
 	settings.Add("ketchop", true, "Ketchop (5)", "stars");
 	settings.Add("neonbulbs", true, "Neo-N-Bulbs (6)", "stars");
 	settings.Add("marcy", true, "Marcy (7)", "stars");
 	settings.Add("lynx8", true, "Lynx (8)", "stars");
+	settings.Add("polly", false, "Polly (9)", "stars");
 	settings.Add("fargo", true, "Fargo (10)", "stars");
 	settings.Add("deadhead", true, "Dead Head (11)", "stars");
+	settings.Add("soltnpeppor3rd", false, "Solt & Pepper (12)", "stars");
+	settings.Add("littlefiredragon", false, "Fire Dragon (13)", "stars");
 	settings.Add("3devas", true, "3 Devas (14)", "stars");
+	settings.Add("dragoon", false, "Dragoon (15)", "stars");
 	settings.Add("giantgloop", true, "Giant Gloop (16)", "stars");
 	settings.Add("taurusoid", true, "Taurusoid (17)", "stars");
 	settings.Add("sunofagun", true, "Sun of a Gun (18)", "stars");
 	settings.Add("bunyip", true, "Bunyip (19)", "stars");
+	settings.Add("generalviper", false, "General Viper (20)", "stars");
 	settings.Add("lynx21", true, "Lynx 2 (21)", "stars");
 	settings.Add("radius", true, "Radius (22)", "stars");
 	settings.Add("sage", true, "Sage (23)", "stars");
 	settings.Add("garai", true, "Garai (24)", "stars");
+	settings.Add("highwayman", false, "Highwayman (25)", "stars");
 	settings.Add("miguel", true, "Miguel (26)", "stars");
 	settings.Add("roachester", true, "Roachester (27)", "stars");
+	settings.Add("hellscook", false, "Orcha/Hell's Cook (28)", "stars");
 	settings.Add("grobyc", true, "Grobyc (29)", "stars");
 	settings.Add("earthdragon", true, "Earth Dragon (30)", "stars");
 	settings.Add("waterdragon", true, "Water Dragon (31)", "stars");
+	settings.Add("tyrano", false, "Tyrano (32)", "stars");
 	settings.Add("greendragon", true, "Green Dragon (33)", "stars");
 	settings.Add("firedragon", true, "Fire Dragon (34)", "stars");
 	settings.Add("skydragon", true, "Sky Dragon (35)", "stars");
 	settings.Add("darkserge", true, "Dark Serge (36)", "stars");
 	settings.Add("vitaunas", true, "Vita Unas (37)", "stars");
-	settings.Add("fate", true, "Fate (37)", "stars");
+	settings.Add("vitaduo", true, "Vita Duo (37)", "stars");
+	settings.Add("vitatres", true, "Vita Tres (37)", "stars");
+	settings.Add("polispolice", false, "Polis-Police (38)", "stars");
+	settings.Add("fate", true, "Fate (39)", "stars");
+	settings.Add("royaljelly", false, "Royal Jelly (40)", "stars");
 	settings.Add("terrator", true, "Terrator (41)", "stars");
 	settings.Add("pyrotor", true, "Pyrotor (42)", "stars");
 	settings.Add("anemotor", true, "Anemotor (43)", "stars");
+	settings.Add("gravitor", false, "Gravitor (44)", "stars");
+	settings.Add("luxator", false, "Luxator (45)", "stars");
 	settings.Add("aquator", true, "Aquator (46)", "stars");
 	settings.Add("dragongod", true, "Dragon God (47)", "stars");
 	
 	settings.Add("nostars", true, "---No Stars---");
 	settings.Add("soltnpeppor2nd", true, "Solt & Peppor 2", "nostars");
 	settings.Add("dario", true, "Dario", "nostars");
+	settings.Add("megastarky", false, "Mega Starky", "nostars");
 	
 	settings.Add("keyitems", true, "---Key Items---");
 	settings.Add("teleporter", false, "Tele-Porter", "keyitems");
@@ -112,7 +129,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Chrono Cross AutoSplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Chrono Cross AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info1", true, "- Autosplit: Bizhawk and Duckstation", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -141,10 +158,11 @@ init {
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DD)) { Name = "keyitems6" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DE)) { Name = "keyitems7" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DF)) { Name = "keyitems8" },
-			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F30A)) { Name = "marcyMaxHP" },
-			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6EBDE)) { Name = "sergeMaxHP" },
-			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6FD66)) { Name = "harleMaxHP" },
-			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F172)) { Name = "karshMaxHP" }
+			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F30A)) { Name = "marcyMaxHP" },
+			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6EBDE)) { Name = "sergeMaxHP" },
+			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6FD66)) { Name = "harleMaxHP" },
+			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F172)) { Name = "karshMaxHP" },
+			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x719A8)) { Name = "money" }
 		};
 
 		vars.watchersInitialized = true;
@@ -230,7 +248,8 @@ init {
 	
 	vars.noStarBoss = (Func<int, bool>)((value) =>
 	{
-		return  vars.watchers["groupID"].Current == value && (vars.watchers["marcyMaxHP"].Changed || vars.watchers["sergeMaxHP"].Changed || vars.watchers["harleMaxHP"].Changed || vars.watchers["karshMaxHP"].Changed);
+		// return  vars.watchers["groupID"].Current == value && (vars.watchers["marcyMaxHP"].Changed || vars.watchers["sergeMaxHP"].Changed || vars.watchers["harleMaxHP"].Changed || vars.watchers["karshMaxHP"].Changed);
+		return  vars.watchers["groupID"].Current == value && vars.watchers["money"].Changed;
 	});
 	
 	vars.chronoCrossUsed = (Func<bool>)(() =>
@@ -238,49 +257,74 @@ init {
 		return vars.watchers["enemy1HP"].Old == 30000 && vars.watchers["enemy1HP"].Current == 0;
 	});
 	
+	vars.timeDevourerKilled = (Func<bool>)(() =>
+	{
+		return vars.watchers["groupID"].Current == 472 && vars.watchers["enemy1HP"].Old > 0 && vars.watchers["enemy1HP"].Current == 0;
+	});
+	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
 	{
 		var splits = new Dictionary<string, bool>
 		{
+			// Final Splits
+			{ "chronocrossused", vars.chronoCrossUsed() },
+			{ "timedevourer", vars.timeDevourerKilled() },
+			
 			// Star Bosses
 			{ "mamaKomodo", vars.starObtained(389) },
 			{ "karshSP", vars.starObtained(390) },
 			{ "soltnpeppor3", vars.starObtained(393) },
+			{ "vipermansionguards", vars.starObtained(401) },
 			{ "ketchop", vars.starObtained(402) },
 			{ "neonbulbs", vars.starObtained(406) },
 			{ "marcy", vars.starObtained(407) },
 			{ "lynx8", vars.starObtained(408) },
+			{ "polly", vars.starObtained(483) },
 			{ "fargo", vars.starObtained(484) },
 			{ "deadhead", vars.starObtained(423) },
+			{ "soltnpeppor3rd", vars.starObtained(485) },
+			{ "littlefiredragon", vars.starObtained(426) },
 			{ "3devas", vars.starObtained(427) },
+			{ "dragoon", vars.starObtained(486) },
 			{ "giantgloop", vars.starObtained(429) },
 			{ "taurusoid", vars.starObtained(430) },
 			{ "sunofagun", vars.starObtained(428) },
 			{ "bunyip", vars.starObtained(431) },
+			{ "generalviper", vars.starObtained(432) },
 			{ "lynx21", vars.starObtained(433) },
 			{ "radius", vars.starObtained(434) },
 			{ "sage", vars.starObtained(447) },
 			{ "garai", vars.starObtained(438) },
+			{ "highwayman", vars.starObtained(439) },
 			{ "miguel", vars.starObtained(440) },
 			{ "roachester", vars.starObtained(441) },
+			{ "hellscook", vars.starObtained(442) },
 			{ "grobyc", vars.starObtained(445) },
 			{ "earthdragon", vars.starObtained(451) },
 			{ "waterdragon", vars.starObtained(452) },
+			{ "tyrano", vars.starObtained(476) },
 			{ "greendragon", vars.starObtained(454) },
 			{ "firedragon", vars.starObtained(453) },
 			{ "skydragon", vars.starObtained(457) },
-			{ "darkserge", vars.starObtained(473) },
+			{ "darkserge", vars.starObtained(473) },			
 			{ "vitaunas", vars.starObtained(458) },
+			{ "vitaduo", vars.starObtained(459) },
+			{ "vitatres", vars.starObtained(460) },
+			{ "polispolice", vars.starObtained(461) },
 			{ "fate", vars.starObtained(462) },
+			{ "royaljelly", vars.starObtained(463) },
 			{ "terrator", vars.starObtained(470) },
 			{ "pyrotor", vars.starObtained(468) },
 			{ "anemotor", vars.starObtained(469) },
+			{ "gravitor", vars.starObtained(466) },
+			{ "luxator", vars.starObtained(465) },
 			{ "aquator", vars.starObtained(467) },
 			{ "dragongod", vars.starObtained(471) },
 			
 			// No Star Bosses
 			{ "soltnpeppor2nd", vars.noStarBoss(474) },
 			{ "dario", vars.noStarBoss(464) },
+			{ "megastarky", vars.noStarBoss(456) },
 			
 			// Key Items
 			{ "teleporter", vars.keyItemObtained("keyitems1", 1) },
@@ -338,10 +382,8 @@ init {
 			{ "timeegg", vars.keyItemObtained("keyitems7", 16) },			
 			{ "reliefcharm", vars.keyItemObtained("keyitems8", 16) },
 			{ "timeshifter", vars.keyItemObtained("keyitems8", 32) },
-			{ "smithspirit", vars.keyItemObtained("keyitems8", 64) },
+			{ "smithspirit", vars.keyItemObtained("keyitems8", 64) }
 			
-			// Final Splits
-			{ "chronoCross", vars.chronoCrossUsed() }
 		};
 		return splits;
 	});
@@ -364,7 +406,7 @@ update {
 	vars.watchers.UpdateAll(game);
 	
 	if (settings["debug"]) {
-		vars.mystring = "--[Autosplitter] GrpID: " + vars.watchers["groupID"].Current + " | Stars: " + vars.watchers["maxStars"].Current + " | M: " + vars.watchers["marcyMaxHP"].Current + " | S: " + vars.watchers["sergeMaxHP"].Current + " | H: " + vars.watchers["harleMaxHP"].Current + " | K: " + vars.watchers["karshMaxHP"].Current;
+		vars.mystring = "--[Autosplitter] GrpID: " + vars.watchers["groupID"].Current + " | Stars: " + vars.watchers["maxStars"].Current + " | Money: " + vars.watchers["money"].Current;
 		if (vars.paststring != vars.mystring) {
 			print(vars.mystring);
 			vars.paststring = vars.mystring;
@@ -380,7 +422,8 @@ start {
 }
 
 reset {
-	if (vars.watchers["debug"].Old == 0 && vars.watchers["debug"].Current == 4129 || (vars.watchers["gameStart1"].Current == -2145387048 && vars.watchers["maxStars"].Current == 20)) {
+	// if (vars.watchers["debug"].Old == 0 && vars.watchers["debug"].Current == 4129 || (vars.watchers["gameStart1"].Current == -2145387048 && vars.watchers["maxStars"].Current == 20)) {
+	if (vars.watchers["gameStart1"].Current == -2145387048 && vars.watchers["maxStars"].Current == 20) {
 		print("--[Autosplitter] Reset!");
 		return true;
 	}
