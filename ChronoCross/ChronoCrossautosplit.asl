@@ -162,7 +162,7 @@ init {
 			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6EBDE)) { Name = "sergeMaxHP" },
 			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6FD66)) { Name = "harleMaxHP" },
 			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F172)) { Name = "karshMaxHP" },
-			new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x719A8)) { Name = "money" }
+			new MemoryWatcher<int>(new DeepPointer(vars.myBaseAddress + 0x719A8)) { Name = "money" }
 		};
 
 		vars.watchersInitialized = true;
