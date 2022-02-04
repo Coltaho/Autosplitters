@@ -64,6 +64,7 @@ startup {
 	
 	settings.Add("nostars", true, "---No Stars---");
 	settings.Add("soltnpeppor2nd", true, "Solt & Peppor 2", "nostars");
+	settings.Add("wightknight", true, "WightKnight", "nostars");
 	settings.Add("dario", true, "Dario", "nostars");
 	settings.Add("megastarky", false, "Mega Starky", "nostars");
 	
@@ -129,7 +130,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Chrono Cross AutoSplitter v1.1 by Coltaho", "infosection");
+	settings.Add("info", true, "Chrono Cross AutoSplitter v1.2 by Coltaho", "infosection");
 	settings.Add("info1", true, "- Autosplit: Bizhawk and Duckstation", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -158,10 +159,6 @@ init {
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DD)) { Name = "keyitems6" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DE)) { Name = "keyitems7" },
 			new MemoryWatcher<byte>(new DeepPointer(vars.myBaseAddress + 0x712DF)) { Name = "keyitems8" },
-			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F30A)) { Name = "marcyMaxHP" },
-			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6EBDE)) { Name = "sergeMaxHP" },
-			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6FD66)) { Name = "harleMaxHP" },
-			// new MemoryWatcher<short>(new DeepPointer(vars.myBaseAddress + 0x6F172)) { Name = "karshMaxHP" },
 			new MemoryWatcher<int>(new DeepPointer(vars.myBaseAddress + 0x719A8)) { Name = "money" }
 		};
 
@@ -248,7 +245,6 @@ init {
 	
 	vars.noStarBoss = (Func<int, bool>)((value) =>
 	{
-		// return  vars.watchers["groupID"].Current == value && (vars.watchers["marcyMaxHP"].Changed || vars.watchers["sergeMaxHP"].Changed || vars.watchers["harleMaxHP"].Changed || vars.watchers["karshMaxHP"].Changed);
 		return  vars.watchers["groupID"].Current == value && vars.watchers["money"].Changed;
 	});
 	
@@ -323,6 +319,7 @@ init {
 			
 			// No Star Bosses
 			{ "soltnpeppor2nd", vars.noStarBoss(474) },
+			{ "wightknight", vars.noStarBoss(475) },
 			{ "dario", vars.noStarBoss(464) },
 			{ "megastarky", vars.noStarBoss(456) },
 			
@@ -422,7 +419,6 @@ start {
 }
 
 reset {
-	// if (vars.watchers["debug"].Old == 0 && vars.watchers["debug"].Current == 4129 || (vars.watchers["gameStart1"].Current == -2145387048 && vars.watchers["maxStars"].Current == 20)) {
 	if (vars.watchers["gameStart1"].Current == -2145387048 && vars.watchers["maxStars"].Current == 20) {
 		print("--[Autosplitter] Reset!");
 		return true;
