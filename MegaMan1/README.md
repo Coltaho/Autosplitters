@@ -7,6 +7,7 @@ Auto Splitter for Mega Man 1 NES
 
 **Supported emulators:**
  - FCEUX 2.2.3
+ - FCEUX 2.6.4
  - Nestopia 1.40 (untested)
  
 ## Features
