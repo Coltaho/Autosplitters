@@ -1,6 +1,6 @@
 //Made by Coltaho 2/19/2019
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	byte enemyhp : 0x436B04, 0x4FF;
 	byte secondenemyhp : 0x436B04, 0x4FE; //used for gemini
@@ -12,6 +12,20 @@ state("fceux")
 	byte stage : 0x436B04, 0x22;
 	// byte xpos : 0x436B04, 0x22;
 	byte screen : 0x436B04, 0xCB; //1 on intro screen
+}
+
+state("fceux", "v2.6.4")
+{
+	byte enemyhp : 0x3DA4EC, 0x4FF;
+	byte secondenemyhp : 0x3DA4EC, 0x4FE; //used for gemini
+	byte enemyid : 0x3DA4EC, 0x4DF; //Number the enemy appears in the stage, 255 if despawned
+	byte secondenemyid : 0x3DA4EC, 0x4DE;
+	// byte enemyidbreakman : 0x3DA4EC, 0x4D2; //breakman is 12 in this slot whyyyy
+	byte myhp : 0x3DA4EC, 0xA2; //128 is dead (disregards high bit)
+	byte soundfx : 0x3DA4EC, 0x702; //58 is teleport
+	byte stage : 0x3DA4EC, 0x22;
+	// byte xpos : 0x3DA4EC, 0x22;
+	byte screen : 0x3DA4EC, 0xCB; //1 on intro screen
 }
 
 state("nestopia")
@@ -47,6 +61,11 @@ init
 	vars.waiting = false;
 	vars.splitboss = false;
 	refreshRate = 60;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {

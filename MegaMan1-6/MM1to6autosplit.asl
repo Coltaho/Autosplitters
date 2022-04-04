@@ -1,6 +1,6 @@
 //Made by Coltaho 3/14/2019
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	int crc : 0x3F4CBC;
 	
@@ -65,6 +65,73 @@ state("fceux")
 	byte six_mycontroller : 0x3B1388, 0x40;
 	byte six_mymenuselection : 0x3B1388, 0x5B1;
 	byte six_soundfx : 0x3B1388, 0x702; //current/last played sound
+}
+
+state("fceux", "v2.6.4")
+{
+	int crc : 0x3F4CBC;
+	
+	//MM1
+	byte one_bosshp : 0x3DA4EC, 0x6C1;
+	byte one_myhp : 0x3DA4EC, 0x6A; //28 is max
+	byte one_mylives : 0x3DA4EC, 0xA6;
+	byte one_soundfx : 0x3DA4EC, 0xEF; //3 is common
+	byte one_stage : 0x3DA4EC, 0x31; //10 is start/gameover screen
+	byte one_orb : 0x3DA4EC, 0x501; //158 after orb grab/wily stages last boss kill
+	byte one_timer : 0x3DA4EC, 0x3C; //Timer that tends to decrement waiting for animations
+	byte one_xpos : 0x3DA4EC, 0x22;
+	byte one_bossid : 0x3DA4EC, 0xAC; //10 is last wily phase
+	
+	//MM2
+	byte two_bosshp : 0x3DA4EC, 0x6C1;
+	byte two_myhp : 0x3DA4EC, 0x6C0;
+	byte two_mylives : 0x3DA4EC, 0xA8;
+	byte two_mytitlescreen : 0x3DA4EC, 0x04B0;
+	byte two_mycontroller : 0x3DA4EC, 0x0025;
+	byte two_soundfx : 0x3DA4EC, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
+	byte two_stage : 0x3DA4EC, 0x2A; //12 is boss rush, 13 is alien
+	
+	//MM3
+	byte three_enemyhp : 0x3DA4EC, 0x4FF;
+	byte three_secondenemyhp : 0x3DA4EC, 0x4FE; //used for gemini
+	byte three_enemyid : 0x3DA4EC, 0x4DF; //Number the enemy appears in the stage, 255 if despawned
+	byte three_secondenemyid : 0x3DA4EC, 0x4DE;
+	byte three_myhp : 0x3DA4EC, 0xA2; //128 is dead (disregards high bit)
+	byte three_soundfx : 0x3DA4EC, 0x702; //58 is teleport
+	byte three_stage : 0x3DA4EC, 0x22;
+	byte three_screen : 0x3DA4EC, 0xCB; //1 on intro screen
+	
+	//MM4
+	byte four_enemyhp : 0x3DA4EC, 0x467;
+	byte four_enemyid : 0x3DA4EC, 0x44F; //Number the enemy appears in the stage, 255 if despawned
+	byte four_myhp : 0x3DA4EC, 0xB0; //128 is dead (disregards high bit)
+	byte four_soundfx : 0x3DA4EC, 0x702; //65 is teleport
+	byte four_stage : 0x3DA4EC, 0x22;
+	byte four_screen : 0x3DA4EC, 0xCB; //1 on intro screen
+	byte four_selection : 0x3DA4EC, 0x200; //151 on Game Start
+	byte four_levelscreen : 0x3DA4EC, 0xF9; //actual screen num in stage
+	
+	// MM5
+	byte five_enemyhp : 0x3DA4EC, 0x458;
+	byte five_enemyid : 0x3DA4EC, 0x440; //Number the enemy appears in the stage, 255 if despawned
+	byte five_myhp : 0x3DA4EC, 0xB0; //128 is dead (disregards high bit)
+	byte five_soundfx : 0x3DA4EC, 0x702; //68 to 66 is teleport
+	byte five_stage : 0x3DA4EC, 0x26; //goes 0 at reset then to 16 during intro
+	byte five_screenassets : 0x3DA4EC, 0x611; // 0 if on start screen
+	byte five_otherscreenassets : 0x3DA4EC, 0x18B;
+	byte five_selection : 0x3DA4EC, 0x200; //151 on Game Start
+	byte five_levelscreen : 0x3DA4EC, 0xF9; //actual screen num in stage
+	byte five_controller : 0x3DA4EC, 0x16; //controller 1 inputs held
+	int five_timer : 0x3DA4EC, 0x10; //timer for things
+	
+	byte six_myhp : 0x3DA4EC, 0x3E5;
+	byte six_mylives : 0x3DA4EC, 0xA9;
+	byte six_bosshp : 0x3DA4EC, 0x3ED;
+	byte six_stage : 0x3DA4EC, 0x51;
+	byte six_currentscreen : 0x3DA4EC, 0x92;
+	byte six_mycontroller : 0x3DA4EC, 0x40;
+	byte six_mymenuselection : 0x3DA4EC, 0x5B1;
+	byte six_soundfx : 0x3DA4EC, 0x702; //current/last played sound
 }
 
 state("nestopia")
@@ -167,6 +234,11 @@ init
 	vars.six_currentBossRush = 0;
 	vars.six_iknowimdead = 0;
 	vars.six_framecounter = 0;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {

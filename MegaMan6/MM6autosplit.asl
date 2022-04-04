@@ -1,6 +1,6 @@
 //Made by Coltaho 3/14/2018
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	byte myhp : 0x3B1388, 0x3E5;
 	byte mylives : 0x3B1388, 0xA9;
@@ -10,6 +10,18 @@ state("fceux")
 	byte mycontroller : 0x3B1388, 0x40;
 	byte mymenuselection : 0x3B1388, 0x5B1;
 	byte soundfx : 0x3B1388, 0x702; //current/last played sound
+}
+
+state("fceux", "v2.6.4")
+{
+	byte myhp : 0x3DA4EC, 0x3E5;
+	byte mylives : 0x3DA4EC, 0xA9;
+	byte bosshp : 0x3DA4EC, 0x3ED;
+	byte stage : 0x3DA4EC, 0x51;
+	byte currentscreen : 0x3DA4EC, 0x92;
+	byte mycontroller : 0x3DA4EC, 0x40;
+	byte mymenuselection : 0x3DA4EC, 0x5B1;
+	byte soundfx : 0x3DA4EC, 0x702; //current/last played sound
 }
 
 state("nestopia")
@@ -45,6 +57,11 @@ init
 	vars.currentBossRush = 0;
 	vars.iknowimdead = 0;
 	vars.framecounter = 0;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {

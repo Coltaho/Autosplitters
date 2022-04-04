@@ -1,8 +1,8 @@
 //Made by Coltaho 6/23/2018
 //Splits on boss kill, assumes boss rush is 1 split
-//Version 1.4
+//Version 1.6
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	byte bosshp : 0x436B04, 0x6C1;
 	byte myhp : 0x436B04, 0x6C0;
@@ -11,6 +11,17 @@ state("fceux")
 	byte mycontroller : 0x436B04, 0x0025;
 	byte soundfx : 0x436B04, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
 	byte stage : 0x436B04, 0x2A; //12 is boss rush, 13 is alien
+}
+
+state("fceux", "v2.6.4")
+{
+	byte bosshp : 0x3DA4EC, 0x6C1;
+	byte myhp : 0x3DA4EC, 0x6C0;
+	byte mylives : 0x3DA4EC, 0xA8;
+	byte mytitlescreen : 0x3DA4EC, 0x04B0;
+	byte mycontroller : 0x3DA4EC, 0x0025;
+	byte soundfx : 0x3DA4EC, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
+	byte stage : 0x3DA4EC, 0x2A; //12 is boss rush, 13 is alien
 }
 
 state("nestopia")
@@ -29,7 +40,7 @@ state("nestopia")
 startup
 {
 	settings.Add("onteleport", true, "Split on teleport, instead of on boss kill");
-	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.5 by Coltaho");
+	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.6 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
 	settings.Add("main1", false, "- Supported emulators : FCEUX, Netstopia", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
@@ -45,6 +56,11 @@ init
 	vars.iknowimdead = 0;
 	vars.framecounter = 0;
 	vars.bossrushdone = 0;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {
@@ -62,7 +78,7 @@ start {
 }
 
 update {
-	//print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --framecount: " + vars.framecounter + " --SoundFX: " + current.soundfx + " --incombat: " + vars.inBossFight);
+	// print("--Current myhp: " + current.myhp + " Current bosshp: " + current.bosshp + " --framecount: " + vars.framecounter + " --SoundFX: " + current.soundfx + " --incombat: " + vars.inBossFight);
 }
 
 split

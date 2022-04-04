@@ -1,6 +1,6 @@
 //Made by Coltaho 2/13/2019
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	byte bosshp : 0x436B04, 0x6C1;
 	byte myhp : 0x436B04, 0x6A; //28 is max
@@ -11,6 +11,19 @@ state("fceux")
 	byte timer : 0x436B04, 0x3C; //Timer that tends to decrement waiting for animations
 	byte xpos : 0x436B04, 0x22;
 	byte bossid : 0x436B04, 0xAC; //10 is last wily phase
+}
+
+state("fceux", "v2.6.4")
+{
+	byte bosshp : 0x3DA4EC, 0x6C1;
+	byte myhp : 0x3DA4EC, 0x6A; //28 is max
+	byte mylives : 0x3DA4EC, 0xA6;
+	byte soundfx : 0x3DA4EC, 0xEF; //3 is common
+	byte stage : 0x3DA4EC, 0x31; //10 is start/gameover screen
+	byte orb : 0x3DA4EC, 0x501; //158 after orb grab/wily stages last boss kill
+	byte timer : 0x3DA4EC, 0x3C; //Timer that tends to decrement waiting for animations
+	byte xpos : 0x3DA4EC, 0x22;
+	byte bossid : 0x3DA4EC, 0xAC; //10 is last wily phase
 }
 
 state("nestopia")
@@ -40,6 +53,11 @@ init
 {
 	print("--Setting init variables!--");
 	refreshRate = 60;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {

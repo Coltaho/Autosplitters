@@ -1,6 +1,6 @@
 //Made by Coltaho 3/3/2019
 
-state("fceux")
+state("fceux", "v2.2.3")
 {
 	byte enemyhp : 0x436B04, 0x458;
 	byte enemyid : 0x436B04, 0x440; //Number the enemy appears in the stage, 255 if despawned
@@ -13,6 +13,21 @@ state("fceux")
 	byte levelscreen : 0x436B04, 0xF9; //actual screen num in stage
 	byte controller : 0x436B04, 0x16; //controller 1 inputs held
 	int timer : 0x436B04, 0x10; //timer for things
+}
+
+state("fceux", "v2.6.4")
+{
+	byte enemyhp : 0x3DA4EC, 0x458;
+	byte enemyid : 0x3DA4EC, 0x440; //Number the enemy appears in the stage, 255 if despawned
+	byte myhp : 0x3DA4EC, 0xB0; //128 is dead (disregards high bit)
+	byte soundfx : 0x3DA4EC, 0x702; //68 to 66 is teleport
+	byte stage : 0x3DA4EC, 0x26; //goes 0 at reset then to 16 during intro
+	byte screenassets : 0x3DA4EC, 0x611; // 0 if on start screen
+	byte otherscreenassets : 0x3DA4EC, 0x18B;
+	byte selection : 0x3DA4EC, 0x200; //151 on Game Start
+	byte levelscreen : 0x3DA4EC, 0xF9; //actual screen num in stage
+	byte controller : 0x3DA4EC, 0x16; //controller 1 inputs held
+	int timer : 0x3DA4EC, 0x10; //timer for things
 }
 
 state("nestopia")
@@ -47,6 +62,11 @@ init
 {
 	print("--Setting init variables!--");
 	refreshRate = 60;
+	
+	if (modules.First().ModuleMemorySize == 0x487000)
+        version = "v2.2.3";
+    else if (modules.First().ModuleMemorySize == 0x603000)
+        version = "v2.6.4";
 }
 
 start {
