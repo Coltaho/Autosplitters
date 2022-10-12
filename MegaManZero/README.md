@@ -8,6 +8,7 @@ Auto Splitter for Mega Man Zero GBA
 **Supported emulators:**
  - Bizhawk using the VBA-NEXT core! (This is the only allowed core for the Zero games)
  - There might also be a limitation with Win10 only. If you have issues when not on Win10, please message me on Discord.
+ - VBA-rr-svn480
 
 ## Features
 

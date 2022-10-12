@@ -1,17 +1,21 @@
 //Made by Coltaho 8/25/2019
+//Updated 10/11/22 to add VBA-rr-svn480 support
 
 state("EmuHawk"){}
+state("VBA-rr-svn480"){}
 
 startup {	
 	refreshRate = 1;
 
 	settings.Add("options", true, "---Options---");
 	settings.Add("missiontimer", false, "Show Mission Timer", "options");
+	settings.Add("debug", false, "Print Debug Info", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero AutoSplitter v1.1 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero AutoSplitter v1.2 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
-	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("info1", true, "- Supported emulators : VBA-rr-svn480", "infosection");
+	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
 	vars.findpointers = (Action<Process, int>)((proc, mymodulesize) => {
 		print("--Scanning for pointers!--");
@@ -69,6 +73,21 @@ startup {
 		};
 	});
 	
+	vars.GetVBAWatcherList = (Func<Process, IntPtr, MemoryWatcherList>)((proc, baseAddress) =>
+	{
+		uint ewram = proc.ReadValue<uint>((IntPtr)baseAddress);
+		print("ewram: " + ewram.ToString("X"));
+		return new MemoryWatcherList
+		{
+			new MemoryWatcher<byte>((IntPtr)ewram + 0x2B62C) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)ewram + 0x23688) { Name = "menuselection" }, //0 for new game
+			new MemoryWatcher<uint>((IntPtr)ewram + 0x23684) { Name = "start" }, // = 1284 to 1540 for starting, 261 while game in progress
+			new MemoryWatcher<ushort>((IntPtr)ewram + 0x22CC4) { Name = "end" }, // = 65535 when control lost but for whole game, seems to be 111 during seraph X only?
+			new MemoryWatcher<ushort>((IntPtr)ewram + 0x2A5D6) { Name = "scorescreen" }, // changed
+			new MemoryWatcher<uint>((IntPtr)ewram + 0x22B28) { Name = "missiontimer" }
+		};
+	});
+	
 	vars.UpdateRoomTimer = (Action<Process>)((proc) => {
         if(vars.textSettingMissionTimer == null) {
             foreach (dynamic component in timer.Layout.Components) {
@@ -102,22 +121,37 @@ init {
 	vars.ewram = IntPtr.Zero;
 	vars.watchers = new MemoryWatcherList();
 	vars.textSettingMissionTimer = null;
+	vars.mystring = "";
+	vars.paststring = "";
 	
-	vars.findpointers(game, modules.First().ModuleMemorySize);
-	vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	if (game.ProcessName == "EmuHawk") {
+		vars.findpointers(game, modules.First().ModuleMemorySize);
+		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	} else {
+		vars.watchers = vars.GetVBAWatcherList(game, modules.First().BaseAddress + 0x3E0250);
+	}
 	
+
 	refreshRate = 60;
 }
 
 update {
 	vars.watchers.UpdateAll(game);
-	if(settings["missiontimer"]) vars.UpdateRoomTimer(game);
-	if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
-		print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
-		vars.findpointers(game, modules.First().ModuleMemorySize);
-		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	if(settings["missiontimer"]) vars.UpdateRoomTimer(game);	
+	if (game.ProcessName == "EmuHawk") {
+		if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
+			print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
+			vars.findpointers(game, modules.First().ModuleMemorySize);
+			vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+		}
 	}
-	// print("--Menu Selection: " + vars.watchers["menuselection"].Current + " | End: " + vars.watchers["end"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current);
+	if (settings["debug"]) {
+		vars.mystring = "--Menu Selection: " + vars.watchers["menuselection"].Current + " | End: " + vars.watchers["end"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current;
+		if (vars.paststring != vars.mystring) {
+			print(vars.mystring);
+			vars.paststring = vars.mystring;
+		}
+	}	
 }
 
 start { 
