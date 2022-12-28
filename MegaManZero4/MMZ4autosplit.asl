@@ -1,4 +1,4 @@
-//Made by Coltaho 9/22/2019
+//Made by Coltaho 9/22/2019 and updated 12/28/2022 for ZZXLC values
 
 state("EmuHawk"){}
 state("MZZXLC") {}
@@ -9,9 +9,10 @@ startup {
 	settings.Add("options", true, "---Options---");
 	settings.Add("missiontimer", false, "Show Mission Timer", "options");
 	settings.Add("refightsplit", false, "Split on first door after refights", "options");
+	settings.Add("debug", false, "Print Debug Info", "options");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.2 by Coltaho", "infosection");
+	settings.Add("info", true, "Mega Man Zero 4 AutoSplitter v1.3 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk 2.3 with VBA-Next Core", "infosection");
 	settings.Add("info1", true, "- Supported PC : Steam ZZXLC", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
@@ -81,14 +82,14 @@ startup {
 	{
 		return new MemoryWatcherList
 		{
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x253FAB8) { Name = "myhp" },
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23F3BA7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F4072) { Name = "start" }, //main menu fade? goes to 31 as screen fades
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F3BA4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FCE42) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FCE40) { Name = "stage" }, //16 for last stage
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x251FE70) { Name = "scorescreen" }, // changed
-			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x2634B04) { Name = "missiontimer" }
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x2541808) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23F5BA7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F6072) { Name = "start" }, //main menu fade? goes to 31 as screen fades
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F5BA4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FEC02) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FEC00) { Name = "stage" }, //16 for last stage
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x2521C20) { Name = "scorescreen" }, // changed
+			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x26367B4) { Name = "missiontimer" }
 		};
 	});
 	
@@ -125,6 +126,8 @@ init {
 	vars.ewram = IntPtr.Zero;
 	vars.watchers = new MemoryWatcherList();
 	vars.textSettingMissionTimer = null;
+	vars.mystring = "";
+	vars.paststring = "";
 	
 	if (game.ProcessName == "EmuHawk") {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
@@ -144,7 +147,13 @@ update {
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetEmuWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	}
-	// print("--Gamestate: " + vars.watchers["gamestate"].Current + " | MenuScreen: " + vars.watchers["menuscreen"].Current + " | MenuFade: " + vars.watchers["start"].Current + " | Checkpoint: " + vars.watchers["checkpoint"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current);
+	if (settings["debug"]) {
+		vars.mystring = "--Menuscreen: " + vars.watchers["menuscreen"].Current + " | Stage: " + vars.watchers["stage"].Current + " | CP: " + vars.watchers["checkpoint"].Current + " | Gamestate: " + vars.watchers["gamestate"].Current + " | Scorescreen: " + vars.watchers["scorescreen"].Current + " | HP: " + vars.watchers["myhp"].Current;
+		if (vars.paststring != vars.mystring) {
+			print(vars.mystring);
+			vars.paststring = vars.mystring;
+		}
+	}	
 }
 
 start { 
