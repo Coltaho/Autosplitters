@@ -1,6 +1,7 @@
 //Made by Coltaho 6/23/2018
 //Splits on boss kill, assumes boss rush is 1 split
-//Version 1.6
+//Updated by McBobX on 2/23/2023
+//Version 1.6.1
 
 state("fceux", "v2.2.3")
 {
@@ -22,6 +23,17 @@ state("fceux", "v2.6.4")
 	byte mycontroller : 0x3DA4EC, 0x0025;
 	byte soundfx : 0x3DA4EC, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
 	byte stage : 0x3DA4EC, 0x2A; //12 is boss rush, 13 is alien
+}
+
+state("Mesen", "0.9.9")
+{
+	byte bosshp : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x6C1;
+	byte myhp : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x6C0;
+	byte mylives : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0xA8;
+	byte mytitlescreen : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x04B0;
+	byte mycontroller : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x0025;
+	byte soundfx : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
+	byte stage : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x2A; //12 is boss rush, 13 is alien
 }
 
 state("nestopia")
@@ -64,7 +76,7 @@ init
 }
 
 start {
-	if (old.mytitlescreen == 119 && current.mytitlescreen == 119 && old.mycontroller == 0 && current.mycontroller == 8) {
+	if (((old.mytitlescreen == 119 && current.mytitlescreen == 119) || (old.mytitlescreen == 103 && current.mytitlescreen == 103)) && old.mycontroller == 0 && current.mycontroller == 8) {
 		print("--Starting, Reset vars!--");
 		vars.inBossFight = 0;
 		vars.currentBossRush = 0;
