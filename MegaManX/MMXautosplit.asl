@@ -297,7 +297,7 @@ split
 			return true;
 		}
 	}
-
+var testme = 0b0000_0001;
 	//split when chill penguin tank is picked up, bit 0 is this tank
 	//if (settings["chillpenguin"] && (vars.watchers["myhearts"].Old & 0b0000_0001 == 0) && (vars.watchers["myhearts"].Current & 0b0000_0001 == 1)) {
 	//	print("--Yay chill penguin heart got!--");
