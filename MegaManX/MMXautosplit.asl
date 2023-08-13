@@ -297,12 +297,12 @@ split
 			return true;
 		}
 	}
-	
+
 	//split when chill penguin tank is picked up, bit 0 is this tank
-	if (settings["chillpenguin"] && (vars.watchers["myhearts"].Old & 0b000_0001 == 0) && (vars.watchers["myhearts"].Current & 0b000_0001 == 1)) {
-		print("--Yay chill penguin heart got!--");
-		return true;
-	}
+	//if (settings["chillpenguin"] && (vars.watchers["myhearts"].Old & 0b0000_0001 == 0) && (vars.watchers["myhearts"].Current & 0b0000_0001 == 1)) {
+	//	print("--Yay chill penguin heart got!--");
+	//	return true;
+	//}
 	
 	//split when we get hadouken and helmet dings
 	if (settings["hadouken"] && vars.hadoget == 0 && vars.watchers["myvisits"].Current == 133 && vars.watchers["sfx"].Current == 45) {
