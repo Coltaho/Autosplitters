@@ -18,6 +18,9 @@ startup
 	settings.Add("chillpenguin", true, "- Chill Penguin Split (on heart pick up)", "hundosplits");
 	settings.Add("hadouken", true, "- Hadouken Split (on helmet ding)", "hundosplits");
 	
+	settings.Add("scriptsection", true, "---Script Options---");
+	settings.Add("debug", false, "Print Debug Info", "scriptsection");
+	
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man X AutoSplitter v1.5 by Coltaho", "infosection");
 	settings.Add("info1", true, "- Supported emulators : Higan 105/106, Snes9X 1.51 v7.1 rerecording, 1.55-1.60 32 and 64 bit (excluding 1.59)", "infosection");
@@ -171,6 +174,8 @@ init
 	vars.inBossFight = 0;
 	vars.sigmaFight = 1;
 	vars.hadoget = 0;
+	vars.log = "";
+	vars.pastlog = "";
 	vars.coop = false;
 }
 
@@ -218,7 +223,14 @@ update {
 	
 	vars.watchers.UpdateAll(game);
 	//print("--SFX: " + vars.watchers["sfx"].Current + " mem: " + vars.memoryOffset + " otherMem: " + vars.othermemoryOffset);
-	print("--SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " level: " + vars.watchers["currentlevel"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot);
+	if (settings["debug"]) {
+		vars.log = "--[Autosplitter] mem: " + vars.memoryOffset.ToString("X") + " otherMem: " + vars.othermemoryOffset.ToString("X") + " SFX: " + vars.watchers["sfx"].Current + " MyHP: " + vars.watchers["myhp"].Current + " Enemy1 ID: " + vars.watchers["enemyid"].Current + " EnemyHP: " + vars.watchers["enemyhp"].Current + " Enemy2 ID: " + vars.watchers["enemyid2"].Current  + " Enemy2HP: " + vars.watchers["enemyhp2"].Current + " level: " + vars.watchers["currentlevel"].Current + " bossname: " + vars.currentBossName + " bossslot: " + vars.currentBossSlot;
+
+		if (vars.pastlog != vars.log) {
+			print(vars.log);
+			vars.pastlog = vars.log;
+		}
+	}
 }
 
 split
@@ -299,7 +311,6 @@ split
 	}
 	
 	//split when chill penguin tank is picked up, bit 0 is this tank
-	// if (settings["chillpenguin"] && ((vars.watchers["myhearts"].Old & (1 << 0)) == 0) && ((vars.watchers["myhearts"].Current & (1 << 0))== 1)) {
 	if (settings["chillpenguin"] && (((vars.watchers["myhearts"].Old >> 0) & 1) == 0) && (((vars.watchers["myhearts"].Current >> 0) & 1) == 1)) {
 		print("--Yay chill penguin heart got!--");
 		return true;
