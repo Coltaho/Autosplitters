@@ -299,7 +299,7 @@ split
 	}
 	
 	//split when chill penguin tank is picked up, bit 0 is this tank
-	if (settings["chillpenguin"] && ((vars.watchers["myhearts"].Old & (1 << 0)) == 0) && ((vars.watchers["myhearts"].Current & (1 << 0)) == 1)) {
+	if (settings["chillpenguin"] && ((vars.watchers["myhearts"].Old >> 0) & 1 == 0) && ((vars.watchers["myhearts"].Current >> 0) & 1 == 1)) {
 		print("--Yay chill penguin heart got!--");
 		return true;
 	}
