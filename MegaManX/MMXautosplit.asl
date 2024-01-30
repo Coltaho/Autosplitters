@@ -2,7 +2,7 @@
 
 state("snes9x"){}
 state("snes9x-x64"){}
-state("higan"){}
+state("bsnes"){}
 
 startup
 {
@@ -23,7 +23,7 @@ startup
 	
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man X AutoSplitter v1.5 by Coltaho", "infosection");
-	settings.Add("info1", true, "- Supported emulators : Higan 105/106, Snes9X 1.51 v7.1 rerecording, 1.55-1.60 32 and 64 bit (excluding 1.59)", "infosection");
+	settings.Add("info1", true, "- Supported emulators : bsnes, Snes9X 1.51 v7.1 rerecording, 1.55-1.60 32 and 64 bit (excluding 1.59)", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
 	
