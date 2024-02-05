@@ -11,6 +11,9 @@ startup
 	
 	settings.Add("onding", true, "Split on helmet ding instead of boss kill");
 	settings.SetToolTip("onding", "Turn off if you want to split on boss kill - Except for X-Hunters who talk before blowing up");
+
+	settings.Add("refights", true, "Split after refights complete (sometimes buggy)");
+	settings.SetToolTip("onding", "Turn off if you want to split refights manually all the time");
 	
 	settings.Add("main", false, "Mega Man X2 AutoSplitter v1.1 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
@@ -267,7 +270,7 @@ split
 	}
 	
 	//split on teleport after refights
-	if (vars.watchers["currentlevel"].Current == 12 && vars.watchers["sfx"].Old == 35 && vars.watchers["sfx"].Current == 17) {
+	if (settings["refights"] && vars.watchers["currentlevel"].Current == 12 && vars.watchers["sfx"].Old == 35 && vars.watchers["sfx"].Current == 17) {
 		print("--After Refights Teleport!--");
 		return true;
 	}
