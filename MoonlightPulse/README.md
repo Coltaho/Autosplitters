@@ -28,7 +28,7 @@ More options to come in the future hopefully!
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://github.com/just-ero/asl-help/blob/f70a9a1e6bbc494a6c0fa274c142d2c8889db371/lib/asl-help
+- Download https://github.com/just-ero/asl-help/raw/main/lib/asl-help
 - Place asl-help in your Livesplit Components folder
 - Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MoonlightPulse/moonlightpulse_autosplit.asl
 - Edit Layout
