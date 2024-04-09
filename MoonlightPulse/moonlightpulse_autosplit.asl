@@ -3,6 +3,8 @@
 state("Moonlight Pulse") {}
 
 startup {
+	vars.scriptVer = "1.1";
+	
     Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Unity");
 	vars.Helper.UnityVersion = new Version(2021, 3);
 	
@@ -25,7 +27,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Moonlight Pulse autosplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Moonlight Pulse autosplitter v" + vars.scriptVer + " by Coltaho", "infosection");
 	settings.Add("info1", true, "- Autosplit: PC Steam version, maybe others", "infosection");
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
@@ -50,12 +52,13 @@ init {
 	vars.mystring = "";
 	vars.nephkill = 0;
 	vars.pastSplits = new HashSet<string>();
+	vars.Log("Script Version: " + vars.scriptVer);
 	
 	vars.bossKilled = (Func<string, bool>)((value) =>
 	{
 		if (value == "Nephelie" && vars.Helper["bossname"].Current == "Nephelie" && vars.Helper["boss_isdead"].Current && !vars.Helper["boss_isdead"].Old) {
 			vars.nephkill += 1;
-			vars.Log("--[Autosplitter] Nephelie kills: " + vars.nephkill);
+			vars.Log("Nephelie kills: " + vars.nephkill);
 		}
 		return vars.Helper["boss_isdead"].Current && !vars.Helper["boss_isdead"].Old && vars.Helper["bossname"].Current == value;
 	});
@@ -111,14 +114,14 @@ update {
 
 start {	
 	if (!vars.Helper["start_IsExecuting"].Old && vars.Helper["start_IsExecuting"].Current && vars.Helper["playtime"].Current == 0) {	
-		vars.Log("--[Autosplitter] Go!");
+		vars.Log("Go!");
 		return true;
 	}
 }
 
 reset {
 	if (vars.Helper["playtime"].Old > 0 && vars.Helper["playtime"].Current == 0) {
-		vars.Log("--[Autosplitter] Reset!");
+		vars.Log("Reset!");
 		return true;
 	}
 }
@@ -134,7 +137,7 @@ split {
 				return false;
 			}
 			vars.pastSplits.Add(split.Key);
-			vars.Log("--[Autosplitter] Split: " + split.Key);
+			vars.Log("Split: " + split.Key);
 			return true;
 		}
 	}
