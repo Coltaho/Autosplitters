@@ -39,7 +39,8 @@ init {
 		vars.Helper["playtime"] = PlayTime.Make<float>("_playTime", 0x38);
 		var PlayerManager = mono["PlayerManager"];
 		vars.Helper["lastSelectedCharacter"] = PlayerManager.Make<int>("_lastSelectedCharacter", 0x38);		
-		vars.Helper["itemHeld"] = PlayerManager.Make<int>("Instance", 0x68, 0x130, 0x10);	
+		vars.Helper["itemHeld"] = PlayerManager.Make<int>("Instance", 0x68, 0x130, 0x10);
+		vars.Helper["itemHeld"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 		var BossHealthBar = mono["BossHealthBar"];
 		vars.Helper["bossname"] = BossHealthBar.MakeString("Instance", 0x50, 0xD8);
 		vars.Helper["boss_isdead"] = BossHealthBar.Make<bool>("Instance", 0x78, 0x7D);
