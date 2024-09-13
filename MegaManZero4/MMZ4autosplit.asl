@@ -82,14 +82,14 @@ startup {
 	{
 		return new MemoryWatcherList
 		{
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x2541808) { Name = "myhp" },
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23F5BA7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F6072) { Name = "start" }, //main menu fade? goes to 31 as screen fades
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F5BA4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FEC02) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
-			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FEC00) { Name = "stage" }, //16 for last stage
-			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x2521C20) { Name = "scorescreen" }, // changed
-			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x26367B4) { Name = "missiontimer" }
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x2541218) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23F59E7) { Name = "menuscreen" }, // = 4 when on difficulty select screen
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F5EB2) { Name = "start" }, //main menu fade? goes to 31 as screen fades
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x23F59E4) { Name = "gamestate" }, //261 when playing, 516 on main menu, resets to 1 during restart
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FE6C2) { Name = "checkpoint" }, //5 after refights - goes from 6 to 9 on final boss defeat
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x23FE6C0) { Name = "stage" }, //16 for last stage
+			new MemoryWatcher<ushort>((IntPtr)baseAddress + 0x2521670) { Name = "scorescreen" }, // changed
+			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x2635F74) { Name = "missiontimer" }
 		};
 	});
 	
@@ -134,6 +134,7 @@ init {
 		vars.watchers = vars.GetEmuWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
 	} else {
 		vars.watchers = vars.GetXLCWatcherList(modules.First().BaseAddress);
+		print("--XLC BaseAddress: " + modules.First().BaseAddress);
 	}
 	
 	refreshRate = 60;
