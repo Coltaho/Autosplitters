@@ -9,7 +9,7 @@ startup {
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
-	settings.Add("info", true, "Brave Escape AutoSplitter v1.0 by Coltaho", "infosection");
+	settings.Add("info", true, "Brave Escape AutoSplitter v1.1 by Coltaho", "infosection");
 	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
 
@@ -28,7 +28,8 @@ init {
 			new MemoryWatcher<int>(vars.myBaseAddress + 8) { Name = "levelindex" },
 			new MemoryWatcher<long>(vars.myBaseAddress + 24) { Name = "totaltime" },
 			new MemoryWatcher<byte>(vars.myBaseAddress + 32) { Name = "iscompletable" },
-			new MemoryWatcher<byte>(vars.myBaseAddress + 35) { Name = "inmenu" }
+			new MemoryWatcher<byte>(vars.myBaseAddress + 35) { Name = "inmenu" },
+			new MemoryWatcher<byte>(vars.myBaseAddress + 37) { Name = "iscompleted" }
 		};
 
 		vars.watchersInitialized = true;
@@ -43,7 +44,7 @@ init {
 		while(!vars.tokenSource.IsCancellationRequested) {
 			print("--[Autosplitter] Scanning memory");
 			
-			vars.scanTarget = new SigScanTarget(0, "D8 25 8D 57 00 00 00 00");
+			vars.scanTarget = new SigScanTarget(0, "D8 25 8D 57 ?? ?? ?? ??");
 
 			foreach (var page in game.MemoryPages()) {
 				var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
@@ -81,40 +82,12 @@ update {
 	
 	
 	if (vars.watchers["magicnumber"].Changed && vars.watchers["magicnumber"].Current != 1468868056) {
-		print("--[Autosplitter] Magic Number incorrect! Address Changed! - " + vars.threadScan.ThreadState);
+		print("--[Autosplitter] Magic Number incorrect! Address Changed! - Should have been resolved, breaking now!");
 		vars.watchersInitialized = false;
-		vars.threadScan = new Thread(() => {
-			print("--[Autosplitter] Starting Thread Scan...");
-
-			while(!vars.tokenSource.IsCancellationRequested) {
-				print("--[Autosplitter] Scanning memory");
-				
-				vars.scanTarget = new SigScanTarget(0, "D8 25 8D 57 00 00 00 00");
-
-				foreach (var page in game.MemoryPages()) {
-					var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
-					vars.myBaseAddress = scanner.Scan(vars.scanTarget);		
-					if (vars.myBaseAddress != IntPtr.Zero) {
-						print("--Magic Number Address: " + ((long)vars.myBaseAddress).ToString("X"));
-						vars.initializeWatchers();
-						break;
-					}
-				}
-				
-				if(vars.watchersInitialized) {
-					break;
-				}
-
-				print("--[Autosplitter] Couldn't find Magic Number! Game is still starting or an update broke things!");
-				Thread.Sleep(2000);
-			}
-			print("--[Autosplitter] Exited Thread Scan");
-		});
-		vars.threadScan.Start();
 	}
 		
 	if (settings["debug"]) {
-		vars.mystring = "--[Autosplitter] MagicNumber: " + vars.watchers["magicnumber"].Current + " | CaveIndex: " + vars.watchers["caveindex"].Current + " | LevelIndex: " + vars.watchers["levelindex"].Current + " | iscompletable: " + vars.watchers["iscompletable"].Current + " | inmenu: " + vars.watchers["inmenu"].Current;
+		vars.mystring = "--[Autosplitter] MagicNumber: " + vars.watchers["magicnumber"].Current + " | CaveIndex: " + vars.watchers["caveindex"].Current + " | LevelIndex: " + vars.watchers["levelindex"].Current + " | iscompletable: " + vars.watchers["iscompletable"].Current + " | iscompleted: " + vars.watchers["iscompleted"].Current;
 		if (vars.paststring != vars.mystring) {
 			print(vars.mystring);
 			vars.paststring = vars.mystring;
@@ -123,7 +96,7 @@ update {
 }
 
 start {	
-	if (vars.watchers["levelindex"].Old == 0 && vars.watchers["levelindex"].Current == 1) {	
+	if (vars.watchers["caveindex"].Current == 0 && vars.watchers["levelindex"].Old == 0 && vars.watchers["levelindex"].Current == 1) {	
 		print("--[Autosplitter] Go!");
 		return true;
 	}
@@ -137,7 +110,7 @@ reset {
 }
 
 split {
-	if (vars.watchers["iscompletable"].Current == 1 && (vars.watchers["levelindex"].Old != vars.watchers["levelindex"].Current)) {	
+	if (vars.watchers["iscompletable"].Current == 1 && vars.watchers["iscompleted"].Old == 0 && vars.watchers["iscompleted"].Current == 1) {	
 		print("--[Autosplitter] Split!");
 		return true;
 	}
