@@ -9,6 +9,8 @@ Auto Splitter for Mega Man 1 NES
  - FCEUX 2.2.3
  - FCEUX 2.6.4
  - Nestopia 1.40 (untested)
+ - Mesen 0.9.9
+ - MesenRTA 0.0.7
  
 ## Features
 

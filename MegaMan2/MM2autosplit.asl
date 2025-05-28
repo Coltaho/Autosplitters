@@ -1,7 +1,7 @@
 //Made by Coltaho 6/23/2018
 //Splits on boss kill, assumes boss rush is 1 split
 //Updated by McBobX on 2/23/2023
-//Version 1.6.1
+//MesenRTA support added ~Aurel
 
 state("fceux", "v2.2.3")
 {
@@ -36,6 +36,17 @@ state("Mesen", "0.9.9")
 	byte stage : "MesenCore.dll", 0x42E0F30, 0xB8, 0x58, 0x2A; //12 is boss rush, 13 is alien
 }
 
+state("Mesen", "0.0.7")
+{
+	byte bosshp : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0x6C1;
+	byte myhp : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0x6C0;
+	byte mylives : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0xA8;
+	byte mytitlescreen : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0x04B0;
+	byte mycontroller : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0x0025;
+	byte soundfx : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0xE2; //0xF1 to 0x35 is boss kill then teleport except for wily machine
+	byte stage : "MesenCore.dll", 0x42F99D0, 0xB8, 0x58, 0x2A; //12 is boss rush, 13 is alien
+}
+
 state("nestopia")
 {
 	// base 0x0000 address of ROM : "nestopia.exe", 0x1b2bcc, 0, 8, 0xc, 0xc, 0x68;
@@ -52,9 +63,9 @@ state("nestopia")
 startup
 {
 	settings.Add("onteleport", true, "Split on teleport, instead of on boss kill");
-	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.6 by Coltaho");
+	settings.Add("main", false, "Mega Man 2 AutoSplitter v1.7 by Coltaho");
 	settings.Add("main0", false, "- Website : https://github.com/Coltaho/Autosplitters", "main");
-	settings.Add("main1", false, "- Supported emulators : FCEUX, Netstopia", "main");
+	settings.Add("main1", false, "- Supported emulators : FCEUX, Nestopia, Mesen, MesenRTA", "main");
 	settings.SetToolTip("main", "Pretty cool, right?");
 }
 
@@ -73,6 +84,38 @@ init
         version = "v2.2.3";
     else if (modules.First().ModuleMemorySize == 0x603000)
         version = "v2.6.4";
+	
+	if(game.ProcessName == "Mesen")
+	{
+		var coreDLL = Array.Find(modules, x => x.ModuleName == "MesenCore.dll");
+		if (coreDLL == null)
+		{
+			// This shouldn't happen...?
+			print("MesenCore.dll isn't loaded?");
+			throw new Exception("Couldn't find MesenCore.dll");
+		}
+
+		string hashStr;
+		using (var sha1 = System.Security.Cryptography.SHA1.Create())
+			using (var fs = File.OpenRead(coreDLL.FileName))
+				hashStr = string.Concat(sha1.ComputeHash(fs).Select(b => b.ToString("X2")));
+
+		switch (hashStr)
+		{
+			case "3D5571326AAF55B17663EE0D6C828D4D0782941A":
+				print("Detected Mesen 0.9.9");
+				version = "0.9.9";
+				break;
+			case "12BFF659191984F011E0F4FC5AC2900C929D5991":
+				print("Detected MesenRTA 0.0.7");
+				version = "0.0.7";
+				break;
+			default:
+				print("Unrecognized Mesen version! SHA1 = " + hashStr);
+				version = "";
+				break;
+		}
+	}
 }
 
 start {

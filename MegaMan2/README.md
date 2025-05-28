@@ -9,7 +9,8 @@ Auto Splitter for Mega Man 2 NES
  - FCEUX 2.2.3
  - FCEUX 2.6.4
  - Nestopia 1.40
- - Let me know if you need support for another emulator
+ - Mesen 0.9.9
+ - MesenRTA 0.0.7
  
 ## Features
 
