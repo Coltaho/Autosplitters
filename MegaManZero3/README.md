@@ -1,6 +1,6 @@
 ## Mega Man Zero 3 Autosplitter
  
-Auto Splitter for Mega Man Zero 3 GBA
+Auto Splitter for Mega Man Zero 3 GBA and ZZXLC
 
 - [LiveSplit](http://livesplit.github.io/) - Here you can find out more about and download LiveSplit. It is a popular timer program typically used for speedruns.
 - [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
