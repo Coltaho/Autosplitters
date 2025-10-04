@@ -1,6 +1,7 @@
 //Made by Coltaho 7/6/2019
 
 state("EmuHawk"){}
+state("MZZXLC") {}
 
 startup {	
 	refreshRate = 1;
@@ -11,15 +12,17 @@ startup {
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "Mega Man Zero 3 AutoSplitter v1.6 by Coltaho", "infosection");
 	settings.Add("info0", true, "- Supported emulators : Win7 or Win10 Bizhawk with VBA-Next Core", "infosection");
-	settings.Add("info1", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
+	settings.Add("info1", true, "- Supported PC : Steam ZZXLC", "infosection");
+	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 	
-	vars.findpointers = (Action<Process, int>)((proc, mymodulesize) => {
+	vars.baseptr = IntPtr.Zero;
+	vars.ewram = IntPtr.Zero;
+	vars.us = false;
+
+	vars.findpointers = (Action < Process, int >)((proc, mymodulesize) => {
 		print("--Scanning for pointers!--");
 		
-		vars.baseptr = IntPtr.Zero;
-		vars.ewram = IntPtr.Zero;
 		vars.scantest = new SigScanTarget[4];
-		vars.us = false;
 		
 		vars.scantest[0] = new SigScanTarget(38, "448B41104489442438488BCA488D5424404C8D442428E8");
 		vars.scantest[1] = new SigScanTarget(5, "83EC2048B9????????????????488B0949BB????????????????390941FF13488BF0488BCEE8");
@@ -90,7 +93,35 @@ startup {
 			};
 		}
 	});
-	
+
+	vars.GetXLCWatcherList = (Func<IntPtr, MemoryWatcherList>)((baseAddress) =>
+	{
+		return new MemoryWatcherList
+		{
+			new MemoryWatcher<ulong>((IntPtr)baseAddress) { Name = "baseptr" },
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x2535A28) { Name = "myhp" },
+			new MemoryWatcher<byte>((IntPtr)baseAddress + 0x25389A8) { Name = "bosshp" },
+			new MemoryWatcher < ushort > ((IntPtr)baseAddress + 0x2629748) { Name = "bossid" },
+				// 1 for silver omega
+				// 2 for Blazin' Flizard
+				// 3 for Childre Inarabitta
+				// 5 for Volteel Biblio
+				// 8 for Devilbat Schilt
+				// 7 for Deathtanz Mantisk
+				// 9 for Bee Server
+				// 10 for Tretista Kelverian
+				// 13 for Cubit Foxtar
+				// 16 for Glacier le Cactank
+				// 18 for gold omega
+				// 22 for big omega
+				// 20 for omega zero
+			new MemoryWatcher < byte > ((IntPtr)baseAddress + 0x23F4B18) { Name = "menuselection" }, //0 for new game
+			new MemoryWatcher < uint > ((IntPtr)baseAddress + 0x23F4684) { Name = "start" }, // = 328452
+			new MemoryWatcher < ushort > ((IntPtr)baseAddress + 0x251DE3E) { Name = "scorescreen" }, // changed
+			new MemoryWatcher<uint>((IntPtr)baseAddress + 0x25BB2C0) { Name = "missiontimer" }
+		};
+	});
+
 	vars.UpdateRoomTimer = (Action<Process>)((proc) => {
         if(vars.textSettingMissionTimer == null) {
             foreach (dynamic component in timer.Layout.Components) {
@@ -125,16 +156,21 @@ init {
 	vars.watchers = new MemoryWatcherList();
 	vars.textSettingMissionTimer = null;
 	
-	vars.findpointers(game, modules.First().ModuleMemorySize);
-	vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
-	
+	if (game.ProcessName == "EmuHawk") {
+		vars.findpointers(game, modules.First().ModuleMemorySize);
+		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
+	} else {
+		vars.watchers = vars.GetXLCWatcherList(modules.First().BaseAddress);
+		print("--XLC BaseAddress: " + modules.First().BaseAddress);
+	}
+
 	refreshRate = 60;
 }
 
 update {
 	vars.watchers.UpdateAll(game);
 	if(settings["missiontimer"]) vars.UpdateRoomTimer(game);
-	if (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0) {
+	if (game.ProcessName == "EmuHawk" && (vars.watchers["baseptr"].Changed || vars.watchers["baseptr"].Current == 0)) {
 		print("--Base ptr changed to: " + vars.watchers["baseptr"].Current.ToString("X"));
 		vars.findpointers(game, modules.First().ModuleMemorySize);
 		vars.watchers = vars.GetWatcherList((IntPtr)vars.baseptr, (IntPtr)vars.ewram);
@@ -151,5 +187,9 @@ reset {
 }
 
 split {
-	return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && (vars.watchers["bossid"].Current == 54945 || vars.watchers["bossid"].Current == 55001) && vars.watchers["myhp"].Current > 0);
+	if (game.ProcessName == "EmuHawk") {
+		return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && (vars.watchers["bossid"].Current == 54945 || vars.watchers["bossid"].Current == 55001) && vars.watchers["myhp"].Current > 0);
+	} else {
+		return (vars.watchers["scorescreen"].Changed && vars.watchers["scorescreen"].Current != 0) || (vars.watchers["bosshp"].Old > 0 && vars.watchers["bosshp"].Current == 0 && (vars.watchers["bossid"].Current == 18 || vars.watchers["bossid"].Current == 22 || vars.watchers["bossid"].Current == 20) && vars.watchers["myhp"].Current > 0);
+	}
 }
