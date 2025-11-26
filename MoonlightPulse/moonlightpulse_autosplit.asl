@@ -1,12 +1,14 @@
 //Created by Coltaho 3/14/2024
+//Updated 11/26/2025 for new Unity patch by Rumii
 
 state("Moonlight Pulse") {}
 
-startup {
-	vars.scriptVer = "1.1";
+startup
+{
+	vars.scriptVer = "1.2";
 	
-    Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Unity");
-	vars.Helper.UnityVersion = new Version(2021, 3);
+    Assembly.Load(File.ReadAllBytes("Components/uhara9")).CreateInstance("Main");
+	vars.Uhara.EnableDebug();
 	
 	settings.Add("bosskills", true, "---Bosses---");
 	settings.Add("siflaron", true, "Siflaron", "bosskills");
@@ -32,45 +34,43 @@ startup {
 	settings.Add("info2", true, "- Website : https://github.com/Coltaho/Autosplitters", "infosection");
 }
 
-
-init {
-    vars.Helper.TryLoad = (Func<dynamic, bool>)(mono => {
-		var StartGame = mono["StartGame"];
-		vars.Helper["start_IsExecuting"] = StartGame.Make<bool>("IsExecuting");
-		var PlayTime = mono["PlayTime"];
-		vars.Helper["playtime"] = PlayTime.Make<float>("_playTime", 0x38);
-		var PlayerManager = mono["PlayerManager"];
-		vars.Helper["lastSelectedCharacter"] = PlayerManager.Make<int>("_lastSelectedCharacter", 0x38);		
-		vars.Helper["itemHeld"] = PlayerManager.Make<int>("Instance", 0x68, 0x130, 0x10);
-		vars.Helper["itemHeld"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
-		var BossHealthBar = mono["BossHealthBar"];
-		vars.Helper["bossname"] = BossHealthBar.MakeString("Instance", 0x50, 0xD8);
-		vars.Helper["boss_isdead"] = BossHealthBar.Make<bool>("Instance", 0x78, 0x7D);
-        return true;
-    });
+init
+{
+    var Tool = vars.Uhara.CreateTool("Unity", "IL2CPP", "Instance");
+	
+	Tool.Watch<bool>("start_IsExecuting", "StartGame", "<IsExecuting>k__BackingField");
+	Tool.Watch<float>("playtime", "PlayTime", "_playTime", "<Value>k__BackingField");
+	Tool.Watch<int>("lastSelectedCharacter", "Players:PlayerManager", "_lastSelectedCharacter", "<Value>k__BackingField");
+	Tool.Watch<int>("itemHeld", "Players:PlayerManager", "<Instance>k__BackingField", "<CurrentPlayer>k__BackingField", "<HeldItem>k__BackingField", "<Id>k__BackingField");
+	vars.Resolver["itemHeld"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	var BossName = Tool.Get("UI.BossHealthBar:BossHealthBar", "<Instance>k__BackingField", "_bossText", "m_text", "0x14");
+	vars.Resolver.WatchString("bossname", BossName.Base, BossName.Offsets);
+	Tool.Watch<bool>("boss_isdead", "UI.BossHealthBar:BossHealthBar", "<Instance>k__BackingField", "<BossEnemy>k__BackingField", "<IsDead>k__BackingField");
+	
 	vars.paststring = "";
 	vars.mystring = "";
 	vars.nephkill = 0;
 	vars.pastSplits = new HashSet<string>();
-	vars.Log("Script Version: " + vars.scriptVer);
+	vars.Uhara.Log("Script Version: " + vars.scriptVer);
 	
 	vars.bossKilled = (Func<string, bool>)((value) =>
 	{
-		if (value == "Nephelie" && vars.Helper["bossname"].Current == "Nephelie" && vars.Helper["boss_isdead"].Current && !vars.Helper["boss_isdead"].Old) {
+		if (value == "Nephelie" && current.bossname == "Nephelie" && vars.Resolver["boss_isdead"].Current && !vars.Resolver["boss_isdead"].Old)
+		{
 			vars.nephkill += 1;
-			vars.Log("Nephelie kills: " + vars.nephkill);
+			vars.Uhara.Log("Nephelie kills: " + vars.nephkill);
 		}
-		return vars.Helper["boss_isdead"].Current && !vars.Helper["boss_isdead"].Old && vars.Helper["bossname"].Current == value;
+		return vars.Resolver["boss_isdead"].Current && !vars.Resolver["boss_isdead"].Old && current.bossname == value;
 	});
 
 	vars.characterJoined = (Func<int, bool>)((value) =>
 	{
-		return vars.Helper["lastSelectedCharacter"].Changed && vars.Helper["lastSelectedCharacter"].Current == value;
+		return vars.Resolver["lastSelectedCharacter"].Current != vars.Resolver["lastSelectedCharacter"].Old && vars.Resolver["lastSelectedCharacter"].Current == value;
 	});
 	
 	vars.itemHeld = (Func<int, bool>)((value) =>
 	{
-		return vars.Helper["itemHeld"].Old != value && vars.Helper["itemHeld"].Current == value;
+		return vars.Resolver["itemHeld"].Old != value && vars.Resolver["itemHeld"].Current == value;
 	});
 	
 	vars.GetSplitList = (Func<Dictionary<string, bool>>)(() =>
@@ -96,32 +96,41 @@ init {
 	});
 }
 
-update {
-	
-	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0) {
+update
+{
+    vars.Uhara.Update();	
+
+	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0)
+	{
 		vars.pastSplits.Clear();
 		vars.nephkill = 0;
 	}
 	
-	if (settings["debug"]) {
-		vars.mystring = "Held Item: " + current.itemHeld + " | Boss: " + current.bossname + " | isDead: " + current.boss_isdead + " | Neph kills: " + vars.nephkill + " | LastCharacter: " + vars.Helper["lastSelectedCharacter"].Current;
-		if (vars.paststring != vars.mystring) {
-			vars.Log(vars.mystring);
+	if (settings["debug"])
+	{
+		vars.mystring = "Held Item: " + current.itemHeld + " | Boss: " + current.bossname + " | isDead: " + current.boss_isdead + " | Neph kills: " + vars.nephkill + " | LastCharacter: " + current.lastSelectedCharacter;
+		if (vars.paststring != vars.mystring)
+		{
+			vars.Uhara.Log(vars.mystring);
 			vars.paststring = vars.mystring;
 		}
 	}
 }
 
-start {	
-	if (!vars.Helper["start_IsExecuting"].Old && vars.Helper["start_IsExecuting"].Current && vars.Helper["playtime"].Current == 0) {	
-		vars.Log("Go!");
+start
+{	
+	if (!old.start_IsExecuting && current.start_IsExecuting && current.playtime == 0)
+	{	
+		vars.Uhara.Log("Go!");
 		return true;
 	}
 }
 
-reset {
-	if (vars.Helper["playtime"].Old > 0 && vars.Helper["playtime"].Current == 0) {
-		vars.Log("Reset!");
+reset
+{
+	if (old.playtime > 0 && current.playtime == 0)
+	{
+		vars.Uhara.Log("Reset!");
 		return true;
 	}
 }
@@ -137,16 +146,18 @@ split {
 				return false;
 			}
 			vars.pastSplits.Add(split.Key);
-			vars.Log("Split: " + split.Key);
+			vars.Uhara.Log("Split: " + split.Key);
 			return true;
 		}
 	}
 }
 
-gameTime {
+gameTime
+{
 	return TimeSpan.FromSeconds(current.playtime);
 }
 
-isLoading {
+isLoading
+{
 	return true;
 }
