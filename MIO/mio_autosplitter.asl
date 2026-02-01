@@ -7,7 +7,7 @@ state("mio") {
 
 startup
 {
-	vars.scriptVer = "0.6";
+	vars.scriptVer = "0.7";
 	
 	settings.Add("introcompleted", true, "---Intro---");
 	settings.Add("intro", true, "Intro Completed", "introcompleted");
@@ -180,23 +180,28 @@ init
 {
 	print("[Autosplitter] Script v" + vars.scriptVer + " init starting...");
 	
+	// var targetSignature = new SigScanTarget(0, "5B 73 61 76 65 5D 20 6E 65 77 20 73 61 76 65 20 61 6C 72 65 61 64 79 20");
+	// var scanner = new SignatureScanner(game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
+	// IntPtr ptr = scanner.Scan(targetSignature);
+	// print("[Autosplitter] Found ptr: " + ptr.ToString("X"));
+	
 	string savePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\MIO\\Saves\\";
 	string selectedFileName = "";
 	if (File.Exists(savePath + "savepath.txt")){
 		print("[Autosplitter] Found config file: " + savePath + "savepath.txt");
 		try {
-			selectedFileName = File.ReadAllText(savePath + "savepath.txt");			
+			selectedFileName = File.ReadAllText(savePath + "savepath.txt");
+			Path.GetFullPath(selectedFileName);
 			print("[Autosplitter] Selected filename read: " + selectedFileName);
 		} catch (Exception ex) {
 			print("[Autosplitter] Error reading config file! " + ex.Message);
+			MessageBox.Show("Error reading config file!\n\n" + ex.Message + "\n\nScript will need manual restart by removing component and re-adding.",
+				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	} else {	
 		print("[Autosplitter] No config file found at: " + savePath + "savepath.txt");
-		MessageBox.Show(
-			"A save file must be selected for autosplitter to work.\n\nNote that it will watch all save files in the folder no matter which you select.\n\nThis folder will be written to your Mio/Saves/Steam folder and used in the future.",
-			"Warning",
-			MessageBoxButtons.OK,
-			MessageBoxIcon.Warning);				
+		MessageBox.Show("A save file must be selected for autosplitter to work.\n\nThis was only tested on Steam saves, let me know in Discord if your platform doesn't work.\n\nNote that it will watch all slot_*.save files in the folder no matter which you select.\n\nThis path will be written to /Mio/Saves/savepath.txt and used in the future.\n\nScript Version " + vars.scriptVer,
+			"Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);				
 		
 		OpenFileDialog openFileDialog1 = new OpenFileDialog();
 		openFileDialog1.InitialDirectory = savePath;
@@ -208,15 +213,19 @@ init
 		if (openFileDialog1.ShowDialog() == DialogResult.OK)
 		{
 			selectedFileName = openFileDialog1.FileName;
-			File.WriteAllText(savePath + "savepath.txt", selectedFileName);
+			try {
+				File.WriteAllText(savePath + "savepath.txt", selectedFileName);		
+				print("[Autosplitter] Created new savepath.txt file: " + selectedFileName);
+			} catch (Exception ex) {
+				print("[Autosplitter] Error writing config file! " + ex.Message);
+				MessageBox.Show("Error writing config file!\n\n" + ex.Message + "\n\nYou will have to select a new file next time. Autosplitter could still work fine.",
+				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}			
 			print("[Autosplitter] Selected Save: " + selectedFileName);
 		} else {
 			print("[Autosplitter] No Selected Save! Will not split!");
-			MessageBox.Show(
-				"No save selected, autosplitter unable to work.\n\nScript will need manual restart by removing component and re-adding.",
-				"Warning",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Error);
+			MessageBox.Show("No save selected, autosplitter unable to work.\n\nScript will need manual restart by removing component and re-adding.",
+				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}
 	
@@ -225,7 +234,7 @@ init
 		vars.watcher.Filter = "slot_*.save";
 		FileSystemEventHandler _handler = (sender, args) =>
 		{
-			// print("[Autosplitter] " + args.FullPath + " " + args.ChangeType + "! Reading new file!");
+			// print("[Autosplitter] FileWatcher: " + args.FullPath + " " + args.ChangeType);
 			vars.args = args;
 			vars.CheckData = true;
 		};	
@@ -407,7 +416,7 @@ init
 	
 	vars.CheckDataFunc = (Func<bool>)(() =>
 	{
-		print("[Autosplitter] Checking Save Data!");
+		print("[Autosplitter] Checking Save Data! " + vars.args.Name);
 		string temp = File.ReadAllText(vars.args.FullPath);
 		string pattern = @"key\s*=\s*String\(""([^""]+)""\)";
 		System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(temp, pattern);

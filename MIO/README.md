@@ -10,11 +10,19 @@ Auto Splitter for MIO: Memories in Orbit(PC)
 - Automatically start timer on game start
 - Automatically split on user picked events
 
-This reads your save file!  On first run it will warn you and ask you to pick your save file. It will read all saves in that folder going forward. If you don't select one, you will need to deactivate and reactivate the splitter to try again later. If your save folder changes or you picked wrong, you will need to edit the savepath.txt file in MIO\Saves\ or delete it.
+The autosplitter is now pushed out live to all who want to use it. Restart Livesplit and in Edit Splits you can Activate it. Ensure you pick all options you want to split on in the Settings. If you do an event, and it is checked in settings, it will split. You need to create your own splits that match what you select. If there's no correlated event in the options let me know what you want added.
 
-The save system is on a 5 second bus.  Due to this, most splits may not happen exactly at the same time the event happens. There's pros and cons to this. If you're quitting out, you know 100% sure it was saved if the split happens. Cons is that your split could vary a few seconds depending on what bus you caught. This may change in the future if the devs change how saves work.
+This reads your save file! On first run it will warn you and ask you to pick your save file. It will read all saves in that folder going forward. If you don't select one, you will need to deactivate and reactivate the splitter to try again later. If your save folder changes or you picked wrong, you will need to edit this file or delete it.
 
-Also this reads the ingame timer. You must being looking at gametime in Livesplit to see this. Right now the ingame timer pauses when you're in a menu. Hopefully this gets changed in a future patch.
+\Appdata\Local\MIO\Saves\savepath.txt
+
+The save system is on a 5 second bus. Due to this, most splits may not happen exactly at the same time the event happens. There's pros and cons to this. If you're quitting out, you know 100% sure it was saved if the split happens. Cons is that your split could vary a few seconds depending on what bus you caught. This may change in the future if the devs change how saves work.
+
+Also this reads the ingame timer. You must being looking at gametime in Livesplit to see this. Right now the ingame timer pauses when you're in a menu. Hopefully this gets changed in a future patch. When you go to the main menu, this timer goes to 0. Do not worry, it will sync back when you enter your game again.
+
+If you're ready to start a new run, you need to manually reset your timer.
+
+Please join the speedrun discord linked on the page if you have any questions.
 
 ## Installation 
 
