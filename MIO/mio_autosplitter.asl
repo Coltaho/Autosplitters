@@ -7,10 +7,11 @@ state("mio") {
 
 startup
 {
-	vars.scriptVer = "0.7";
+	vars.scriptVer = "0.7.1";
 	
-	settings.Add("introcompleted", true, "---Intro---");
-	settings.Add("intro", true, "Intro Completed", "introcompleted");
+	settings.Add("misc", true, "---Misc---");
+	settings.Add("intro", true, "Intro Completed", "misc");
+	settings.Add("hacker_met", true, "Hacker Met (Samsk finished upgrade)", "misc");
 	
 	settings.Add("bossmeet", false, "---Bosses Meet---");
 	settings.Add("nabuu_meet", false, "Nabuu Meet", "bossmeet");
@@ -251,6 +252,7 @@ init
 	vars.CheckData = false;
 	vars.OldList = new List<string>();
 	vars.NewestList = new List<string>();
+	vars.hackermet = false;
 	vars.paststring = "";
 	vars.mystring = "";
 	vars.pastSplits = new HashSet<string>();	
@@ -266,6 +268,7 @@ init
 		{
 			// Triggers
 			{ "intro", vars.eventExists("CODE:TUTO_JUMP_DONE") },
+			{ "hacker_met", vars.hackermet },
 			{ "badending", vars.eventExists("GAME:BAD_ENDING") },
 			{ "goodending", vars.eventExists("GAME:GOOD_ENDING") },
 			
@@ -418,6 +421,10 @@ init
 	{
 		print("[Autosplitter] Checking Save Data! " + vars.args.Name);
 		string temp = File.ReadAllText(vars.args.FullPath);
+		if (!vars.hackermet && temp.Contains("plotpoints.hacker.met_at_least_once = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.hacker.met_at_least_once = bool(true)");
+			vars.hackermet = true;
+		}
 		string pattern = @"key\s*=\s*String\(""([^""]+)""\)";
 		System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(temp, pattern);
 
@@ -427,9 +434,7 @@ init
 		foreach (System.Text.RegularExpressions.Match match in matches)
 		{
 			string value = match.Groups[1].Value;
-
 			matchList.Add(value);
-
 			if (!vars.OldList.Contains(value))
 			{
 				vars.NewestList.Add(value);
@@ -459,6 +464,7 @@ update
 		vars.OldList.Clear();
 		vars.CheckData = false;
 		vars.delay = 0;
+		vars.hackermet = false;
 	}
 }
 
