@@ -10,7 +10,11 @@ Auto Splitter for MIO: Memories in Orbit(PC)
 - Automatically start timer on game start
 - Automatically split on user picked events
 
-This reads your save file which you will have to select on first run. There's a save bus that saves every 5 seconds and runs nonstop. However for quit outs, you want to ensure your event splits before quitting out. This might change in the future.
+This reads your save file!  On first run it will warn you and ask you to pick your save file. It will read all saves in that folder going forward. If you don't select one, you will need to deactivate and reactivate the splitter to try again later. If your save folder changes or you picked wrong, you will need to edit the savepath.txt file in MIO\Saves\ or delete it.
+
+The save system is on a 5 second bus.  Due to this, most splits may not happen exactly at the same time the event happens. There's pros and cons to this. If you're quitting out, you know 100% sure it was saved if the split happens. Cons is that your split could vary a few seconds depending on what bus you caught. This may change in the future if the devs change how saves work.
+
+Also this reads the ingame timer. You must being looking at gametime in Livesplit to see this. Right now the ingame timer pauses when you're in a menu. Hopefully this gets changed in a future patch.
 
 ## Installation 
 
