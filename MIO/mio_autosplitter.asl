@@ -7,7 +7,7 @@ state("mio") {
 
 startup
 {
-	vars.scriptVer = "0.7.1";
+	vars.scriptVer = "0.7.2";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -115,8 +115,8 @@ startup
 	settings.Add("mod_extracoating", false, "Extra-Coating Processor", "modsobtained");
 	
 	settings.Add("dialogread", true, "---Dialogue Read---");
-	settings.Add("dialog_rad_kidnapping", true, "TXT_RAD_KIDNAPPING", "dialogread");
-	settings.Add("dialog_flick", true, "VO_ST_HALYN_MEETING_FLICK", "dialogread");
+	settings.Add("dialog_rad_kidnapping", true, "DIALOG:TXT_RAD_KIDNAPPING", "dialogread");
+	settings.Add("dialog_flick", true, "DIALOG:VO_ST_HALYN_MEETING_FLICK", "dialogread");
 	
 	settings.Add("candleobtained", true, "---Candle Obtained---");
 	settings.Add("candle_0", false, "Candle 0", "candleobtained");
