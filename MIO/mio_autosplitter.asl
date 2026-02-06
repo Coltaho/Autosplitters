@@ -1,13 +1,18 @@
 //Created by Coltaho 1/29/2026
 
-state("mio") {
-	float gametime : 0x1113C20;
+state("mio", "Unknown") {
+	float gametime : 0x1113C20; //release address
 	int deaths : 0x1113BF4;
+}
+
+state("mio", "patch1.2") { 
+	float gametime : 0x1114C20; //first patch
+	int deaths : 0x1114BF4;
 }
 
 startup
 {
-	vars.scriptVer = "0.7.2";
+	vars.scriptVer = "0.8.0";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -181,6 +186,21 @@ init
 {
 	print("[Autosplitter] Script v" + vars.scriptVer + " init starting...");
 	
+	string MD5Hash;
+    using (var md5 = System.Security.Cryptography.MD5.Create())
+    using (var s = File.Open(modules.First().FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+    MD5Hash = md5.ComputeHash(s).Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
+    
+	switch (MD5Hash) {
+            case "2FF2DF335A5D2F4943079CDDACFAAB15":
+                version = "patch1.2";
+                break;
+            default:
+                version = "Unknown";
+                break;
+	}
+	print("[Autosplitter] Hash is: " + MD5Hash + " | version: " + version);
+	
 	// var targetSignature = new SigScanTarget(0, "5B 73 61 76 65 5D 20 6E 65 77 20 73 61 76 65 20 61 6C 72 65 61 64 79 20");
 	// var scanner = new SignatureScanner(game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
 	// IntPtr ptr = scanner.Scan(targetSignature);
@@ -247,7 +267,6 @@ init
 		print("[Autosplitter] File Watcher not initialized! Will not split!");
 	}
 	
-
 	vars.delay = 0;
 	vars.CheckData = false;
 	vars.OldList = new List<string>();

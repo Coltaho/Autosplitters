@@ -3,7 +3,6 @@
 Auto Splitter for Moonlight Pulse on PC
 
 - [LiveSplit](http://livesplit.github.io/) - Here you can find out more about and download LiveSplit. It is a popular timer program typically used for speedruns.
-- [ASL](https://github.com/LiveSplit/LiveSplit/blob/master/Documentation/Auto-Splitters.md) - Here you can find more information about ASL (basically C#) and autosplitters in general.
 
 **Supported Versions:**
  - Steam, possibly other releases on PC but untested
@@ -28,8 +27,8 @@ More options to come in the future hopefully!
 
 ## Manual Installation (skip if you used the 'Activate' Button)
 
-- Download https://github.com/just-ero/asl-help/raw/main/lib/asl-help
-- Place asl-help in your Livesplit Components folder
+- Download https://github.com/ru-mii/uhara/raw/refs/heads/main/bin/uhara9
+- Place uhara9 in your Livesplit Components folder
 - Download https://raw.githubusercontent.com/Coltaho/Autosplitters/master/MoonlightPulse/moonlightpulse_autosplit.asl
 - Edit Layout
 - Add Other /Scriptable Componment / Script Path: Browse to the "moonlightpulse_autosplit.asl" file you downloaded previously
@@ -50,7 +49,7 @@ Here you can enable/disable the options for auto start and auto splitting.
 
 ## Thanks
 
-- Thanks to [Ero] for creating ASL-HELP
+- Thanks to [Ru-Mii] for creating Uhara
 
 ## Contact
 
