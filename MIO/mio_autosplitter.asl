@@ -12,7 +12,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.8.1";
+	vars.scriptVer = "0.9.0";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -267,6 +267,7 @@ init
 		print("[Autosplitter] File Watcher not initialized! Will not split!");
 	}
 	
+	vars.stopwatch = new Stopwatch();
 	vars.delay = 0;
 	vars.CheckData = false;
 	vars.OldList = new List<string>();
@@ -477,8 +478,8 @@ init
 
 update
 {
-	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.pastSplits.Count > 0)
-	{
+	if (timer.CurrentPhase == TimerPhase.NotRunning && vars.stopwatch.ElapsedMilliseconds > 0) {
+		vars.stopwatch.Reset();
 		vars.pastSplits.Clear();
 		vars.OldList.Clear();
 		vars.CheckData = false;
@@ -508,7 +509,7 @@ split {
 	if (!vars.CheckData || !File.Exists(vars.args.FullPath))
 		return;
 	
-	if (vars.CheckData && vars.delay < 10) {
+	if (vars.CheckData && vars.delay < 8) {
 		vars.delay++;
 		return;
 	}	
@@ -528,7 +529,12 @@ split {
 
 gameTime
 {
-	return TimeSpan.FromSeconds(current.gametime);
+	if (current.gametime > 0 && !vars.stopwatch.IsRunning) {
+		vars.stopwatch.Start();		
+	} else if (current.gametime == 0 && vars.stopwatch.IsRunning) {
+		vars.stopwatch.Stop();
+	}
+	return TimeSpan.FromMilliseconds(vars.stopwatch.ElapsedMilliseconds);
 }
 
 isLoading
