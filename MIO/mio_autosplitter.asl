@@ -12,11 +12,12 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.9.0";
+	vars.scriptVer = "0.9.1";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
 	settings.Add("hacker_met", true, "Hacker Met (Samsk finished upgrade)", "misc");
+	settings.Add("fan_breakables", true, "Metropolis Last Fan Breakable", "misc");
 	
 	settings.Add("bossmeet", false, "---Bosses Meet---");
 	settings.Add("nabuu_meet", false, "Nabuu Meet", "bossmeet");
@@ -157,6 +158,7 @@ startup
 	settings.Add("cp_vaultsshuttle", false, "Vault's Shuttle", "checkpointobtained");
 	settings.Add("cp_canopy", false, "Canopy", "checkpointobtained");
 	settings.Add("cp_dwellings", false, "Dwellings", "checkpointobtained");
+	settings.Add("cp_celestialbay", false, "Celestial Bay", "checkpointobtained");
 	settings.Add("cp_library", false, "Library", "checkpointobtained");
 	settings.Add("cp_crucible", false, "Crucible", "checkpointobtained");
 	settings.Add("cp_lab", false, "The Lab", "checkpointobtained");
@@ -164,10 +166,30 @@ startup
 	settings.Add("cp_manufactory", false, "Manufactory", "checkpointobtained");
 	settings.Add("cp_pit", false, "The Pit", "checkpointobtained");
 	
+	settings.Add("overseerobtained", true, "---Overseer Obtained---");
+	settings.Add("os_nexus", false, "Nexus", "overseerobtained");	
+	settings.Add("os_citygates", false, "City Gates", "overseerobtained");
+	settings.Add("os_cityhall", false, "City Hall", "overseerobtained");
+	settings.Add("os_bloodsanctum", false, "Blood Sanctum", "overseerobtained");
+	settings.Add("os_belltower", false, "Bell Tower", "overseerobtained");
+	settings.Add("os_promenadeentrance", false, "Promenade Entrance", "overseerobtained");
+	settings.Add("os_promenadetower", false, "Promenade Tower", "overseerobtained");
+	settings.Add("os_redacted1", false, "Redacted One", "overseerobtained");
+	settings.Add("os_redacted2", false, "Redacted Two", "overseerobtained");
+	settings.Add("os_vaultsshuttle", false, "Vault's Shuttle", "overseerobtained");
+	settings.Add("os_canopy", false, "Canopy", "overseerobtained");
+	settings.Add("os_dwellings", false, "Dwellings", "overseerobtained");
+	settings.Add("os_celestialbay", false, "Celestial Bay", "overseerobtained");
+	settings.Add("os_crucible", false, "Crucible", "overseerobtained");
+	settings.Add("os_lab", false, "The Lab", "overseerobtained");
+	settings.Add("os_vaults", false, "Vaults", "overseerobtained");
+	settings.Add("os_manufactory", false, "Manufactory", "overseerobtained");
+	
 	settings.Add("keyobtained", true, "---Key Obtained---");
 	settings.Add("key_roots", false, "Silo Access Badge", "keyobtained");	
 	settings.Add("key_glasshouse", false, "Averie Passport", "keyobtained");
 	settings.Add("key_belltower", false, "Bell Tower Pass", "keyobtained");	
+	settings.Add("key_friendlyinvite", false, "Friendly Invitation", "keyobtained");	
 	
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
@@ -289,6 +311,7 @@ init
 			// Triggers
 			{ "intro", vars.eventExists("CODE:TUTO_JUMP_DONE") },
 			{ "hacker_met", vars.hackermet },
+			{ "fan_breakables", vars.eventExists("BREAKABLE:br_LQ_under_tuto_P2_6") },
 			{ "badending", vars.eventExists("GAME:BAD_ENDING") },
 			{ "goodending", vars.eventExists("GAME:GOOD_ENDING") },
 			
@@ -422,6 +445,7 @@ init
 			{ "cp_vaultsshuttle", vars.eventExists("CHECKPOINT:CP_ST_security_asc_P1") },
 			{ "cp_canopy", vars.eventExists("CHECKPOINT:cp_ga_roof_leaves_P3") },
 			{ "cp_dwellings", vars.eventExists("CHECKPOINT:CP_LQ_SSX_tricky") },
+			{ "cp_celestialbay", vars.eventExists("CHECKPOINT:cp_TW_mid_core_P2") },
 			{ "cp_library", vars.eventExists("CHECKPOINT:cp_de_la_honte") },
 			{ "cp_crucible", vars.eventExists("CHECKPOINT:cp_cuves_main_P1") },
 			{ "cp_lab", vars.eventExists("CHECKPOINT:hacker_room_save") },
@@ -429,9 +453,28 @@ init
 			{ "cp_manufactory", vars.eventExists("CHECKPOINT:CP_ST_tube_path1_P1") },
 			{ "cp_pit", vars.eventExists("CHECKPOINT:CP_ST_pearl_hill") },
 			
+			{ "os_nexus", vars.eventExists("OVERSEER:cp_HUB_main_down_P1") },			
+			{ "os_citygates", vars.eventExists("OVERSEER:CP_city_entrance") },
+			{ "os_cityhall", vars.eventExists("OVERSEER:cp_LQ_city_hall") },
+			{ "os_bloodsanctum", vars.eventExists("OVERSEER:cp_Liho") },
+			{ "os_belltower", vars.eventExists("OVERSEER:cp_GA_bou_chill_S2") },
+			{ "os_promenadeentrance", vars.eventExists("OVERSEER:Cp_Entree_GA_Vin") },
+			{ "os_promenadetower", vars.eventExists("OVERSEER:GA_taunting_save") },
+			{ "os_redacted1", vars.eventExists("OVERSEER:cp_ST_security_spider_P1") },
+			{ "os_redacted2", vars.eventExists("OVERSEER:CP_ST_security_glide_P1") },
+			{ "os_vaultsshuttle", vars.eventExists("OVERSEER:CP_ST_security_asc_P1") },
+			{ "os_canopy", vars.eventExists("OVERSEER:cp_ga_roof_leaves_P3") },
+			{ "os_dwellings", vars.eventExists("OVERSEER:CP_LQ_SSX_tricky") },
+			{ "os_celestialbay", vars.eventExists("OVERSEER:cp_TW_mid_core_P2") },
+			{ "os_crucible", vars.eventExists("OVERSEER:cp_cuves_main_P1") },
+			{ "os_lab", vars.eventExists("OVERSEER:hacker_room_save") },
+			{ "os_vaults", vars.eventExists("OVERSEER:CP_ST_tube_main_save") },
+			{ "os_manufactory", vars.eventExists("OVERSEER:CP_ST_tube_path1_P1") },
+			
 			{ "key_belltower", vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") },
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
-			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") }
+			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
+			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") }
 			
 		};
 		return splits;
