@@ -12,7 +12,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.8.0";
+	vars.scriptVer = "0.8.1";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -387,7 +387,7 @@ init
 			{ "mod_sunsail", vars.eventExists("TRINKET:TURBO_GLIDE") },
 			{ "mod_extracoating", vars.eventExists("TRINKET:VAMPIRE") },
 			
-			{ "dialog_rad_kidnapping", vars.eventExists("DIALOG:TXT_RAD_KIDNAPPING") },
+			{ "dialog_rad_kidnapping", (vars.eventExists("DIALOG:TXT_RAD_KIDNAPPING") || vars.eventExists("DIALOG:TXT_RAD_KIDNAPPING_NEWFACE")) },
 			{ "dialog_flick", vars.eventExists("DIALOG:VO_ST_HALYN_MEETING_FLICK") },
 			
 			{ "candle_0", vars.eventExists("CANDLE:0") },
