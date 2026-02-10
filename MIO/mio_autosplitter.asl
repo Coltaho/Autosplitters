@@ -1,18 +1,20 @@
 //Created by Coltaho 1/29/2026
 
 state("mio", "Unknown") {
-	float gametime : 0x1113C20; //release address
-	int deaths : 0x1113BF4;
+	// float gametime : 0x1113C20; //release
+	// int deaths : 0x1113BF4;
+	float gametime : 0x1114C20;
+	int deaths : 0x1114BF4;
 }
 
 state("mio", "patch1.2") { 
-	float gametime : 0x1114C20; //first patch
+	float gametime : 0x1114C20;
 	int deaths : 0x1114BF4;
 }
 
 startup
 {
-	vars.scriptVer = "0.9.1";
+	vars.scriptVer = "0.9.2";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -311,7 +313,7 @@ init
 			// Triggers
 			{ "intro", vars.eventExists("CODE:TUTO_JUMP_DONE") },
 			{ "hacker_met", vars.hackermet },
-			{ "fan_breakables", vars.eventExists("BREAKABLE:br_LQ_under_tuto_P2_6") },
+			{ "fan_breakables", vars.eventExists("BREAKABLE:0x2213a832e590affa") },
 			{ "badending", vars.eventExists("GAME:BAD_ENDING") },
 			{ "goodending", vars.eventExists("GAME:GOOD_ENDING") },
 			
