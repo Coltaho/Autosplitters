@@ -14,7 +14,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.9.2";
+	vars.scriptVer = "0.9.3";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -299,7 +299,9 @@ init
 	vars.hackermet = false;
 	vars.paststring = "";
 	vars.mystring = "";
-	vars.pastSplits = new HashSet<string>();	
+	vars.pastSplits = new HashSet<string>();
+	vars.gametimeMoving = 0;
+	refreshRate = 60;
 	
 	vars.eventExists = (Func<string, bool>)((value) =>
 	{
@@ -530,6 +532,7 @@ update
 		vars.CheckData = false;
 		vars.delay = 0;
 		vars.hackermet = false;
+		vars.gametimeMoving = 0;
 	}
 }
 
@@ -575,9 +578,21 @@ split {
 gameTime
 {
 	if (current.gametime > 0 && !vars.stopwatch.IsRunning) {
-		vars.stopwatch.Start();		
+		if (vars.gametimeMoving < 3 && current.gametime > 0 && old.gametime != current.gametime) {
+			vars.gametimeMoving++;
+			if (settings["debug"]) {
+				print("[Autosplitter] Gametime: " + current.gametime + " | Movingframes: " + vars.gametimeMoving);
+			}
+		} else if (vars.gametimeMoving >= 3) {
+			vars.stopwatch.Start();	
+			vars.gametimeMoving = 0;
+			if (settings["debug"]) {
+				print("[Autosplitter] Gametime: " + current.gametime + " | Restarted Timer!");
+			}
+		}
 	} else if (current.gametime == 0 && vars.stopwatch.IsRunning) {
 		vars.stopwatch.Stop();
+		vars.gametimeMoving = 0;
 	}
 	return TimeSpan.FromMilliseconds(vars.stopwatch.ElapsedMilliseconds);
 }
