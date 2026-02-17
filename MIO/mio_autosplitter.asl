@@ -14,7 +14,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.9.3";
+	vars.scriptVer = "0.9.4";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -122,6 +122,10 @@ startup
 	settings.Add("mod_sunsail", false, "Sunsail", "modsobtained");
 	settings.Add("mod_extracoating", false, "Extra-Coating Processor", "modsobtained");
 	
+	settings.Add("modextensionobtained", true, "---Mod Extension Obtained---");
+	settings.Add("me_metropolis", false, "Mod Extension (under Metropolis)", "modextensionobtained");	
+	settings.Add("me_canopy", false, "Mod Extension (in Canopy)", "modextensionobtained");
+
 	settings.Add("dialogread", true, "---Dialogue Read---");
 	settings.Add("dialog_rad_kidnapping", true, "DIALOG:TXT_RAD_KIDNAPPING", "dialogread");
 	settings.Add("dialog_flick", true, "DIALOG:VO_ST_HALYN_MEETING_FLICK", "dialogread");
@@ -467,6 +471,9 @@ init
 			{ "mod_highvoltage", vars.eventExists("TRINKET:STAGGER_ATTACK") },
 			{ "mod_sunsail", vars.eventExists("TRINKET:TURBO_GLIDE") },
 			{ "mod_extracoating", vars.eventExists("TRINKET:VAMPIRE") },
+
+			{ "me_metropolis", vars.eventExists("TRINKET_SLOT_UPGRADE:6") },
+			{ "me_canopy", vars.eventExists("TRINKET_SLOT_UPGRADE:5") },
 			
 			{ "dialog_rad_kidnapping", (vars.eventExists("DIALOG:TXT_RAD_KIDNAPPING") || vars.eventExists("DIALOG:TXT_RAD_KIDNAPPING_NEWFACE")) },
 			{ "dialog_flick", vars.eventExists("DIALOG:VO_ST_HALYN_MEETING_FLICK") },
@@ -528,7 +535,7 @@ init
 			{ "os_vaults", vars.eventExists("OVERSEER:CP_ST_tube_main_save") },
 			{ "os_manufactory", vars.eventExists("OVERSEER:CP_ST_tube_path1_P1") },
 			
-			{ "key_belltower", vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") },
+			{ "key_belltower", (vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") || vars.eventExists("KEY:BELL_TOWER_PASS_CITY")) },
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
 			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
 			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") },
