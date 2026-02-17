@@ -14,7 +14,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.9.4";
+	vars.scriptVer = "0.9.5";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -250,6 +250,14 @@ startup
 	settings.Add("capu_flute", false, "Earthen Relic", "curioanalysed");
 	settings.Add("capu_shoe", false, "Orphaned Shoe", "curioanalysed");
 	
+	settings.Add("serialnumbersobtained", true, "---Fragmented Serial Numbers Obtained---");
+	settings.Add("fsn_west_1", false, "West redacted area: 1st number", "serialnumbersobtained");
+	settings.Add("fsn_west_2", false, "West redacted area: 2nd number", "serialnumbersobtained");
+	settings.Add("fsn_west_3", false, "West redacted area: 3rd number", "serialnumbersobtained");
+	settings.Add("fsn_east_1", false, "East redacted area: 1st number", "serialnumbersobtained");
+	settings.Add("fsn_east_2", false, "East redacted area: 2nd number", "serialnumbersobtained");
+	settings.Add("fsn_east_3", false, "East redacted area: 3rd number", "serialnumbersobtained");
+
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
 	settings.Add("goodending", true, "Good Ending", "endingsection");
@@ -585,8 +593,14 @@ init
 			{ "capu_plushie", vars.eventExists("DATAPAD:CURIO_PLUSHIE_CAPUCINED") },
 			{ "capu_journal", vars.eventExists("DATAPAD:CURIO_JOURNAL_CAPUCINED") },
 			{ "capu_flute", vars.eventExists("DATAPAD:CURIO_FLUTE_CAPUCINED") },
-			{ "capu_shoe", vars.eventExists("DATAPAD:CURIO_SHOE_CAPUCINED") }
-			
+			{ "capu_shoe", vars.eventExists("DATAPAD:CURIO_SHOE_CAPUCINED") },
+
+			{ "fsn_west_1", vars.eventExists("CHEST_KEY:5") },
+			{ "fsn_west_2", vars.eventExists("CHEST_KEY:2") },
+			{ "fsn_west_3", vars.eventExists("CHEST_KEY:3") },
+			{ "fsn_east_1", vars.eventExists("CHEST_KEY:0") },
+			{ "fsn_east_2", vars.eventExists("CHEST_KEY:1") },
+			{ "fsn_east_3", vars.eventExists("CHEST_KEY:4") }
 		};
 		return splits;
 	});
