@@ -191,7 +191,60 @@ startup
 	settings.Add("key_roots", false, "Silo Access Badge", "keyobtained");	
 	settings.Add("key_glasshouse", false, "Averie Passport", "keyobtained");
 	settings.Add("key_belltower", false, "Bell Tower Pass", "keyobtained");	
-	settings.Add("key_friendlyinvite", false, "Friendly Invitation", "keyobtained");	
+	settings.Add("key_friendlyinvite", false, "Friendly Invitation", "keyobtained");
+	
+	settings.Add("flashmemoryobtained", true, "---Flash Memory Obtained---");
+	settings.Add("fm_embeddingduty", false, "Embedding Duty", "flashmemoryobtained");
+	settings.Add("fm_corrupted", false, "%$!#'%ú°[", "flashmemoryobtained");
+	settings.Add("fm_consultationregister", false, "Consultation Register", "flashmemoryobtained");
+	settings.Add("fm_connectionlost", false, "-- Connection Lost --", "flashmemoryobtained");
+	settings.Add("fm_incomingsignal", false, "INCOMING SIGNAL", "flashmemoryobtained");
+	settings.Add("fm_reincomingsignal", false, "Re: INCOMING SIGNAL", "flashmemoryobtained");
+	settings.Add("fm_equivalentexchange", false, "Equivalent Exchange", "flashmemoryobtained");
+
+	settings.Add("travellerslogobtained", true, "---Traveller's Log Obtained---");
+	settings.Add("tl_stargazing", false, "Stargazing", "travellerslogobtained");
+	settings.Add("tl_soboring", false, "So Boring", "travellerslogobtained");
+	settings.Add("tl_nopromise", false, "No Promise", "travellerslogobtained");
+	settings.Add("tl_grateful", false, "Grateful", "travellerslogobtained");
+	settings.Add("tl_nomore", false, "No More", "travellerslogobtained");
+	settings.Add("tl_thewordofthevoices", false, "The Word of the Voices", "travellerslogobtained");
+	settings.Add("tl_prayertothedead", false, "Prayer to the Dead", "travellerslogobtained");
+
+	settings.Add("letterfromtomoobtained", true, "---Letter from Tomo Obtained---");
+	settings.Add("lft_0", false, "(0) First Case Study", "letterfromtomoobtained");
+	settings.Add("lft_1", false, "(1) Farewell Letter", "letterfromtomoobtained");
+	settings.Add("lft_2", false, "(2) Flawed Assumptions", "letterfromtomoobtained");
+	settings.Add("lft_3", false, "(3) Hopeful Findings", "letterfromtomoobtained");
+	settings.Add("lft_4", false, "(4) Belated Realisation", "letterfromtomoobtained");
+	settings.Add("lft_5", false, "(5) It Might Be Too Late Already", "letterfromtomoobtained");
+	settings.Add("lft_6", false, "(6) It All Makes Sense Now", "letterfromtomoobtained");
+
+	settings.Add("pearlrecordobtained", true, "---Pearl Record Obtained---");
+	settings.Add("pr_ourfault", false, "Our Fault", "pearlrecordobtained");
+	settings.Add("pr_beginningoftheend", false, "Beginning of the End", "pearlrecordobtained");
+	settings.Add("pr_positivereport", false, "Positive Report", "pearlrecordobtained");
+	settings.Add("pr_prematureconclusion", false, "Premature Conclusion", "pearlrecordobtained");
+	settings.Add("pr_nofuture", false, "No Future", "pearlrecordobtained");
+	settings.Add("pr_finalinstructions", false, "Final Instructions", "pearlrecordobtained");
+
+	settings.Add("curioobtained", true, "---Curio Obtained---");
+	settings.Add("curio_pendant", false, "Metallic Curio", "curioobtained");
+	settings.Add("curio_cerealbar", false, "Cryptic Curio", "curioobtained");
+	settings.Add("curio_marbles", false, "Disturbing Curio", "curioobtained");
+	settings.Add("curio_plushie", false, "Fluffy Curio", "curioobtained");
+	settings.Add("curio_journal", false, "Pristine Curio", "curioobtained");
+	settings.Add("curio_flute", false, "Ancient Curio", "curioobtained");
+	settings.Add("curio_shoe", false, "Weird Curio", "curioobtained");
+
+	settings.Add("curioanalysed", true, "---Curio Analysed---");
+	settings.Add("capu_pendant", false, "Dual Pendant", "curioanalysed");
+	settings.Add("capu_cerealbar", false, "Standardised Biochemical Sample", "curioanalysed");
+	settings.Add("capu_marbles", false, "Miniature Pearls", "curioanalysed");
+	settings.Add("capu_plushie", false, "Combat-training Target Practice", "curioanalysed");
+	settings.Add("capu_journal", false, "Pristine Journal", "curioanalysed");
+	settings.Add("capu_flute", false, "Earthen Relic", "curioanalysed");
+	settings.Add("capu_shoe", false, "Orphaned Shoe", "curioanalysed");
 	
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
@@ -478,7 +531,54 @@ init
 			{ "key_belltower", vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") },
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
 			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
-			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") }
+			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") },
+
+			{ "fm_embeddingduty", vars.eventExists("DATAPAD:MEM_HORNFELL") },
+			{ "fm_corrupted", vars.eventExists("DATAPAD:MEM_VOICEKEEPER") },
+			{ "fm_consultationregister", vars.eventExists("DATAPAD:MEM_LIBRARIAN") },
+			{ "fm_connectionlost", vars.eventExists("DATAPAD:MEM_PUPPET") },
+			{ "fm_incomingsignal", vars.eventExists("DATAPAD:MEM_LIDAR") },
+			{ "fm_reincomingsignal", vars.eventExists("DATAPAD:MEM_LIDAR_2") },
+			{ "fm_equivalentexchange", vars.eventExists("DATAPAD:MEM_IMPY") },
+			
+			{ "tl_stargazing", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG1_TRANSLATED") },
+			{ "tl_soboring", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG2_TRANSLATED") },
+			{ "tl_nopromise", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG3_TRANSLATED") },
+			{ "tl_grateful", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG4_TRANSLATED") },
+			{ "tl_nomore", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG5_TRANSLATED") },
+			{ "tl_thewordofthevoices", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG6_TRANSLATED") },
+			{ "tl_prayertothedead", vars.eventExists("DATAPAD:TXT_TRAVELLER_LOG7_TRANSLATED") },
+
+			{ "lft_0", vars.eventExists("DATAPAD:LETTER_FIRST_CASE") },
+			{ "lft_1", vars.eventExists("DATAPAD:LETTER_FAREWELL") },
+			{ "lft_2", vars.eventExists("DATAPAD:LETTER_TRIGGER") },
+			{ "lft_3", vars.eventExists("DATAPAD:LETTER_SPREAD") },
+			{ "lft_4", vars.eventExists("DATAPAD:LETTER_LOVE") },
+			{ "lft_5", vars.eventExists("DATAPAD:LETTER_ACCELERATE") },
+			{ "lft_6", vars.eventExists("DATAPAD:LETTER_POISON") },
+			
+			{ "pr_ourfault", vars.eventExists("DATAPAD:PEARL_LIHO") },
+			{ "pr_beginningoftheend", vars.eventExists("DATAPAD:PEARL_HALYN") },
+			{ "pr_positivereport", vars.eventExists("DATAPAD:PEARL_ASMA") },
+			{ "pr_prematureconclusion", vars.eventExists("DATAPAD:PEARL_NODEN") },
+			{ "pr_nofuture", vars.eventExists("DATAPAD:PEARL_AMYTIS") },
+			{ "pr_finalinstructions", vars.eventExists("DATAPAD:PEARL_KHLIA") },
+			
+			{ "curio_pendant", vars.eventExists("DATAPAD:CURIO_PENDANT") },
+			{ "curio_cerealbar", vars.eventExists("DATAPAD:CURIO_CEREAL_BAR") },
+			{ "curio_marbles", vars.eventExists("DATAPAD:CURIO_MARBLES") },
+			{ "curio_plushie", vars.eventExists("DATAPAD:CURIO_PLUSHIE") },
+			{ "curio_journal", vars.eventExists("DATAPAD:CURIO_JOURNAL") },
+			{ "curio_flute", vars.eventExists("DATAPAD:CURIO_FLUTE") },
+			{ "curio_shoe", vars.eventExists("DATAPAD:CURIO_SHOE") },
+
+			{ "capu_pendant", vars.eventExists("DATAPAD:CURIO_PENDANT_CAPUCINED") },
+			{ "capu_cerealbar", vars.eventExists("DATAPAD:CURIO_CEREAL_BAR_CAPUCINED") },
+			{ "capu_marbles", vars.eventExists("DATAPAD:CURIO_MARBLES_CAPUCINED") },
+			{ "capu_plushie", vars.eventExists("DATAPAD:CURIO_PLUSHIE_CAPUCINED") },
+			{ "capu_journal", vars.eventExists("DATAPAD:CURIO_JOURNAL_CAPUCINED") },
+			{ "capu_flute", vars.eventExists("DATAPAD:CURIO_FLUTE_CAPUCINED") },
+			{ "capu_shoe", vars.eventExists("DATAPAD:CURIO_SHOE_CAPUCINED") }
 			
 		};
 		return splits;
