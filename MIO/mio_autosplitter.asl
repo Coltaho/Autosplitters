@@ -528,7 +528,7 @@ init
 			{ "os_vaults", vars.eventExists("OVERSEER:CP_ST_tube_main_save") },
 			{ "os_manufactory", vars.eventExists("OVERSEER:CP_ST_tube_path1_P1") },
 			
-			{ "key_belltower", vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") },
+			{ "key_belltower", (vars.eventExists("KEY:BELL_TOWER_PASS_GARDEN") || vars.eventExists("KEY:BELL_TOWER_PASS_CITY")) },
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
 			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
 			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") },
