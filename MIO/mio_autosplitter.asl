@@ -20,6 +20,8 @@ startup
 	settings.Add("intro", true, "Intro Completed", "misc");
 	settings.Add("hacker_met", true, "Hacker Met (Samsk finished upgrade)", "misc");
 	settings.Add("fan_breakables", true, "Metropolis Last Fan Breakable", "misc");
+	settings.Add("key_halyn", false, "Dr. Halyn's Employment Ledger", "misc");
+	settings.Add("alice_meet", false, "Rebuild Alice", "misc");
 	
 	settings.Add("bossmeet", false, "---Bosses Meet---");
 	settings.Add("nabuu_meet", false, "Nabuu Meet", "bossmeet");
@@ -258,6 +260,13 @@ startup
 	settings.Add("fsn_east_2", false, "East redacted area: 2nd number", "serialnumbersobtained");
 	settings.Add("fsn_east_3", false, "East redacted area: 3rd number", "serialnumbersobtained");
 
+	settings.Add("specialitemobtained", true, "---Special Item Obtained---");
+	settings.Add("si_spine_fragment", false, "Fragment of Ailen, the Spine", "specialitemobtained");
+	settings.Add("si_luras_seal", false, "Lura's Seal", "specialitemobtained");
+	settings.Add("si_severed_fingertip", false, "Severed Fingertip", "specialitemobtained");
+	settings.Add("si_crucible_left", false, "Crucible Left Tablet", "specialitemobtained");
+	settings.Add("si_crucible_right", false, "Crucible Right Tablet", "specialitemobtained");
+
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
 	settings.Add("goodending", true, "Good Ending", "endingsection");
@@ -381,6 +390,8 @@ init
 			{ "intro", vars.eventExists("CODE:TUTO_JUMP_DONE") },
 			{ "hacker_met", vars.hackermet },
 			{ "fan_breakables", vars.eventExists("BREAKABLE:0x2213a832e590affa") },
+			{ "key_halyn", vars.eventExists("KEY:BUNKER_KEY")},
+			{ "alice_meet", vars.eventExists("REBUILD_NPC:PUPPET_ALICE") },
 			{ "badending", vars.eventExists("GAME:BAD_ENDING") },
 			{ "goodending", vars.eventExists("GAME:GOOD_ENDING") },
 			
@@ -600,7 +611,13 @@ init
 			{ "fsn_west_3", vars.eventExists("CHEST_KEY:3") },
 			{ "fsn_east_1", vars.eventExists("CHEST_KEY:0") },
 			{ "fsn_east_2", vars.eventExists("CHEST_KEY:1") },
-			{ "fsn_east_3", vars.eventExists("CHEST_KEY:4") }
+			{ "fsn_east_3", vars.eventExists("CHEST_KEY:4") },
+
+			{ "si_spine_fragment", vars.eventExists("KEY:SPINE_FRAGMENT") },
+			{ "si_luras_seal", vars.eventExists("KEY:LURA") },
+			{ "si_severed_fingertip", vars.eventExists("KEY:FINGER_WHEEL") },
+			{ "si_crucible_left", vars.eventExists("KEY:CRUCIBLE_GLOOMWATER") },
+			{ "si_crucible_right", vars.eventExists("KEY:CRUCIBLE_CRYSTAL") }
 		};
 		return splits;
 	});
