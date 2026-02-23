@@ -14,7 +14,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "1.0.0";
+	vars.scriptVer = "1.0.1";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -196,6 +196,7 @@ startup
 	settings.Add("key_glasshouse", false, "Averie Passport", "keyobtained");
 	settings.Add("key_belltower", false, "Bell Tower Pass", "keyobtained");	
 	settings.Add("key_friendlyinvite", false, "Friendly Invitation", "keyobtained");
+	settings.Add("key_halyn", false, "Dr. Halyn's Employment Ledger", "keyobtained");
 	
 	settings.Add("flashmemoryobtained", true, "---Flash Memory Obtained---");
 	settings.Add("fm_embeddingduty", false, "Embedding Duty", "flashmemoryobtained");
@@ -257,6 +258,19 @@ startup
 	settings.Add("fsn_east_1", false, "East redacted area: 1st number", "serialnumbersobtained");
 	settings.Add("fsn_east_2", false, "East redacted area: 2nd number", "serialnumbersobtained");
 	settings.Add("fsn_east_3", false, "East redacted area: 3rd number", "serialnumbersobtained");
+
+	settings.Add("specialitemobtained", true, "---Special Item Obtained---");
+	settings.Add("si_spine_fragment", false, "Fragment of Ailen, the Spine", "specialitemobtained");
+	settings.Add("si_luras_seal", false, "Lura's Seal", "specialitemobtained");
+	settings.Add("si_severed_fingertip", false, "Severed Fingertip", "specialitemobtained");
+	settings.Add("si_crucible_left", false, "Crucible Left Tablet", "specialitemobtained");
+	settings.Add("si_crucible_right", false, "Crucible Right Tablet", "specialitemobtained");
+
+	settings.Add("npcsaved", true, "---NPC Saved---");
+	settings.Add("npc_sin", false, "Sin", "npcsaved");
+	settings.Add("npc_cos", false, "Cos", "npcsaved");
+	settings.Add("npc_tan", false, "Tan", "npcsaved");
+	settings.Add("npc_alice", false, "Alice", "npcsaved");
 
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
@@ -362,6 +376,9 @@ init
 	vars.OldList = new List<string>();
 	vars.NewestList = new List<string>();
 	vars.hackermet = false;
+	vars.sinsaved = false;
+	vars.cossaved = false;
+	vars.tansaved = false;
 	vars.pastSplits = new HashSet<string>();
 	vars.gametimeMoving = 0;
 	refreshRate = 60;
@@ -549,6 +566,7 @@ init
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
 			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
 			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") },
+			{ "key_halyn", vars.eventExists("KEY:BUNKER_KEY") },
 
 			{ "fm_embeddingduty", vars.eventExists("DATAPAD:MEM_HORNFELL") },
 			{ "fm_corrupted", vars.eventExists("DATAPAD:MEM_VOICEKEEPER") },
@@ -602,7 +620,19 @@ init
 			{ "fsn_west_3", vars.eventExists("CHEST_KEY:3") },
 			{ "fsn_east_1", vars.eventExists("CHEST_KEY:0") },
 			{ "fsn_east_2", vars.eventExists("CHEST_KEY:1") },
-			{ "fsn_east_3", vars.eventExists("CHEST_KEY:4") }
+			{ "fsn_east_3", vars.eventExists("CHEST_KEY:4") },
+
+			{ "si_spine_fragment", vars.eventExists("KEY:SPINE_FRAGMENT") },
+			{ "si_luras_seal", vars.eventExists("KEY:LURA") },
+			{ "si_severed_fingertip", vars.eventExists("KEY:FINGER_WHEEL") },
+			{ "si_crucible_left", vars.eventExists("KEY:CRUCIBLE_GLOOMWATER") },
+			{ "si_crucible_right", vars.eventExists("KEY:CRUCIBLE_CRYSTAL") },
+
+			{ "npc_sin", vars.sinsaved },
+			{ "npc_cos", vars.cossaved },
+			{ "npc_tan", vars.tansaved },
+			{ "npc_alice", vars.eventExists("REBUILD_NPC:PUPPET_ALICE") }
+
 		};
 		return splits;
 	});
@@ -616,6 +646,18 @@ init
 		if (!vars.hackermet && temp.Contains("plotpoints.hacker.met_at_least_once = bool(true)")) {
 			print("[Autosplitter] Variable: plotpoints.hacker.met_at_least_once = bool(true)");
 			vars.hackermet = true;
+		}
+		if(!vars.sinsaved && temp.Contains("plotpoints.mel.minions.sin = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.sin = bool(true)");
+			vars.sinsaved = true;
+		}
+		if(!vars.cossaved && temp.Contains("plotpoints.mel.minions.cos = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.cos = bool(true)");
+			vars.cossaved = true;
+		}
+		if(!vars.tansaved && temp.Contains("plotpoints.mel.minions.tan = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.tan = bool(true)");
+			vars.tansaved = true;
 		}
 		string pattern = @"key\s*=\s*String\(""([^""]+)""\)";
 		System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(temp, pattern);
@@ -657,6 +699,9 @@ update
 		vars.CheckData = false;
 		vars.delay = 0;
 		vars.hackermet = false;
+		vars.sinsaved = false;
+		vars.cossaved = false;
+		vars.tansaved = false;
 		vars.gametimeMoving = 0;
 		vars.quitouts = 0;
 		vars.savebus = "";

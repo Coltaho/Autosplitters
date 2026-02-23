@@ -1,4 +1,4 @@
-## Timespinner Autosplitter
+## MIO Autosplitter
  
 Auto Splitter for MIO: Memories in Orbit(PC)
 
