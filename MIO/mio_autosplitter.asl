@@ -14,7 +14,7 @@ state("mio", "patch1.2") {
 
 startup
 {
-	vars.scriptVer = "0.9.5";
+	vars.scriptVer = "1.0.0";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -362,11 +362,13 @@ init
 	vars.OldList = new List<string>();
 	vars.NewestList = new List<string>();
 	vars.hackermet = false;
-	vars.paststring = "";
-	vars.mystring = "";
 	vars.pastSplits = new HashSet<string>();
 	vars.gametimeMoving = 0;
 	refreshRate = 60;
+	vars.quitouts = 0;
+	vars.QuitOutAdjustment = 11000; //Time in ms to adjust for each quit out
+	vars.savebus = "";
+	vars.savebusCounter = 0;
 	
 	vars.eventExists = (Func<string, bool>)((value) =>
 	{
@@ -608,6 +610,8 @@ init
 	vars.CheckDataFunc = (Func<bool>)(() =>
 	{
 		print("[Autosplitter] Checking Save Data! " + vars.args.Name);
+		vars.savebus = "Saved!";
+		vars.savebusCounter = 0;
 		string temp = File.ReadAllText(vars.args.FullPath);
 		if (!vars.hackermet && temp.Contains("plotpoints.hacker.met_at_least_once = bool(true)")) {
 			print("[Autosplitter] Variable: plotpoints.hacker.met_at_least_once = bool(true)");
@@ -654,6 +658,14 @@ update
 		vars.delay = 0;
 		vars.hackermet = false;
 		vars.gametimeMoving = 0;
+		vars.quitouts = 0;
+		vars.savebus = "";
+		vars.savebusCounter = 0;
+	}
+	if (vars.savebusCounter <= 60) {
+		vars.savebusCounter++;		
+	} else {
+		vars.savebus = "";
 	}
 }
 
@@ -678,7 +690,7 @@ split {
 	if (!vars.CheckData || !File.Exists(vars.args.FullPath))
 		return;
 	
-	if (vars.CheckData && vars.delay < 8) {
+	if (vars.CheckData && vars.delay < 2) {
 		vars.delay++;
 		return;
 	}	
@@ -714,8 +726,9 @@ gameTime
 	} else if (current.gametime == 0 && vars.stopwatch.IsRunning) {
 		vars.stopwatch.Stop();
 		vars.gametimeMoving = 0;
+		vars.quitouts++;
 	}
-	return TimeSpan.FromMilliseconds(vars.stopwatch.ElapsedMilliseconds);
+	return TimeSpan.FromMilliseconds(vars.stopwatch.ElapsedMilliseconds + (vars.quitouts * vars.QuitOutAdjustment));
 }
 
 isLoading
