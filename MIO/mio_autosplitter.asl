@@ -20,7 +20,6 @@ startup
 	settings.Add("intro", true, "Intro Completed", "misc");
 	settings.Add("hacker_met", true, "Hacker Met (Samsk finished upgrade)", "misc");
 	settings.Add("fan_breakables", true, "Metropolis Last Fan Breakable", "misc");
-	settings.Add("key_halyn", false, "Dr. Halyn's Employment Ledger", "misc");
 	
 	settings.Add("bossmeet", false, "---Bosses Meet---");
 	settings.Add("nabuu_meet", false, "Nabuu Meet", "bossmeet");
@@ -197,6 +196,7 @@ startup
 	settings.Add("key_glasshouse", false, "Averie Passport", "keyobtained");
 	settings.Add("key_belltower", false, "Bell Tower Pass", "keyobtained");	
 	settings.Add("key_friendlyinvite", false, "Friendly Invitation", "keyobtained");
+	settings.Add("key_halyn", false, "Dr. Halyn's Employment Ledger", "keyobtained");
 	
 	settings.Add("flashmemoryobtained", true, "---Flash Memory Obtained---");
 	settings.Add("fm_embeddingduty", false, "Embedding Duty", "flashmemoryobtained");
