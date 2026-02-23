@@ -21,7 +21,6 @@ startup
 	settings.Add("hacker_met", true, "Hacker Met (Samsk finished upgrade)", "misc");
 	settings.Add("fan_breakables", true, "Metropolis Last Fan Breakable", "misc");
 	settings.Add("key_halyn", false, "Dr. Halyn's Employment Ledger", "misc");
-	settings.Add("alice_meet", false, "Rebuild Alice", "misc");
 	
 	settings.Add("bossmeet", false, "---Bosses Meet---");
 	settings.Add("nabuu_meet", false, "Nabuu Meet", "bossmeet");
@@ -267,6 +266,12 @@ startup
 	settings.Add("si_crucible_left", false, "Crucible Left Tablet", "specialitemobtained");
 	settings.Add("si_crucible_right", false, "Crucible Right Tablet", "specialitemobtained");
 
+	settings.Add("npcsaved", true, "---NPC Saved---");
+	settings.Add("npc_sin", false, "Sin", "npcsaved");
+	settings.Add("npc_cos", false, "Cos", "npcsaved");
+	settings.Add("npc_tan", false, "Tan", "npcsaved");
+	settings.Add("npc_alice", false, "Alice", "npcsaved");
+
 	settings.Add("endingsection", true, "---Endings---");
 	settings.Add("badending", true, "Bad Ending", "endingsection");
 	settings.Add("goodending", true, "Good Ending", "endingsection");
@@ -371,6 +376,9 @@ init
 	vars.OldList = new List<string>();
 	vars.NewestList = new List<string>();
 	vars.hackermet = false;
+	vars.sinsaved = false;
+	vars.cossaved = false;
+	vars.tansaved = false;
 	vars.paststring = "";
 	vars.mystring = "";
 	vars.pastSplits = new HashSet<string>();
@@ -390,8 +398,6 @@ init
 			{ "intro", vars.eventExists("CODE:TUTO_JUMP_DONE") },
 			{ "hacker_met", vars.hackermet },
 			{ "fan_breakables", vars.eventExists("BREAKABLE:0x2213a832e590affa") },
-			{ "key_halyn", vars.eventExists("KEY:BUNKER_KEY")},
-			{ "alice_meet", vars.eventExists("REBUILD_NPC:PUPPET_ALICE") },
 			{ "badending", vars.eventExists("GAME:BAD_ENDING") },
 			{ "goodending", vars.eventExists("GAME:GOOD_ENDING") },
 			
@@ -558,6 +564,7 @@ init
 			{ "key_roots", vars.eventExists("KEY:ROOTS_CORRIDOR") },
 			{ "key_glasshouse", vars.eventExists("KEY:GLASSHOUSE_KEY") },
 			{ "key_friendlyinvite", vars.eventExists("KEY:SPIDY_KEY") },
+			{ "key_halyn", vars.eventExists("KEY:BUNKER_KEY") },
 
 			{ "fm_embeddingduty", vars.eventExists("DATAPAD:MEM_HORNFELL") },
 			{ "fm_corrupted", vars.eventExists("DATAPAD:MEM_VOICEKEEPER") },
@@ -617,7 +624,13 @@ init
 			{ "si_luras_seal", vars.eventExists("KEY:LURA") },
 			{ "si_severed_fingertip", vars.eventExists("KEY:FINGER_WHEEL") },
 			{ "si_crucible_left", vars.eventExists("KEY:CRUCIBLE_GLOOMWATER") },
-			{ "si_crucible_right", vars.eventExists("KEY:CRUCIBLE_CRYSTAL") }
+			{ "si_crucible_right", vars.eventExists("KEY:CRUCIBLE_CRYSTAL") },
+
+			{ "npc_sin", vars.sinsaved },
+			{ "npc_cos", vars.cossaved },
+			{ "npc_tan", vars.tansaved },
+			{ "npc_alice", vars.eventExists("REBUILD_NPC:PUPPET_ALICE") }
+
 		};
 		return splits;
 	});
@@ -629,6 +642,18 @@ init
 		if (!vars.hackermet && temp.Contains("plotpoints.hacker.met_at_least_once = bool(true)")) {
 			print("[Autosplitter] Variable: plotpoints.hacker.met_at_least_once = bool(true)");
 			vars.hackermet = true;
+		}
+		if(!vars.sinsaved && temp.Contains("plotpoints.mel.minions.sin = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.sin = bool(true)");
+			vars.sinsaved = true;
+		}
+		if(!vars.cossaved && temp.Contains("plotpoints.mel.minions.cos = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.cos = bool(true)");
+			vars.cossaved = true;
+		}
+		if(!vars.tansaved && temp.Contains("plotpoints.mel.minions.tan = bool(true)")) {
+			print("[Autosplitter] Variable: plotpoints.mel.minions.tan = bool(true)");
+			vars.tansaved = true;
 		}
 		string pattern = @"key\s*=\s*String\(""([^""]+)""\)";
 		System.Text.RegularExpressions.MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(temp, pattern);
@@ -670,6 +695,9 @@ update
 		vars.CheckData = false;
 		vars.delay = 0;
 		vars.hackermet = false;
+		vars.sinsaved = false;
+		vars.cossaved = false;
+		vars.tansaved = false;
 		vars.gametimeMoving = 0;
 	}
 }
