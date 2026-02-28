@@ -383,7 +383,7 @@ init
 	vars.gametimeMoving = 0;
 	refreshRate = 60;
 	vars.quitouts = 0;
-	vars.QuitOutAdjustment = 11000; //Time in ms to adjust for each quit out
+	vars.QuitOutAdjustment = 0; //Time in ms to adjust for each quit out
 	vars.savebus = "";
 	vars.savebusCounter = 0;
 	
