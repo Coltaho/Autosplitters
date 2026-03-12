@@ -1,10 +1,8 @@
 //Created by Coltaho 1/29/2026
 
 state("mio", "Unknown") {
-	// float gametime : 0x1113C20; //release
-	// int deaths : 0x1113BF4;
-	float gametime : 0x1114C20;
-	int deaths : 0x1114BF4;
+	float gametime : 0x1113C20; //release
+	int deaths : 0x1113BF4;
 }
 
 state("mio", "patch1.2") { 
@@ -12,9 +10,14 @@ state("mio", "patch1.2") {
 	int deaths : 0x1114BF4;
 }
 
+state("mio", "patch2.0") { 
+	float gametime : 0x1116D48;
+	int deaths : 0x1116D1C;
+}
+
 startup
 {
-	vars.scriptVer = "1.0.2";
+	vars.scriptVer = "1.0.3";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -297,6 +300,9 @@ init
 	switch (MD5Hash) {
             case "2FF2DF335A5D2F4943079CDDACFAAB15":
                 version = "patch1.2";
+                break;
+            case "36648D6FA80937F77FFC326F6D26F7CA":
+                version = "patch2.0";
                 break;
             default:
                 version = "Unknown";
