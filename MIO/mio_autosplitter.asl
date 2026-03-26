@@ -661,7 +661,7 @@ init
 	
 	vars.CheckDataFunc = (Func<bool>)(() =>
 	{
-		print("[Autosplitter] Checking Save Data! " + Path.GetFileName(args.Name));
+		print("[Autosplitter] Checking Save Data! " + Path.GetFileName(vars.fullPath));
 		vars.savebus = "Saved!";
 		vars.savebusCounter = 0;
 		string temp = File.ReadAllText(vars.fullPath);
@@ -754,7 +754,7 @@ reset
 
 split {
 	
-	if (!vars.CheckData || !File.Exists(vars.args.FullPath))
+	if (!vars.CheckData || !File.Exists(vars.fullPath))
 		return;
 	
 	if (vars.CheckData && vars.delay < 2) {
