@@ -17,7 +17,7 @@ state("mio", "patch2.0") {
 
 startup
 {
-	vars.scriptVer = "1.0.3";
+	vars.scriptVer = "1.0.4";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
