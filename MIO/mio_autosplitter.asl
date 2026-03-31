@@ -281,6 +281,7 @@ startup
 	
 	settings.Add("scriptsection", true, "---Script Options---");
 	settings.Add("debug", false, "Print Debug Info", "scriptsection");
+	settings.Add("proton", false, "Proton support", "scriptsection");
 	
 	settings.Add("infosection", true, "---Info---");
 	settings.Add("info", true, "MIO autosplitter v" + vars.scriptVer + " by Coltaho", "infosection");
@@ -361,15 +362,30 @@ init
 	
 	if (File.Exists(selectedFileName)){		
 		vars.watcher = new FileSystemWatcher(Path.GetDirectoryName(selectedFileName));
-		vars.watcher.Filter = "slot_*.save";
+		vars.watcher.Filter = "slot_?.save";
 		FileSystemEventHandler _handler = (sender, args) =>
 		{
-			// print("[Autosplitter] FileWatcher: " + args.FullPath + " " + args.ChangeType);
-			vars.args = args;
+			// print("[Autosplitter] FileWatcher: " + args.ChangeType);
+			// print("[Autosplitter] FileWatcher: " + args.Name);
+			// print("[Autosplitter] FileWatcher: " + Path.GetFileName(args.Name));
+			if (settings["proton"]){
+				// In proton, for some reason, args.Name contains the full path to the file, and args.FullPath contains the directory twice
+				vars.fullPath = args.Name;
+			} else {
+				vars.fullPath = args.FullPath;
+			}
+				
 			vars.CheckData = true;
-		};	
+		};
+
 		vars.myhandler = _handler;
-		vars.watcher.Deleted += vars.myhandler;
+		if (settings["proton"]){
+			// In proton, the Deleted event doesn't trigger when the save file is modified, but Changed does
+			vars.watcher.Changed += vars.myhandler;
+		} else {
+			vars.watcher.Deleted += vars.myhandler;
+
+		}
 		vars.watcher.EnableRaisingEvents = true;
 		print("[Autosplitter] File Watcher initialized!");
 	} else {
@@ -645,10 +661,10 @@ init
 	
 	vars.CheckDataFunc = (Func<bool>)(() =>
 	{
-		print("[Autosplitter] Checking Save Data! " + vars.args.Name);
+		print("[Autosplitter] Checking Save Data! " + Path.GetFileName(vars.fullPath));
 		vars.savebus = "Saved!";
 		vars.savebusCounter = 0;
-		string temp = File.ReadAllText(vars.args.FullPath);
+		string temp = File.ReadAllText(vars.fullPath);
 		if (!vars.hackermet && temp.Contains("plotpoints.hacker.met_at_least_once = bool(true)")) {
 			print("[Autosplitter] Variable: plotpoints.hacker.met_at_least_once = bool(true)");
 			vars.hackermet = true;
@@ -721,8 +737,8 @@ update
 }
 
 start
-{	
-	if(vars.CheckData && File.Exists(vars.args.FullPath)) {
+{
+	if(vars.CheckData && File.Exists(vars.fullPath)) {
 		vars.CheckDataFunc();
 		if (vars.eventExists("CODE:START_GAME")) {
 			print("[Autosplitter] Starting timer! found: CODE:START_GAME");
@@ -738,7 +754,7 @@ reset
 
 split {
 	
-	if (!vars.CheckData || !File.Exists(vars.args.FullPath))
+	if (!vars.CheckData || !File.Exists(vars.fullPath))
 		return;
 	
 	if (vars.CheckData && vars.delay < 2) {
@@ -791,7 +807,11 @@ shutdown
 {
 	try {
 		if (vars.watcher != null)
-			vars.watcher.Deleted -= vars.myhandler;
+			if (settings["proton"]){
+				vars.watcher.Changed -= vars.myhandler;
+			} else {
+				vars.watcher.Deleted -= vars.myhandler;
+			}
 	}
 	catch (Exception ex) {
 		print("[Autosplitter] No watcher to unsubscribe from handler... Cool.");
