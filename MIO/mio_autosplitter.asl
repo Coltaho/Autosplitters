@@ -17,7 +17,7 @@ state("mio", "patch2.0") {
 
 startup
 {
-	vars.scriptVer = "1.0.3";
+	vars.scriptVer = "1.0.4";
 	
 	settings.Add("misc", true, "---Misc---");
 	settings.Add("intro", true, "Intro Completed", "misc");
@@ -174,6 +174,7 @@ startup
 	settings.Add("cp_vaults", true, "Vaults", "checkpointobtained");
 	settings.Add("cp_manufactory", false, "Manufactory", "checkpointobtained");
 	settings.Add("cp_pit", false, "The Pit", "checkpointobtained");
+	settings.Add("cp_halyntemp", false, "Halyn temp", "checkpointobtained");
 	
 	settings.Add("overseerobtained", true, "---Overseer Obtained---");
 	settings.Add("os_nexus", false, "Nexus", "overseerobtained");	
@@ -565,6 +566,7 @@ init
 			{ "cp_vaults", vars.eventExists("CHECKPOINT:CP_ST_tube_main_save") },
 			{ "cp_manufactory", vars.eventExists("CHECKPOINT:CP_ST_tube_path1_P1") },
 			{ "cp_pit", vars.eventExists("CHECKPOINT:CP_ST_pearl_hill") },
+			{ "cp_halyntemp", vars.eventExists("CHECKPOINT:CP_ST_halyn_temp") },
 			
 			{ "os_nexus", vars.eventExists("OVERSEER:cp_HUB_main_down_P1") },			
 			{ "os_citygates", vars.eventExists("OVERSEER:CP_city_entrance") },
