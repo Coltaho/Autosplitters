@@ -368,7 +368,7 @@ init
 			// print("[Autosplitter] FileWatcher: " + args.ChangeType);
 			// print("[Autosplitter] FileWatcher: " + args.Name);
 			// print("[Autosplitter] FileWatcher: " + Path.GetFileName(args.Name));
-			if (settings['proton']){
+			if (settings["proton"]){
 				// In proton, for some reason, args.Name contains the full path to the file, and args.FullPath contains the directory twice
 				vars.fullPath = args.Name;
 			} else {
@@ -379,7 +379,7 @@ init
 		};
 
 		vars.myhandler = _handler;
-		if (settings['proton']){
+		if (settings["proton"]){
 			// In proton, the Deleted event doesn't trigger when the save file is modified, but Changed does
 			vars.watcher.Changed += vars.myhandler;
 		} else {
@@ -807,7 +807,7 @@ shutdown
 {
 	try {
 		if (vars.watcher != null)
-			if (settings['proton']){
+			if (settings["proton"]){
 				vars.watcher.Changed -= vars.myhandler;
 			} else {
 				vars.watcher.Deleted -= vars.myhandler;
